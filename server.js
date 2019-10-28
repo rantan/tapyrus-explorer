@@ -1,46 +1,54 @@
 'use strict';
 
-const jayson   =  require('jayson/promise');
-const express  =  require('express')
-const app      =  express()
-const exec     =  require('child_process').exec;
+const jayson  = require('jayson/promise');
+const express = require('express')
+const app     = express()
+const exec    = require('child_process').exec;
+const util    = require('util');
 
-const client = jayson.client.tcp({
+const Client  = require('bitcoin-core');
+const cl      = new Client ({ 
+  network  : 'regtest',
+  username : 'user',
+  password : 'password',
+  port     : 18443
+});
+
+const client  = jayson.client.tcp({
   port : 60401
 });
 
+function getBlockHash(height, callback){
+  cl.getBlockHash(height).then((result) => callback(result));
+};
 
-function getBlockHash(height,callback){
-  let COMMAND = 'bitcoin-cli getblockhash ' + height;
-  exec(COMMAND, function(error, result){
-    if(error !== null) { console.log('exec error: ' + error); return; }
-    callback(result,returnResult);
-  });
-}
-
-function getBlock(blockHash,callback){
-  let COMMAND = 'bitcoin-cli getblock ' + blockHash;
-  exec(COMMAND, function(error, result){
-    if(error !== null) { console.log('exec error: ' + error); return; }
-    let blockInfo = JSON.parse(result);
-    callback(blockInfo);
-  });
-}
-
+function getBlock(blockHash, callback){
+  cl.getBlock(blockHash).then((result) => callback(result));
+};
 
 app.get('/block', (req, res) => {
   client.request('blockchain.headers.subscribe',[],function(error, result){
     let height = result.result.height;
     let count = 25;
     let start_height = height - count;
-    let displayList = "";
+    let output = new Object();
 
-    client.request('blockchain.block.headers',[start_height,count,0],function(error, result){
-      let output = result.result.hex.match(/.{160}/g);
-      getBlockHash(height, (hash) => {
-        getBlock(hash, (blockInfo) => {
-          res.json(blockInfo);
-        });
+      getBlockHash(height, (blockHash) => {
+        getBlock(blockHash, (blockInfo) => {
+          output.BlockHash             =  blockInfo.hash;
+          output.No_of_Transactions    =  blockInfo.nTx;
+          output.Height                =  blockInfo.height;
+          output.Timestamp             =  Date(blockInfo.time*1000);
+          output.Proof                 =  blockInfo.nonce;
+          output.SizeBytes             =  blockInfo.size;
+          output.Version               =  blockInfo.version;
+          output.Merkle_Root           =  blockInfo.merkleroot;
+          output.Immutable_Merkle_Root =  "immutable";
+          output.Previous_Block        =  blockInfo.previousblockhash;
+          output.Next_Block            =  blockInfo.nextblockhash;
+                   
+          res.json(output);
+          console.log(output);
       });
     });
   });
