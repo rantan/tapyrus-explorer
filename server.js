@@ -19,30 +19,33 @@ function getBlock(blockHash, callback){
 };
 
 app.get('/blocks/:blockHash', (req, res) => {
-    let output = new Object();
-
-    let regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+    const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
     let urlBlockHash = req.params.blockHash;
 
-    if(regex.test(urlBlockHash)){
-      getBlock(urlBlockHash, (blockInfo) => {
-        output.BlockHash             =  blockInfo.hash;
-        output.No_of_Transactions    =  blockInfo.nTx;
-        output.Height                =  blockInfo.height;
-        output.Timestamp             =  Date(blockInfo.time*1000);
-        output.Proof                 =  blockInfo.nonce;
-        output.SizeBytes             =  blockInfo.size;
-        output.Version               =  blockInfo.version;
-        output.Merkle_Root           =  blockInfo.merkleroot;
-        output.Immutable_Merkle_Root =  "immutable";
-        output.Previous_Block        =  blockInfo.previousblockhash;
-        output.Next_Block            =  blockInfo.nextblockhash;
-                 
-        res.json(output);
-        console.log(output);
-      });
+    let output = new Object();
+
+    if(!regex.test(urlBlockHash)){
+      res.status(400).send('Bad request');
+      return;
     }
-    else{ res.status(400).send('Bad request'); }
+    getBlock(urlBlockHash, (blockInfo) => {
+      const output ={
+        blockHash             :  blockInfo.hash,
+        ntx                   :  blockInfo.nTx,
+        height                :  blockInfo.height,
+        timestamp             :  blockInfo.time,
+        proof                 :  blockInfo.nonce,
+        sizeBytes             :  blockInfo.size,
+        version               :  blockInfo.version,
+        merkleRoot            :  blockInfo.merkleroot,
+        immutableMerkleRoot   :  "immutable",
+        previousBlock         :  blockInfo.previousblockhash,
+        nextBlock             :  blockInfo.nextblockhash
+      };
+
+      res.json(output);
+      console.log(output);
+    });
 });
 
 app.listen(3000, () => console.log('Listening on port 3000!'))
