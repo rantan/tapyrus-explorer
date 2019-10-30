@@ -22,14 +22,12 @@ app.get('/blocks/:blockHash', (req, res) => {
     const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
     let urlBlockHash = req.params.blockHash;
 
-    let output = new Object();
-
     if(!regex.test(urlBlockHash)){
       res.status(400).send('Bad request');
       return;
     }
     getBlock(urlBlockHash, (blockInfo) => {
-      const output ={
+      const output = {
         blockHash             :  blockInfo.hash,
         ntx                   :  blockInfo.nTx,
         height                :  blockInfo.height,
