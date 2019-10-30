@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "basic-auth": "^2.0.1",
     "bitcoin-core": "^3.0.0",
     "express": "^4.17.1",
     "jayson": "^3.1.1",
