@@ -48,7 +48,6 @@ app.get('/blocks/:blockHash', (req, res) => {
     };
 
     res.json(output);
-    // console.log(output);
   });
 });
 
