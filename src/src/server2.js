@@ -1,1 +1,0 @@
-/home/hino/server/server2.js
