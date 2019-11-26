@@ -24,6 +24,10 @@ class App extends React.Component {
     });
   }
 
+  onClick(){
+    window.alert("東京の私立大学の文系学部に通う21歳の男");
+  }
+
   render() {
     const list = [];
     if (this.state.data.length !== 0) {
@@ -50,6 +54,13 @@ class App extends React.Component {
             {list}
           </tbody>
         </table>
+        <div align="right">
+          <button onClick={this.onClick}>First</button>
+          <button onClick={this.onClick}>&lt;</button>
+          <button onClick={this.onClick}>{this.state.data.length}</button>
+          <button onClick={this.onClick}>&gt;</button>
+          <button onClick={this.onClick}>Last</button>
+        </div>
       </div>
     );
   }
