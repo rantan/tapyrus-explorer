@@ -50,16 +50,14 @@ async function getBlockchainInfo() {
 
 app.get('/list/:linesPerPage', (req, res) => {
   const linesPerPage = +req.params.linesPerPage;
-  let bestBlockHeight;
 
-    getBlockchainInfo().then(bestBlockHeight=>{
-
+  getBlockchainInfo().then((bestBlockHeight) => {
     elect.request('blockchain.block.headers', [bestBlockHeight - linesPerPage + 1, linesPerPage, 0], async (err, rep) => {
       if (err) throw err;
 
       const headersHex = rep.result.hex;
       const headerHex = headersHex.match(/.{160}/g);
-      let promiseArray = headerHex.map(x => getBlock(internalByteOrder(x)));
+      const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
 
       const result = await Promise.all(promiseArray);
       res.json(result);
