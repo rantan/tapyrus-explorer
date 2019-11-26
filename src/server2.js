@@ -59,7 +59,6 @@ app.get('/list/:linesPerPage', (req, res) => {
 
       const headersHex = rep.result.hex;
       const headerHex = headersHex.match(/.{160}/g);
-
       let promiseArray = headerHex.map(x => getBlock(internalByteOrder(x)));
 
       const result = await Promise.all(promiseArray);
