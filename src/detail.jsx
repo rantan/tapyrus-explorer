@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-const blockHash = '3272350d554f75cb407813ee1ebe8c96fea5dc6c82623b20876d97ea27b18f61';
+const bh = '19af353c9828e6dc20b37ae3006551500be68322552e1027fbf6def8a1a0b710';
+
 class App extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -27,7 +28,7 @@ class App extends React.Component {
   }
 
   async getBlockInfo() {
-    const result = await axios.get(`${'http://localhost:3001/blocks'}/${blockHash}`);
+    const result = await axios.get(`${'http://localhost:3001/blocks'}/${bh}`);
     this.setState({
       blockHash: result.data.blockHash,
       ntx: result.data.ntx,
@@ -44,31 +45,88 @@ class App extends React.Component {
   }
 
   render() {
+    const {
+      blockHash, ntx, height, timestamp, proof, sizeBytes, version,
+      merkleRoot, immutableMerkleRoot, previousBlock, nextBlock,
+    } = this.state;
     return (
       <div className="App">
         <p>
-            BLOCKHASH :
-          {this.state.blockHash}
-            NTX :
-          {this.state.ntx}
-            HEIGHT :
-          {this.state.height}
-            TIME :
-          {this.state.timestamp}
-            PROOF :
-          {this.state.proof}
-            SIZE :
-          {this.state.sizeBytes}
-            VERSION :
-          {this.state.version}
-            MERKLEROOT :
-          {this.state.merkleRoot}
-            IMMUTABLEMERKLEROOT :
-          {this.state.immutableMerkleRoot}
-            PREVIOUSBLOCK :
-          {this.state.previousBlock}
-            NEXT BLOCK :
-          {this.state.nextBlock}
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  {' '}
+BLOCKHASH :
+                  {blockHash}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {' '}
+NTX :
+                  {ntx}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {' '}
+HEIGHT :
+                  {height}
+                </td>
+              </tr>
+              <tr>
+                <td>
+TIME :
+                  {timestamp}
+                </td>
+              </tr>
+              <tr>
+                <td>
+PROOF :
+                  {proof}
+                </td>
+              </tr>
+              <tr>
+                <td>
+SIZE :
+                  {sizeBytes}
+                </td>
+              </tr>
+              <tr>
+                <td>
+VERSION :
+                  {version}
+                </td>
+              </tr>
+              <tr>
+                <td>
+MERKLEROOT :
+                  {merkleRoot}
+                </td>
+              </tr>
+              <tr>
+                <td>
+IMMUTABLEMERKLEROOT :
+                  {immutableMerkleRoot}
+                </td>
+              </tr>
+              <tr>
+                <td>
+PREVIOUSBLOCK :
+                  {previousBlock}
+                </td>
+              </tr>
+              <tr>
+                <td>
+NEXT BLOCK :
+                  {nextBlock}
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
         </p>
       </div>
     );
