@@ -3,4 +3,10 @@
   "env":{
     "browser":true
   },
+  "settings":{
+    "import/resolver":"webpack"
+  },
+  "rules":{
+    "import/no-unresolved":"off"
+  }
 }
