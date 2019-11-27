@@ -57,7 +57,7 @@ class App extends React.Component {
         <div align="right">
           <button type="button" onClick={this.onClick}>First</button>
           <button type="button" onClick={this.onClick}>&lt;</button>
-          <button type="button" onClick={this.onClick}>page-num</button>
+          <button type="button" onClick={this.onClick}>Number</button>
           <button type="button" onClick={this.onClick}>&gt;</button>
           <button type="button" onClick={this.onClick}>Last</button>
         </div>
