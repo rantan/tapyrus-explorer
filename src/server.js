@@ -1,9 +1,7 @@
 
-const jayson = require('jayson/promise');
 const express = require('express');
 
 const app = express();
-
 const Client = require('bitcoin-core');
 
 const cl = new Client({
