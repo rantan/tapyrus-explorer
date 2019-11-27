@@ -18,6 +18,7 @@ class App extends React.Component {
   }
 
   static onClick() {
+    
   }
 
   async getBlockInfo() {
