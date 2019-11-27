@@ -17,6 +17,9 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
+  static onClick() {
+  }
+
   async getBlockInfo() {
     const result = await axios.get(`${'http://localhost:3001/list'}/${linesPerPage}`);
     this.setState({
@@ -24,24 +27,23 @@ class App extends React.Component {
     });
   }
 
-  onClick(){
-    window.alert("東京の私立大学の文系学部に通う21歳の男");
-  }
-
   render() {
-    const list = [];
-    if (this.state.data.length !== 0) {
-      for (let i = 0; i < linesPerPage; i += 1) {
-        list.push(
-          <tr>
-            <td>{this.state.data[i].hash}</td>
-            <td>{this.state.data[i].height}</td>
-            <td>{this.state.data[i].time}</td>
-            <td>{this.state.data[i].size}</td>
-          </tr>,
-        );
-      }
-    }
+    const { data } = this.state;
+    const list = data.map((i) => {
+      const {
+        hash, height, time, size,
+      } = i;
+      console.log(`asanoyama: ${JSON.stringify(i)}`);
+      // debugger;
+      return (
+        <tr>
+          <td>{hash}</td>
+          <td>{height}</td>
+          <td>{time}</td>
+          <td>{size}</td>
+        </tr>
+      );
+    });
     return (
       <div className="App">
         <h1>LIST</h1>
@@ -55,11 +57,11 @@ class App extends React.Component {
           </tbody>
         </table>
         <div align="right">
-          <button onClick={this.onClick}>First</button>
-          <button onClick={this.onClick}>&lt;</button>
-          <button onClick={this.onClick}>{this.state.data.length}</button>
-          <button onClick={this.onClick}>&gt;</button>
-          <button onClick={this.onClick}>Last</button>
+          <button type="button" onClick={this.onClick}>First</button>
+          <button type="button" onClick={this.onClick}>&lt;</button>
+          <button type="button" onClick={this.onClick}>page-num</button>
+          <button type="button" onClick={this.onClick}>&gt;</button>
+          <button type="button" onClick={this.onClick}>Last</button>
         </div>
       </div>
     );
