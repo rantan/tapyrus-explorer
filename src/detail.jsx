@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-const bh = '19af353c9828e6dc20b37ae3006551500be68322552e1027fbf6def8a1a0b710';
+const bH = '19af353c9828e6dc20b37ae3006551500be68322552e1027fbf6def8a1a0b710';
 
 class App extends React.Component {
   constructor(props, context) {
@@ -28,7 +28,7 @@ class App extends React.Component {
   }
 
   async getBlockInfo() {
-    const result = await axios.get(`${'http://localhost:3001/blocks'}/${bh}`);
+    const result = await axios.get(`${'http://localhost:3001/blocks'}/${bH}`);
     this.setState({
       blockHash: result.data.blockHash,
       ntx: result.data.ntx,
