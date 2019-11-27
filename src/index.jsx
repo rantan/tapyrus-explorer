@@ -3,23 +3,13 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-const bh = '19af353c9828e6dc20b37ae3006551500be68322552e1027fbf6def8a1a0b710';
+const linesPerPage = 10;
 
 class App extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      blockHash: 'hash',
-      ntx: 'ntx',
-      height: 'height',
-      timestamp: 'time',
-      proof: 'nonce',
-      sizeBytes: 'size',
-      version: 'version',
-      merkleRoot: 'merkleRoot',
-      immutableMerkleRoot: 'immutable',
-      previousBlock: 'previousblockhash',
-      nextBlock: 'nextblockhash',
+      data: [],
     };
   }
 
@@ -27,107 +17,50 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
+  static onClick() {
+  }
+
   async getBlockInfo() {
-    const result = await axios.get(`${'http://localhost:3001/blocks'}/${bh}`);
+    const result = await axios.get(`${'http://localhost:3001/list'}/${linesPerPage}`);
     this.setState({
-      blockHash: result.data.blockHash,
-      ntx: result.data.ntx,
-      height: result.data.height,
-      timestamp: result.data.timestamp,
-      proof: result.data.proof,
-      sizeBytes: result.data.sizeBytes,
-      version: result.data.version,
-      merkleRoot: result.data.merkleRoot,
-      immutableMerkleRoot: 'immutable',
-      previousBlock: result.data.previousBlock,
-      nextBlock: result.data.nextBlock,
+      data: result.data,
     });
   }
 
   render() {
-    const {
-      blockHash, ntx, height, timestamp, proof, sizeBytes, version,
-      merkleRoot, immutableMerkleRoot, previousBlock, nextBlock,
-    } = this.state;
+    const { data } = this.state;
+    const list = data.map((i) => {
+      const {
+        hash, height, time, size,
+      } = i;
+      return (
+        <tr>
+          <td>{hash}</td>
+          <td>{height}</td>
+          <td>{time}</td>
+          <td>{size}</td>
+        </tr>
+      );
+    });
     return (
       <div className="App">
-        <p>
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  {' '}
-BLOCKHASH :
-                  {blockHash}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  {' '}
-NTX :
-                  {ntx}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  {' '}
-HEIGHT :
-                  {height}
-                </td>
-              </tr>
-              <tr>
-                <td>
-TIME :
-                  {timestamp}
-                </td>
-              </tr>
-              <tr>
-                <td>
-PROOF :
-                  {proof}
-                </td>
-              </tr>
-              <tr>
-                <td>
-SIZE :
-                  {sizeBytes}
-                </td>
-              </tr>
-              <tr>
-                <td>
-VERSION :
-                  {version}
-                </td>
-              </tr>
-              <tr>
-                <td>
-MERKLEROOT :
-                  {merkleRoot}
-                </td>
-              </tr>
-              <tr>
-                <td>
-IMMUTABLEMERKLEROOT :
-                  {immutableMerkleRoot}
-                </td>
-              </tr>
-              <tr>
-                <td>
-PREVIOUSBLOCK :
-                  {previousBlock}
-                </td>
-              </tr>
-              <tr>
-                <td>
-NEXT BLOCK :
-                  {nextBlock}
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-
-        </p>
+        <h1>LIST</h1>
+        <table>
+          <tbody>
+            <td>BLOCKHASH</td>
+            <td>HEIGHT</td>
+            <td>TIME</td>
+            <td>SiZE</td>
+            {list}
+          </tbody>
+        </table>
+        <div align="right">
+          <button type="button" onClick={this.onClick}>First</button>
+          <button type="button" onClick={this.onClick}>&lt;</button>
+          <button type="button" onClick={this.onClick}>page-num</button>
+          <button type="button" onClick={this.onClick}>&gt;</button>
+          <button type="button" onClick={this.onClick}>Last</button>
+        </div>
       </div>
     );
   }
