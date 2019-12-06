@@ -17,9 +17,7 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
-  static onClick() {
-    
-  }
+  static onClick() {}
 
   async getBlockInfo() {
     const result = await axios.get(`${'http://localhost:3001/list'}/${linesPerPage}`);
