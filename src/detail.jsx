@@ -27,7 +27,7 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
-  onClick(blockhash) {
+  static onClick(blockhash) {
     window.alert(blockhash);
   }
 
