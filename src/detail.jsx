@@ -27,6 +27,10 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
+  onClick(blockhash) {
+    window.alert(blockhash);
+  }
+
   async getBlockInfo() {
     const result = await axios.get(`${'http://localhost:3001/blocks'}/${bH}`);
     this.setState({
@@ -52,19 +56,23 @@ class App extends React.Component {
     return (
       <div className="App">
         <p>
+          <h2>
+BLOCK #
+            {height}
+            <button type="button" onClick={this.onClick}>Raw Data</button>
+          </h2>
+          <h5>
+BLOCKHASH
+            {blockHash}
+
+          </h5>
+
           <table>
             <tbody>
               <tr>
                 <td>
                   {' '}
-BLOCKHASH :
-                  {blockHash}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  {' '}
-NTX :
+No. of Transaction :
                   {ntx}
                 </td>
               </tr>
@@ -124,9 +132,12 @@ NEXT BLOCK :
                 </td>
               </tr>
             </tbody>
-
           </table>
 
+          <h5>
+            <button type="button" onClick={this.onClick}>\/</button>
+          View All Transactions
+          </h5>
         </p>
       </div>
     );
