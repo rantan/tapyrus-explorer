@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-const linesPerPage = 10;
+const linesPerPage = 15;
 
 class App extends React.Component {
   constructor(props, context) {
