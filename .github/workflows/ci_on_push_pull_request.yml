@@ -11,9 +11,6 @@ jobs:
       - name: Setup
         run: |
           npm install
-          ls -l
-          ./node_modules/.bin/eslint src/detail.jsx
-          ./node_modules/.bin/eslint src/index.jsx
-          ./node_modules/.bin/eslint src/server.js
-          ./node_modules/.bin/eslint src/server2.js
+          npm run jslint
+          npm run jsxlint
   
