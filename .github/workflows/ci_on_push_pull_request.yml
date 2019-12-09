@@ -10,9 +10,8 @@ jobs:
       - uses: actions/checkout@v1
       - name: Setup
         run: |
-          ls -al
-          cd backend
+          cd frontend
           npm install
           npm run jslint
           npm run jsxlint
-          
+  
