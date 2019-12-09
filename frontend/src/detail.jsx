@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-const bH = '19af353c9828e6dc20b37ae3006551500be68322552e1027fbf6def8a1a0b710';
+const bH = '4d6ca4ef62a3e8cca7378baffe01f89142c5075e13cb3b5eb4d2c337cad1bfa0';
 
 class App extends React.Component {
   constructor(props, context) {
@@ -27,9 +27,7 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
-  static onClick(blockhash) {
-    window.alert(blockhash);
-  }
+  static onClick() {}
 
   async getBlockInfo() {
     const result = await axios.get(`${'http://localhost:3001/blocks'}/${bH}`);
@@ -59,7 +57,7 @@ class App extends React.Component {
           <h2>
 BLOCK #
             {height}
-            <button type="button" onClick={this.onClick}>Raw Data</button>
+            <button type="button" onClick={this.onclick}>Raw Data</button>
           </h2>
           <h5>
 BLOCKHASH
