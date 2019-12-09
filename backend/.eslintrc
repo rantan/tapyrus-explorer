@@ -1,10 +1,9 @@
 {
   "extends":"airbnb",
   "env":{
-    "browser":true
+    "browser":false
   },
   "settings":{
-    "import/resolver":"webpack"
   },
   "rules":{
     "import/no-unresolved":"off",
