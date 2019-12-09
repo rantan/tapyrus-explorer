@@ -11,4 +11,8 @@ jobs:
       - name: Setup
         run: |
           ls -al
-  
+          cd backend
+          npm install
+          npm run jslint
+          npm run jsxlint
+          
