@@ -49,7 +49,7 @@ class App extends React.Component {
             <td>BLOCKHASH</td>
             <td>HEIGHT</td>
             <td>TIME</td>
-            <td>SiZE</td>
+            <td>SIZE</td>
             {list}
           </tbody>
         </table>
