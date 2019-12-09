@@ -41,6 +41,12 @@ class App extends React.Component {
         </tr>
       );
     });
+
+
+    list.sort(
+      (a, b) => (a < b ? 1 : -1),
+    );
+
     return (
       <div className="App">
         <h1>LIST</h1>
