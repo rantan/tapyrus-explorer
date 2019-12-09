@@ -12,6 +12,6 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run jslint
-          npm run jsxlint
+          # npm run jslint
+          # npm run jsxlint
   
