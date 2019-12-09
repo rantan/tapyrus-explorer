@@ -12,9 +12,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          ls -al
-          which eslint
-          eslint src/index.jsx
+          npm run jsxlint
           # npm run jsxlint
           # npm run jslint
           
