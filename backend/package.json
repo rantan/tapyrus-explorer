@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "jslint": "eslint *.js actions/"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +15,16 @@
     "bitcoin-core": "^3.0.0",
     "express": "^4.17.1",
     "jayson": "^3.1.1",
+    "jssha": "^2.3.1",
     "socket.io": "^2.3.0",
     "ws": "^7.1.2",
     "wss": "^3.3.4"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0"
   }
 }
