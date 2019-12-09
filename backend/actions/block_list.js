@@ -1,11 +1,11 @@
 const jayson = require('jayson/promise');
-const app = require('../app.js');
 const Jssha = require('jssha');
 
 const elect = jayson.client.tcp({
   port: 60401,
 });
 const Client = require('bitcoin-core');
+const app = require('../app.js');
 
 const cl = new Client({
   network: 'regtest',

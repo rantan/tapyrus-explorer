@@ -1,5 +1,5 @@
-const app = require('../app.js');
 const Client = require('bitcoin-core');
+const app = require('../app.js');
 
 const cl = new Client({
   network: 'regtest',
