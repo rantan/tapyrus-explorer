@@ -1,9 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
-
-const bH = '4d6ca4ef62a3e8cca7378baffe01f89142c5075e13cb3b5eb4d2c337cad1bfa0';
 
 class App extends React.Component {
   constructor(props, context) {
@@ -30,7 +27,10 @@ class App extends React.Component {
   static onClick() {}
 
   async getBlockInfo() {
-    const result = await axios.get(`${'http://localhost:3001/blocks'}/${bH}`);
+    const url = window.location.href.split('/');
+    const blockHashUrl = url[url.length - 1];
+
+    const result = await axios.get(`${'http://localhost:3001/block'}/${blockHashUrl}`);
     this.setState({
       blockHash: result.data.blockHash,
       ntx: result.data.ntx,
@@ -142,7 +142,4 @@ NEXT BLOCK :
   }
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root'),
-);
+export default App;

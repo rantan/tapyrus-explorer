@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/blocks/:blockHash', (req, res) => {
+app.get('/block/:blockHash', (req, res) => {
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
   const urlBlockHash = req.params.blockHash;
 
