@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import './index.css'; 
+import './index.css';
 
 class App extends React.Component {
   constructor(props, context) {
@@ -27,9 +27,8 @@ class App extends React.Component {
   static onClick() {}
 
   async getBlockInfo() {
-
-    let url = window.location.href.split("/");  
-    let blockHashUrl = url[url.length -1];  
+    const url = window.location.href.split('/');
+    const blockHashUrl = url[url.length - 1];
 
     const result = await axios.get(`${'http://localhost:3001/block'}/${blockHashUrl}`);
     this.setState({

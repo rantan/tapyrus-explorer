@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import './index.css';
-import detail from './detail';
 import {
   Link,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom';
+import detail from './detail';
 
 
 const linesPerPage = 15;
@@ -47,7 +47,7 @@ class App extends React.Component {
           <Switch>
             <Route path="block" component={detail} />
           </Switch>
-          
+
         </tr>
       );
     });
