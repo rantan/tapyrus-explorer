@@ -1,6 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import './index.css';
+import detail from './detail';
+import {
+  Link,
+  Route,
+  Switch
+} from 'react-router-dom';
+
 
 const linesPerPage = 15;
 
@@ -33,10 +40,14 @@ class App extends React.Component {
       } = i;
       return (
         <tr>
-          <td>{hash}</td>
-          <td>{height}</td>
+          <td><Link to={`/block/${hash}`}>{hash}</Link></td>
+          <td><Link to={`/block/${hash}`}>{height}</Link></td>
           <td>{time}</td>
           <td>{size}</td>
+          <Switch>
+            <Route path="block" component={detail} />
+          </Switch>
+          
         </tr>
       );
     });

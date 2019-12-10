@@ -24,14 +24,14 @@ class App extends Component {
               <Link to="/list">List</Link>
             </li>
             <li>
-              <Link to="/detail">Detail</Link>
+              <Link to="/block">Detail</Link>
             </li>
           </ul>
         </div>
         <div className="App-intro">
           <Switch>
             <Route exact path="/list" component={list} />
-            <Route path="/detail" component={detail} />
+            <Route path="/block" component={detail} />
             <Redirect to="/list" />
           </Switch>
         </div>
