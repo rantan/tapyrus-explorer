@@ -46,11 +46,12 @@ async function getBlockchainInfo() {
   return result.headers;
 }
 
-app.get('/list/:linesPerPage', (req, res) => {
-  const linesPerPage = +req.params.linesPerPage;
+app.get('/api/list', (req, res) => {
+  const column = req.query.column / 1;
+  const page = req.query.page / 1;
 
   getBlockchainInfo().then((bestBlockHeight) => {
-    elect.request('blockchain.block.headers', [bestBlockHeight - linesPerPage + 1, linesPerPage, 0], async (err, rep) => {
+    elect.request('blockchain.block.headers', [bestBlockHeight - column * page + 1, column, 0], async (err, rep) => {
       if (err) throw err;
 
       const headersHex = rep.result.hex;

@@ -2,17 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import './index.css';
 import {
-  BrowserRouter as Router,
   Link,
   Route,
   Switch,
-  useLocation,
 } from 'react-router-dom';
 import queryString from 'querystring';
 import detail from './detail';
 
 function GetParams() {
-  const location = window.location;
+  const { location } = window;
   const queryParams = queryString.parse(location.search.slice(1));
   return (
     queryParams.page
@@ -21,7 +19,6 @@ function GetParams() {
 
 class App extends React.Component {
   constructor(props, context) {
-    console.log("const");
     super(props, context);
     this.state = {
       data: [],
@@ -29,7 +26,7 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount() {console.log("didmount");
+  componentDidMount() {
     this.getBlockInfo();
   }
 
@@ -46,11 +43,14 @@ class App extends React.Component {
     });
   }
 
-  render() {console.log("render");
-  // const volvol = this.getBlockInfo();
-  // console.dir(volvol);
+  render() {
     const { data } = this.state;
     const { page } = this.state;
+
+    if (page !== GetParams()) {
+      this.getBlockInfo();
+    }
+
     const list = data.map((i) => {
       const {
         hash, height, time, size,
@@ -86,22 +86,14 @@ class App extends React.Component {
         </table>
 
         <div align="right">
-          {/* <button type="button" onClick={this.getBlockInfo.bind(this)}> */}
           <button type="button">
-            <Link to={{
-              pathname: '/list',
-              search: '?page=1',
-            }}
-            >Prev
+            <Link to={`/list?page=${Number(page) - 1}`}>
+Prev
             </Link>
           </button>
           <button type="button">
-          {/* <button type="button" onClick={this.getBlockInfo.bind(this)}> */}
-            <Link to={{
-              pathname: '/list',
-              search: '?page=2',//+{page}+1,,
-            }}
-            >Next 
+            <Link to={`/list?page=${Number(page) + 1}`}>
+Next
             </Link>
           </button>
         </div>
