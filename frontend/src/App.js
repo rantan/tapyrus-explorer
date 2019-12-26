@@ -18,17 +18,10 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">HOME</h1>
         </header>
-        <div className="menu">
-          <ul>
-            <li>
-              <Link to="/list">List</Link>
-            </li>
-            <li>
-              <Link to="/block">Detail</Link>
-            </li>
-          </ul>
-        </div>
         <div className="App-intro">
+          <button type="button">
+            <Link to={`/list?page=1`}>list</Link>
+          </button>
           <Switch>
             <Route exact path="/list" component={list} />
             <Route path="/block" component={detail} />

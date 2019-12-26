@@ -9,7 +9,7 @@ const cl = new Client({
 });
 
 function getBlock(blockHash, callback) {
-  cl.getBlock(blockHash).then((result) => callback(result));
+  cl.getBlock(blockHash, 2).then((result) => callback(result));
 }
 
 app.use((req, res, next) => {
@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/block/:blockHash', (req, res) => {
+app.get('/api/block/:blockHash', (req, res) => {
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
   const urlBlockHash = req.params.blockHash;
 
@@ -37,11 +37,11 @@ app.get('/block/:blockHash', (req, res) => {
       sizeBytes: blockInfo.size,
       version: blockInfo.version,
       merkleRoot: blockInfo.merkleroot,
+      tx: blockInfo.tx,
       immutableMerkleRoot: 'immutable',
       previousBlock: blockInfo.previousblockhash,
       nextBlock: blockInfo.nextblockhash,
     };
-
     res.json(output);
   });
 });

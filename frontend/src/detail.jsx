@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import './index.css';
+import {
+  Link, Switch, Route,
+} from 'react-router-dom';
 
 class App extends React.Component {
   constructor(props, context) {
@@ -14,6 +17,7 @@ class App extends React.Component {
       sizeBytes: 'size',
       version: 'version',
       merkleRoot: 'merkleRoot',
+      tx: 'tx',
       immutableMerkleRoot: 'immutable',
       previousBlock: 'previousblockhash',
       nextBlock: 'nextblockhash',
@@ -24,13 +28,11 @@ class App extends React.Component {
     this.getBlockInfo();
   }
 
-  static onClick() {}
-
   async getBlockInfo() {
     const url = window.location.href.split('/');
     const blockHashUrl = url[url.length - 1];
 
-    const result = await axios.get(`${'http://localhost:3001/block'}/${blockHashUrl}`);
+    const result = await axios.get(`${'http://localhost:3001/api/block'}/${blockHashUrl}`);
     this.setState({
       blockHash: result.data.blockHash,
       ntx: result.data.ntx,
@@ -40,6 +42,7 @@ class App extends React.Component {
       sizeBytes: result.data.sizeBytes,
       version: result.data.version,
       merkleRoot: result.data.merkleRoot,
+      tx: result.data.tx,
       immutableMerkleRoot: 'immutable',
       previousBlock: result.data.previousBlock,
       nextBlock: result.data.nextBlock,
@@ -47,95 +50,87 @@ class App extends React.Component {
   }
 
   render() {
-    const {
+
+    let {
       blockHash, ntx, height, timestamp, proof, sizeBytes, version,
-      merkleRoot, immutableMerkleRoot, previousBlock, nextBlock,
+      merkleRoot, tx, immutableMerkleRoot, previousBlock, nextBlock,
     } = this.state;
+
+    let pretender;
+    for(let i=0; i<ntx; i++){
+      pretender += JSON.stringify(tx[i].txid) + ' ';
+  }
+    
     return (
       <div className="App">
         <p>
-          <h2>
-BLOCK #
-            {height}
-            <button type="button" onClick={this.onclick}>Raw Data</button>
+          <h2>BLOCK #            {height}
+            <button type="button">Raw Data</button>
           </h2>
-          <h5>
-BLOCKHASH
-            {blockHash}
-
+          <h5>BLOCKHASH :             {blockHash}
           </h5>
-
           <table>
             <tbody>
               <tr>
                 <td>
-                  {' '}
-No. of Transaction :
+                  {' '}No. of Transaction :
                   {ntx}
                 </td>
               </tr>
               <tr>
                 <td>
-                  {' '}
-HEIGHT :
+                  {' '}HEIGHT :
                   {height}
                 </td>
               </tr>
               <tr>
-                <td>
-TIME :
+                <td>TIME :
                   {timestamp}
                 </td>
               </tr>
               <tr>
-                <td>
-PROOF :
+                <td>PROOF :
                   {proof}
                 </td>
               </tr>
               <tr>
-                <td>
-SIZE :
+                <td>SIZE :
                   {sizeBytes}
                 </td>
               </tr>
               <tr>
-                <td>
-VERSION :
+                <td>VERSION :
                   {version}
                 </td>
               </tr>
               <tr>
-                <td>
-MERKLEROOT :
+                <td>MERKLEROOT :
                   {merkleRoot}
                 </td>
               </tr>
               <tr>
-                <td>
-IMMUTABLEMERKLEROOT :
+                <td>IMMUTABLEMERKLEROOT :
                   {immutableMerkleRoot}
                 </td>
               </tr>
               <tr>
-                <td>
-PREVIOUSBLOCK :
+                <td>PREVIOUSBLOCK :
                   {previousBlock}
                 </td>
               </tr>
               <tr>
-                <td>
-NEXT BLOCK :
+                <td>NEXT BLOCK :
                   {nextBlock}
                 </td>
               </tr>
             </tbody>
           </table>
-
-          <h5>
-            <button type="button" onClick={this.onClick}>\/</button>
-          View All Transactions
-          </h5>
+          <button type="button">
+            <Link to={`/tx/$txid`}>View All Transactions</Link>
+          </button>
+          <br />
+          {/* tx  : {JSON.stringify(tx[0].txid)} */}
+          {pretender}
         </p>
       </div>
     );

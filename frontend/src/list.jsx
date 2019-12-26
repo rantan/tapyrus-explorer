@@ -34,7 +34,7 @@ class App extends React.Component {
     const result = await axios.get(`${'http://localhost:3001/api/list'}`, {
       params: {
         page: GetParams(),
-        column: 15,
+        column: 10,
       },
     });
     this.setState({
@@ -75,6 +75,18 @@ class App extends React.Component {
     return (
       <div className="App">
         <h1>LIST</h1>
+
+        <div align="left">
+          <button type="button">
+            <Link to={`/list?page=${Number(page) - 1}`}>Prev
+            </Link>
+          </button>
+          <button type="button">
+            <Link to={`/list?page=${Number(page) + 1}`}>Next
+            </Link>
+          </button>
+        </div>
+
         <table>
           <tbody>
             <td>BLOCKHASH</td>
@@ -84,19 +96,6 @@ class App extends React.Component {
             {list}
           </tbody>
         </table>
-
-        <div align="right">
-          <button type="button">
-            <Link to={`/list?page=${Number(page) - 1}`}>
-Prev
-            </Link>
-          </button>
-          <button type="button">
-            <Link to={`/list?page=${Number(page) + 1}`}>
-Next
-            </Link>
-          </button>
-        </div>
       </div>
     );
   }
