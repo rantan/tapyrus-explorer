@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import './index.css';
 import {
-  Link, Switch, Route,
+  Link,
 } from 'react-router-dom';
 
 class App extends React.Component {
@@ -56,7 +56,7 @@ class App extends React.Component {
     } = this.state;
 
     const pretender = new Array(ntx);
-    for (let i = 0; i < ntx; i++) {
+    for (let i = 0; i < ntx; i += 1) {
       pretender[i] = tx[i];
     }
 
@@ -64,17 +64,15 @@ class App extends React.Component {
       const {
         txid, vin, vout,
       } = i;
-      if(vin != null){
+      if (vin != null) {
         console.dir(vout);
         return (
           <tr>
             <td>{txid}</td>
-            {/* <td>{vin[0].txid == null ? "coinbase" : vin[0].txid}</td> */}
-            {/* <td>{vout[0].scriptPubKey.addresses[0]}</td> */}
 
             <td>
               {vin.map((j) => (
-                <div>{j.txid == null ? "coinbase" : j.txid}</div>
+                <div>{j.txid == null ? 'coinbase' : j.txid}</div>
               ))}
             </td>
 
@@ -168,7 +166,8 @@ NEXT BLOCK :
             </tbody>
           </table>
           <button type="button">
-            <Link to="/tx/$txid">View All Transactions</Link>
+            {/* <Link to="/tx/$txid">View All Transactions</Link> */}
+            View All Transactions
           </button>
 
           <table>
