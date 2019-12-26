@@ -50,7 +50,7 @@ class App extends React.Component {
     if (page !== GetParams()) {
       this.getBlockInfo();
     }
-
+    
     const list = data.map((i) => {
       const {
         hash, height, time, size,

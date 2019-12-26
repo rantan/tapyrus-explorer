@@ -50,87 +50,123 @@ class App extends React.Component {
   }
 
   render() {
-
-    let {
+    const {
       blockHash, ntx, height, timestamp, proof, sizeBytes, version,
       merkleRoot, tx, immutableMerkleRoot, previousBlock, nextBlock,
     } = this.state;
 
-    let pretender;
-    for(let i=0; i<ntx; i++){
-      pretender += JSON.stringify(tx[i].txid) + ' ';
-  }
-    
+    const pretender = new Array(ntx);
+    for (let i = 0; i < ntx; i++) {
+      pretender[i] = tx[i];
+    }
+
+    const list = pretender.map((i) => {
+      const {
+        txid, vin, vout,
+      } = i;
+      if(vin != null){
+        console.dir(vin);
+        return (
+          <tr>
+            <td>{txid}</td>
+            <td>{vin[0].txid == null && "coinbase" || vin[0].txid}</td>
+            <td>{vout[0].scriptPubKey.addresses[0]}</td>
+          </tr>
+        );
+      }
+    });
+
     return (
       <div className="App">
         <p>
-          <h2>BLOCK #            {height}
+          <h2>
+BLOCK #
+            {height}
             <button type="button">Raw Data</button>
           </h2>
-          <h5>BLOCKHASH :             {blockHash}
+          <h5>
+BLOCKHASH :
+            {blockHash}
           </h5>
           <table>
             <tbody>
               <tr>
                 <td>
-                  {' '}No. of Transaction :
+                  {' '}
+No. of Transaction :
                   {ntx}
                 </td>
               </tr>
               <tr>
                 <td>
-                  {' '}HEIGHT :
+                  {' '}
+HEIGHT :
                   {height}
                 </td>
               </tr>
               <tr>
-                <td>TIME :
+                <td>
+TIME :
                   {timestamp}
                 </td>
               </tr>
               <tr>
-                <td>PROOF :
+                <td>
+PROOF :
                   {proof}
                 </td>
               </tr>
               <tr>
-                <td>SIZE :
+                <td>
+SIZE :
                   {sizeBytes}
                 </td>
               </tr>
               <tr>
-                <td>VERSION :
+                <td>
+VERSION :
                   {version}
                 </td>
               </tr>
               <tr>
-                <td>MERKLEROOT :
+                <td>
+MERKLEROOT :
                   {merkleRoot}
                 </td>
               </tr>
               <tr>
-                <td>IMMUTABLEMERKLEROOT :
+                <td>
+IMMUTABLEMERKLEROOT :
                   {immutableMerkleRoot}
                 </td>
               </tr>
               <tr>
-                <td>PREVIOUSBLOCK :
+                <td>
+PREVIOUSBLOCK :
                   {previousBlock}
                 </td>
               </tr>
               <tr>
-                <td>NEXT BLOCK :
+                <td>
+NEXT BLOCK :
                   {nextBlock}
                 </td>
               </tr>
             </tbody>
           </table>
           <button type="button">
-            <Link to={`/tx/$txid`}>View All Transactions</Link>
+            <Link to="/tx/$txid">View All Transactions</Link>
           </button>
-          <br />
-          {/* tx  : {JSON.stringify(tx[0].txid)} */}
-          {pretender}
+
+          <table>
+            <tbody>
+              <td>TXID</td>
+              <td>input txid(input address)</td>
+              <td>output address</td>
+              {list}
+            </tbody>
+          </table>
+
         </p>
       </div>
     );
