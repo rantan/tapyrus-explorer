@@ -65,12 +65,25 @@ class App extends React.Component {
         txid, vin, vout,
       } = i;
       if(vin != null){
-        console.dir(vin);
+        console.dir(vout);
         return (
           <tr>
             <td>{txid}</td>
-            <td>{vin[0].txid == null && "coinbase" || vin[0].txid}</td>
-            <td>{vout[0].scriptPubKey.addresses[0]}</td>
+            {/* <td>{vin[0].txid == null ? "coinbase" : vin[0].txid}</td> */}
+            {/* <td>{vout[0].scriptPubKey.addresses[0]}</td> */}
+
+            <td>
+              {vin.map((j) => (
+                <div>{j.txid == null ? "coinbase" : j.txid}</div>
+              ))}
+            </td>
+
+            <td>
+              {vout.map((j) => (
+                <div>{j.scriptPubKey.addresses}</div>
+              ))}
+            </td>
+
           </tr>
         );
       }
