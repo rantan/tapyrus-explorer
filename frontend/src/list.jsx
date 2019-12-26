@@ -50,7 +50,7 @@ class App extends React.Component {
     if (page !== GetParams()) {
       this.getBlockInfo();
     }
-    
+
     const list = data.map((i) => {
       const {
         hash, height, time, size,
@@ -78,11 +78,13 @@ class App extends React.Component {
 
         <div align="left">
           <button type="button">
-            <Link to={`/list?page=${Number(page) - 1}`}>Prev
+            <Link to={`/list?page=${Number(page) - 1}`}>
+Prev
             </Link>
           </button>
           <button type="button">
-            <Link to={`/list?page=${Number(page) + 1}`}>Next
+            <Link to={`/list?page=${Number(page) + 1}`}>
+Next
             </Link>
           </button>
         </div>
