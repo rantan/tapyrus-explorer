@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 });
 
 function getBlock(blockHash) {
+  console.log('blockHash', blockHash)
   return cl.getBlock(blockHash);
 }
 
@@ -43,14 +44,19 @@ function internalByteOrder(hex) {
 
 async function getBlockchainInfo() {
   const result = await cl.getBlockchainInfo();
+  console.log('getBlockchainInfo:', result)
   return result.headers;
 }
 
 app.get('/list/:linesPerPage', (req, res) => {
+  console.log('list:', req.params)
   const linesPerPage = +req.params.linesPerPage;
 
   getBlockchainInfo().then((bestBlockHeight) => {
+    console.log("bestBlockHeight", bestBlockHeight, bestBlockHeight - linesPerPage + 1, linesPerPage);
     elect.request('blockchain.block.headers', [bestBlockHeight - linesPerPage + 1, linesPerPage, 0], async (err, rep) => {
+      console.log("rep", rep);
+      console.log("err", err);
       if (err) throw err;
 
       const headersHex = rep.result.hex;
@@ -58,6 +64,7 @@ app.get('/list/:linesPerPage', (req, res) => {
       const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
 
       const result = await Promise.all(promiseArray);
+      console.log(result)
       res.json(result);
     });
   });
