@@ -1,0 +1,39 @@
+ion-footer ion-toolbar {
+    --background: linear-gradient(#5398DA, #135EA8)
+}
+
+.footer-text {
+    font-size: 12px;
+    color: white;
+    margin: 0px !important;
+}
+
+.border-right {
+    border-right: 1px solid gray;
+}
+
+.circle-container {
+    display: flex;
+    justify-content: space-between;padding-left:15%;
+    padding-right:15%;
+}
+
+.circle {
+    background: white;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+.pt-5 {
+    padding-top: 5px;
+}
+
+.pt-6 {
+    padding-top: 6px;
+}
+
+.pt-8 {
+    padding-top: 8px;
+}
