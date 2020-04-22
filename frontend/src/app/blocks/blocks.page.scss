@@ -1,0 +1,31 @@
+ion-content {
+    --background: var(--ion-item-background, var(--ion-background-color, #E5E5E5)) !important;
+  }
+  
+  #table {
+      background-color: #FBFBFB;
+  }
+  
+  #table-header {
+      background-color:#F6F6F6;
+      ion-col {
+          color: #AAAAAA;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 16px;
+          letter-spacing: 0.02em;
+          padding: 15px 10px;
+      }
+  }
+  
+  .link-color {
+      color: #125FA8;
+  }
+  
+  .text-color {
+      color: #898989;
+  }
+  
+  .font-14 {
+      font-size: 14px;
+  }

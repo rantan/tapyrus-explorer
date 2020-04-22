@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { TransactionsPageRoutingModule } from './transactions-routing.module';
 
 import { TransactionsPage } from './transactions.page';
-import { SharedPipeModule } from '../modules/sharePipe.module';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { FooterComponent } from '../components/footer/footer.component';
 
 @NgModule({
@@ -16,9 +14,7 @@ import { FooterComponent } from '../components/footer/footer.component';
     CommonModule,
     FormsModule,
     IonicModule,
-    TransactionsPageRoutingModule,
-    SharedPipeModule,
-    NgxPaginationModule
+    TransactionsPageRoutingModule
   ],
   declarations: [TransactionsPage, FooterComponent]
 })

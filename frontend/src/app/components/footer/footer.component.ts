@@ -11,8 +11,8 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {}
 
-  goTo(url) {
-    var win = window.open(url, '_blank');
+  goTo(url: string) {
+    const win = window.open(url, '_blank');
     win.focus();
   }
 

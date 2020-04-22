@@ -1,9 +1,22 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>blocks</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-
+<ion-content class="ion-padding bg-light">
+  <div class="ion-padding" style="">
+    <ion-grid class="ion-padding" id="table">
+      <ion-row id="table-header">
+        <ion-col size="2">HEIGHT</ion-col>
+        <ion-col size="6">HASH</ion-col>
+        <ion-col size="2">TIME</ion-col>
+        <ion-col size="2">SIZE</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page }">
+        <ion-col size="2" class="font-14 link-color">{{ txn.height }}</ion-col>
+        <ion-col size="6" class="font-14 link-color" (click)="goToBlock()">{{ txn.hash }}</ion-col>
+        <ion-col size="2" class="font-14 text-color">{{ txn.time | momentFromNow }}</ion-col>
+        <ion-col  size="2" class="font-14 text-color">{{ txn.size }}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div class="ion-text-right">
+    <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
+  </div>
 </ion-content>
+<app-footer></app-footer>
