@@ -10,6 +10,7 @@ export class BlocksPage implements OnInit {
   perPage = 15;
   page = 1;
   transactions: any = [];
+  searchValue: string;
 
   constructor(
     private httpClient: HttpClient
@@ -54,6 +55,10 @@ export class BlocksPage implements OnInit {
 
   goToBlock() {
     console.log('goToBlock');
+  }
+
+  onSearch() {
+    console.log('onSearch', this.searchValue);
   }
 
 }

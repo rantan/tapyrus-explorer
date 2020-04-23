@@ -1,5 +1,23 @@
 <ion-content class="ion-padding bg-light">
-  <div class="ion-padding" style="">
+  <div class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2"></ion-col>
+      <ion-col size="6">
+        <ion-input class="bg-white" [(ngModel)]="searchValue" placeholder="Search address, transactions, blocks"></ion-input>
+      </ion-col>
+      <ion-col>
+        <ion-button color="primary" (click)="onSearch()">
+          <ion-icon name="search-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button color="light">
+          <img src="../assets/images/tapyrus-logo.png" height="30" width="30">
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
     <ion-grid class="ion-padding" id="table">
       <ion-row id="table-header">
         <ion-col size="2">HEIGHT</ion-col>
@@ -19,4 +37,3 @@
     <pagination-controls (pageChange)="onPageChange($event)"></pagination-controls>
   </div>
 </ion-content>
-<app-footer></app-footer>

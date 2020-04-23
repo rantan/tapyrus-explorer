@@ -10,7 +10,6 @@ import { BlocksPage } from './blocks.page';
 
 import { SharedPipeModule } from '../modules/sharePipe.module';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { FooterComponent } from '../components/footer/footer.component';
 
 @NgModule({
   imports: [
@@ -21,6 +20,6 @@ import { FooterComponent } from '../components/footer/footer.component';
     SharedPipeModule,
     NgxPaginationModule
   ],
-  declarations: [BlocksPage, FooterComponent]
+  declarations: [BlocksPage]
 })
 export class BlocksPageModule {}

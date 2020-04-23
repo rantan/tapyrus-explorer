@@ -11,9 +11,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedPipeModule } from './modules/sharePipe.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FooterComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
