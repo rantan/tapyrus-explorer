@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BlockPageRoutingModule } from './block-routing.module';
 
 import { BlockPage } from './block.page';
+import { BlockRawdataPage } from '../block-rawdata/block-rawdata.page';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { BlockPage } from './block.page';
     IonicModule,
     BlockPageRoutingModule
   ],
-  declarations: [BlockPage]
+  declarations: [BlockPage, BlockRawdataPage],
+  entryComponents: [BlockRawdataPage]
 })
 export class BlockPageModule {}

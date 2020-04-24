@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
-import { BlockPage } from '../block/block.page';
 
 @Component({
   selector: 'app-blocks',

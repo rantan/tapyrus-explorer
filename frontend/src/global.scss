@@ -33,3 +33,34 @@
 .pb-footer {
     --padding-bottom: 150px !important;
 }
+
+.bg-white {
+    --background: white !important;
+    background-color: white !important;
+}
+
+.link-color {
+    color: #125FA8 !important;
+}
+
+.text-color {
+    color: #898989 !important;
+}
+
+.font-14 {
+    font-size: 14px !important;
+}
+
+.font-w500 {
+    font-weight: 500 !important;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.raw-data-modal {
+    .modal-wrapper {
+        --height: 50% !important;
+    }
+}

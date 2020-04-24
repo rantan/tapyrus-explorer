@@ -18,6 +18,10 @@ const routes: Routes = [
   {
     path: 'transactions',
     loadChildren: () => import('./transactions/transactions.module').then( m => m.TransactionsPageModule)
+  },
+  {
+    path: 'block-rawdata',
+    loadChildren: () => import('./block-rawdata/block-rawdata.module').then( m => m.BlockRawdataPageModule)
   }
 ];
 

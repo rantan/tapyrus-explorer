@@ -45,3 +45,19 @@ app.get('/block/:blockHash', (req, res) => {
     res.json(output);
   });
 });
+
+app.get('/block/:blockHash/rawData', (req, res) => {
+  // bitcoin-cli getblock ${blockHash} 0
+  const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+  const urlBlockHash = req.params.blockHash;
+
+  if (!regex.test(urlBlockHash)) {
+    res.status(400).send('Bad request');
+    return;
+  }
+
+  cl.getBlock(urlBlockHash, 0).then((result) => {
+    res.json(result);
+  });
+  
+})
