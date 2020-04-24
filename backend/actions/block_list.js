@@ -47,14 +47,17 @@ async function getBlockchainInfo() {
 }
 
 app.get('/list', (req, res) => {
-  const perPage = Number(req.query.perPage);
-  const page = Number(req.query.page);
-  console.log('page', page, perPage);
+  var perPage = Number(req.query.perPage);
+  var page = Number(req.query.page);
 
   getBlockchainInfo().then((bestBlockHeight) => {
-    console.log("bestBlockHeight", bestBlockHeight, bestBlockHeight - perPage*page + 1, perPage);
-    // blockchain.block.headers [getBlockHeightFrom, perPage, cpHeight]
-    elect.request('blockchain.block.headers', [bestBlockHeight - perPage*page + 1, perPage, 0], async (err, rep) => {
+    var startFromBlock = bestBlockHeight - perPage*page + 1;
+    if(Math.sign(startFromBlock) == -1) {
+      //if last page's remainder should use different value of startFromBlock and perPage
+      startFromBlock = bestBlockHeight%perPage;
+      perPage = bestBlockHeight%perPage;
+    }
+    elect.request('blockchain.block.headers', [startFromBlock, perPage, 0], async (err, rep) => {
       if (err) throw err;
 
       const headersHex = rep.result.hex;
@@ -62,7 +65,10 @@ app.get('/list', (req, res) => {
       const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
 
       const result = await Promise.all(promiseArray);
-      res.json(result);
+      res.json({
+        results: result,
+        bestHeight: bestBlockHeight
+      });
     });
   });
 });

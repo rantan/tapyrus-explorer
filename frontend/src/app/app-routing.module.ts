@@ -12,6 +12,10 @@ const routes: Routes = [
     loadChildren: () => import('./blocks/blocks.module').then( m => m.BlocksPageModule)
   },
   {
+    path: 'blocks/:hash',
+    loadChildren: () => import('./block/block.module').then( m => m.BlockPageModule)
+  },
+  {
     path: 'transactions',
     loadChildren: () => import('./transactions/transactions.module').then( m => m.TransactionsPageModule)
   }
