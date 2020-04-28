@@ -13,6 +13,11 @@ export class BlockPage implements OnInit {
 
   blockHash: string;
   block: any = {};
+  blockTxns: any = {};
+  openTxns = false;
+
+  txConfirmation: number;
+  txTime: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -52,4 +57,47 @@ export class BlockPage implements OnInit {
     return await modal.present();
   }
 
+  getBlockTxnsInfo() {
+    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/txns`).subscribe(
+      data => {
+        console.log(data);
+        this.blockTxns = data || {};
+        this.txConfirmation = this.blockTxns.confirmations;
+        this.txTime = this.blockTxns.time;
+        this.openTxns = true;
+        this.calculateVoutTotalAndFee();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  closeTxns() {
+    this.openTxns = false;
+  }
+
+  async calculateVoutTotalAndFee() {
+    await this.blockTxns.tx.forEach(tx => {
+      let voutValue = 0;
+      let vinValue = 0;
+      for (const vout of tx.vout) {
+        if (vout.value) {
+          voutValue += vout.value;
+        }
+      }
+      for (const vin of tx.vinRaw) {
+        if (vin && vin.vout) {
+          for (const vout of vin.vout) {
+            if (vout && vout.value) {
+              vinValue += vout.value;
+            }
+          }
+        }
+      }
+      tx.totalVout = voutValue;
+      tx.totalVin = vinValue;
+      tx.totalFee = vinValue - voutValue;
+    });
+  }
 }

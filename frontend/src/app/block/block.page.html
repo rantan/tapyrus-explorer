@@ -10,7 +10,7 @@
       <div id="block-hash-bg" class="font-14">
         BlockHash <p class="text-color" id="block-hash-text">{{ block.blockHash }}</p>
       </div>
-      <hr/>
+      <ion-item-divider></ion-item-divider>
       <ion-grid class="font-14 text-color">
         <ion-row>
           <ion-col size="4" class="font-w500">No. of Transactions:</ion-col>
@@ -57,8 +57,72 @@
 
     <div class="bg-white ion-padding ion-margin-top">
       <div class="flex">
-        <ion-icon  size="large" name="chevron-down-circle-outline" id="arrow-icon"></ion-icon>
+        <ion-icon size="large" name="chevron-down-circle-outline" id="arrow-icon" *ngIf="!openTxns" (click)="getBlockTxnsInfo()"></ion-icon>
+        <ion-icon size="large" name="chevron-up-circle-outline" id="arrow-icon" *ngIf="openTxns" (click)="closeTxns()"></ion-icon>
         <p id="transactions-header">View Transactions</p>
+      </div>
+    </div>
+
+    <div *ngIf="openTxns">
+      <div class="bg-white ion-padding ion-margin-bottom" *ngFor="let tx of blockTxns.tx;">
+        <ion-row>
+          <ion-col size="1">
+            <ion-icon name="add-circle" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col size="7" class="ion-text-left">
+            <div class="text-primary" class="pl-5">{{ tx.hash }}</div>
+          </ion-col>
+          <ion-col size="4" class="ion-text-right">
+            <div>Verified: {{ txTime * 1000 | date: 'MMM dd, yyyy hh:mm:ss' }}</div>
+          </ion-col>   
+          <!-- {{ tx.time }} -->
+        </ion-row>
+  
+        <ion-grid>
+          <ion-row class="word-break">
+            <ion-col size="5">
+              <div *ngFor="let vin of tx.vinRaw; let i=index;">
+                <div *ngIf="tx.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
+                <div *ngIf="!tx.vin[i].coinbase">
+                  <div *ngFor="let vout of vin.vout" class="mb-5">
+                    <ion-row *ngFor="let add of vout.scriptPubKey.addresses" class="vin-vout-input">
+                      <ion-col size="8" class="ion-no-margin text-primary">{{ add }}</ion-col>
+                      <ion-col size="4" class="ion-no-margin ion-text-right text-gray">{{ vout.value }} TPC</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="2" class="ion-text-center">
+              <ion-icon name="arrow-forward" size="large"></ion-icon>
+            </ion-col>
+            <ion-col size="5">
+              <div *ngFor="let vout of tx.vout" class="mb-5">
+                <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
+                  <ion-col size="8"  class="text-primary">{{ add }}</ion-col>
+                  <ion-col size="4" class="ion-text-right text-gray">{{ vout.value }} TPC(s)</ion-col>
+                </ion-row >
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
+
+          <ion-row>
+            <ion-col size="4">
+              <ion-button class="btn-gray" *ngIf="tx.totalFee > 0">
+                FEE: {{ tx.totalFee }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="8" class="ion-text-end">
+              <ion-button class="btn-gray">
+                {{ txConfirmation }} CONFIRMATIONS
+              </ion-button>
+              <ion-button color="primary">
+                {{ tx.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
     </div>
   </div>

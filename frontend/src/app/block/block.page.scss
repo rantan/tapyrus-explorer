@@ -33,3 +33,33 @@ ion-content {
     margin-top: 6px;
     margin-right: 20px;
 }
+
+.text-primary {
+    color: var(--ion-color-primary) !important;
+}
+
+.word-break {
+    word-break: break-all !important;
+}
+
+.btn-gray {
+    --background: #BFBFBF !important;
+    --color: white;
+}
+
+.vin-vout-input {
+    background-color: #EBEBEB;
+    padding: 8px;
+}
+
+.text-gray {
+    color: #898989;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.pl-5 {
+    padding-left: 5px;
+}
