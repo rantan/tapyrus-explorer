@@ -13,6 +13,7 @@ export class BlocksPage implements OnInit {
   pages = 1; // number of pages
   transactions: any = [];
   searchValue: string;
+  bestHeight = 0;
 
   constructor(
     private httpClient: HttpClient,
@@ -24,7 +25,7 @@ export class BlocksPage implements OnInit {
   }
 
   getBlockLists() {
-    this.httpClient.get('http://localhost:3001/list', {
+    this.httpClient.get('http://localhost:3001/blocks', {
       params: new HttpParams({
         fromObject: {
           page: this.page.toString(),
@@ -36,7 +37,8 @@ export class BlocksPage implements OnInit {
         const resultData: any = data || {};
         const txnsData: any = resultData.results || [];
         this.transactions = txnsData.sort(this.compareHeight);
-        this.calculatePagination(resultData.bestHeight);
+        this.bestHeight = resultData.bestHeight;
+        this.calculatePagination();
       },
       err => {
         console.log(err);
@@ -53,7 +55,6 @@ export class BlocksPage implements OnInit {
   }
 
   onPageChange(pageNumber: number) {
-    console.log(pageNumber);
     this.page = pageNumber;
     this.getBlockLists();
   }
@@ -63,8 +64,8 @@ export class BlocksPage implements OnInit {
     this.getBlockLists();
   }
 
-  calculatePagination(bestHeight: number) {
-    this.pages = Math.ceil(bestHeight / this.perPage);
+  calculatePagination() {
+    this.pages = Math.ceil(this.bestHeight / this.perPage);
   }
 
   goToBlock(hash: string) {

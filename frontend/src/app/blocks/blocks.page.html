@@ -25,7 +25,7 @@
         <ion-col size="2">TIME</ion-col>
         <ion-col size="2">SIZE</ion-col>
       </ion-row>
-      <ion-row *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: 101 }">
+      <ion-row class="table-border-bottom" *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: bestHeight }">
         <ion-col size="2" class="font-14 link-color" (click)="goToBlock(txn.hash)">{{ txn.height }}</ion-col>
         <ion-col size="6" class="font-14 link-color" (click)="goToBlock(txn.hash)">{{ txn.hash }}</ion-col>
         <ion-col size="2" class="font-14 text-color">{{ txn.time | momentFromNow }}</ion-col>

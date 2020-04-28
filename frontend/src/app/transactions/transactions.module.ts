@@ -7,13 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { TransactionsPageRoutingModule } from './transactions-routing.module';
 
 import { TransactionsPage } from './transactions.page';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedPipeModule } from '../modules/sharePipe.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TransactionsPageRoutingModule
+    TransactionsPageRoutingModule,
+    SharedPipeModule,
+    NgxPaginationModule
   ],
   declarations: [TransactionsPage]
 })

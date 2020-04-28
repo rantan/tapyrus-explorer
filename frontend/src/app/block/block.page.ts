@@ -60,7 +60,6 @@ export class BlockPage implements OnInit {
   getBlockTxnsInfo() {
     this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/txns`).subscribe(
       data => {
-        console.log(data);
         this.blockTxns = data || {};
         this.txConfirmation = this.blockTxns.confirmations;
         this.txTime = this.blockTxns.time;

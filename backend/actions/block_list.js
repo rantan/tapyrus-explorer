@@ -46,7 +46,7 @@ async function getBlockchainInfo() {
   return result.headers;
 }
 
-app.get('/list', (req, res) => {
+app.get('/blocks', (req, res) => {
   var perPage = Number(req.query.perPage);
   var page = Number(req.query.page);
 
@@ -71,4 +71,31 @@ app.get('/list', (req, res) => {
       });
     });
   });
+});
+
+app.get('/transactions', (req, res) => {
+  // List transactions 100 to 120
+  // bitcoin-cli listtransactions "*" 20 100
+  // bitcoin-cli getchaintxstats
+  var perPage = Number(req.query.perPage);
+  var page = Number(req.query.page);
+
+  cl.command([
+    { 
+      method: 'listtransactions', 
+      parameters: {
+        dummy: "*",
+        count: perPage,
+        skip: page*perPage
+      }
+    }, {
+      method: 'getchaintxstats'
+    }
+  ]).then((responses) => {
+    res.json({
+      transactions: responses[0],
+      txStats: responses[1]
+    });
+  });
+
 });
