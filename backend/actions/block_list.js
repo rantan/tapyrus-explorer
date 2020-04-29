@@ -99,3 +99,27 @@ app.get('/transactions', (req, res) => {
   });
 
 });
+
+app.get('/transaction/:txid/rawData', (req, res) => {
+  // bitcoin-cli getblock ${blockHash} 0
+  const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+  const urlTxid = req.params.txid;
+
+  if (!regex.test(urlTxid)) {
+    res.status(400).send('Bad request');
+    return;
+  }
+
+  cl.command([
+    { 
+      method: 'getrawtransaction', 
+      parameters: {
+        txid: urlTxid,
+      }
+    }
+  ]).then((responses) => {
+    res.json(responses[0]);
+  });
+  
+})
+

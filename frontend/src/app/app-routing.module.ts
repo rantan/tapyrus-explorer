@@ -16,12 +16,20 @@ const routes: Routes = [
     loadChildren: () => import('./block/block.module').then( m => m.BlockPageModule)
   },
   {
+    path: 'block-rawdata',
+    loadChildren: () => import('./block-rawdata/block-rawdata.module').then( m => m.BlockRawdataPageModule)
+  },
+  {
     path: 'transactions',
     loadChildren: () => import('./transactions/transactions.module').then( m => m.TransactionsPageModule)
   },
   {
-    path: 'block-rawdata',
-    loadChildren: () => import('./block-rawdata/block-rawdata.module').then( m => m.BlockRawdataPageModule)
+    path: 'transactions/:txid',
+    loadChildren: () => import('./transaction/transaction.module').then( m => m.TransactionPageModule)
+  },
+  {
+    path: 'transaction-rawdata',
+    loadChildren: () => import('./transaction-rawdata/transaction-rawdata.module').then( m => m.TransactionRawdataPageModule)
   }
 ];
 
