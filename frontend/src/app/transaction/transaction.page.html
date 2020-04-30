@@ -1,9 +1,95 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>transaction</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="pb-footer">
+  <div class="ion-padding">
+    <div class="bg-white ion-padding">
+      <div class="flex">
+        <ion-icon  size="large" name="chevron-back-circle-outline" id="arrow-icon" (click)="goToTransactions()"></ion-icon>
+        <p id="block-header-text">Transaction Details</p>
+        <ion-button color="primary" size="small" id="raw-data-btn" (click)="goToTransactionRawData()">Raw Data</ion-button>
+      </div>
+      <div id="block-hash-bg" class="font-14">
+        TXID <p class="text-color" id="block-hash-text">{{ transaction.txid }}</p>
+      </div>
+      <ion-item-divider></ion-item-divider>
+      <ion-grid class="font-14 text-color">
+        <ion-row>
+          <ion-col size="4" class="font-w500">Size(Bytes):</ion-col>
+          <ion-col size="8">{{ transaction.size }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Received Time:</ion-col>
+          <ion-col size="8">{{ transaction.time }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Lock Time:</ion-col>
+          <ion-col size="8">{{ transaction.locktime }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Verified Time:</ion-col>
+          <ion-col size="8">{{ transaction.blocktime }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
-<ion-content>
-  <ion-button color="primary" size="small" id="raw-data-btn" (click)="goToTransactionRawData()">Raw Data</ion-button>
+    <div>
+      <div class="bg-white ion-padding ion-margin-bottom">
+        <ion-row>
+          <ion-col size="1">
+            <ion-icon name="add-circle" color="primary"></ion-icon>
+          </ion-col>
+          <ion-col size="7" class="ion-text-left">
+            <div class="text-primary" class="pl-5">{{ transaction.txid }}</div>
+          </ion-col>
+          <ion-col size="4" class="ion-text-right">
+            <div>Verified: {{ transaction.blocktime * 1000 | date: 'MMM dd, yyyy hh:mm:ss' }}</div>
+          </ion-col>   
+        </ion-row>
+  
+        <ion-grid>
+          <ion-row class="word-break">
+            <ion-col size="5">
+              <div *ngFor="let vin of transaction.vinRaw; let i=index;">
+                <div *ngIf="transaction.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
+                <div *ngIf="!transaction.vin[i].coinbase">
+                  <div *ngFor="let vout of vin.vout" class="mb-5">
+                    <ion-row *ngFor="let add of vout.scriptPubKey.addresses" class="vin-vout-input">
+                      <ion-col size="8" class="ion-no-margin text-primary">{{ add }}</ion-col>
+                      <ion-col size="4" class="ion-no-margin ion-text-right text-gray">{{ vout.value }} TPC</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="2" class="ion-text-center">
+              <ion-icon name="arrow-forward" size="large"></ion-icon>
+            </ion-col>
+            <ion-col size="5">
+              <div *ngFor="let vout of transaction.vout" class="mb-5">
+                <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
+                  <ion-col size="8"  class="text-primary">{{ add }}</ion-col>
+                  <ion-col size="4" class="ion-text-right text-gray">{{ vout.value }} TPC(s)</ion-col>
+                </ion-row >
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
+
+          <ion-row>
+            <ion-col size="4">
+              <ion-button class="btn-gray" *ngIf="transaction.totalFee > 0">
+                FEE: {{ transaction.totalFee }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="8" class="ion-text-end">
+              <ion-button class="btn-gray">
+                {{ transaction.confirmations }} CONFIRMATIONS
+              </ion-button>
+              <ion-button color="primary">
+                {{ transaction.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+  </div>
 </ion-content>

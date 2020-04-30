@@ -75,7 +75,6 @@ app.get('/block/:blockHash/txns', (req, res) => {
   cl.getBlock(urlBlockHash, 2).then(async (result) => {
     var data = result;
     for(var tx of data.tx) {
-      // let res = [];
       let res = [];
       for(var vin of tx.vin) {
         if(vin.txid) {

@@ -11,6 +11,7 @@ import { TransactionRawdataPage } from '../transaction-rawdata/transaction-rawda
 })
 export class TransactionPage implements OnInit {
   txid: string;
+  transaction: any = {};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -21,12 +22,48 @@ export class TransactionPage implements OnInit {
 
   ngOnInit() {
     this.txid = this.activatedRoute.snapshot.paramMap.get('txid');
-    console.log(this.txid)
     this.getTransactionInfo();
   }
 
   getTransactionInfo() {
+    this.httpClient.get(`http://localhost:3001/transaction/${this.txid}`).subscribe(
+      data => {
+        this.transaction = data || {};
+        this.calculateTxSize();
+        this.calculateVoutTotalAndFee();
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
+  calculateTxSize() {
+    const vin = this.transaction.vin.length;
+    const vout = this.transaction.vout.length;
+    this.transaction.size = 148 * vin + 34 * vout + 10;
+  }
+
+  async calculateVoutTotalAndFee() {
+    let voutValue = 0;
+    let vinValue = 0;
+    for (const vout of this.transaction.vout) {
+      if (vout.value) {
+        voutValue += vout.value;
+      }
+    }
+    for (const vin of this.transaction.vinRaw) {
+      if (vin && vin.vout) {
+        for (const vout of vin.vout) {
+          if (vout && vout.value) {
+            vinValue += vout.value;
+          }
+        }
+      }
+    }
+    this.transaction.totalVout = voutValue;
+    this.transaction.totalVin = vinValue;
+    this.transaction.totalFee = vinValue - voutValue;
   }
 
   goToTransactions() {

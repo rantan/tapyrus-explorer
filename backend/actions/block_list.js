@@ -100,6 +100,50 @@ app.get('/transactions', (req, res) => {
 
 });
 
+app.get('/transaction/:txid', (req, res) => {
+  const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+  const urlTxid = req.params.txid;
+
+  if (!regex.test(urlTxid)) {
+    res.status(400).send('Bad request');
+    return;
+  }
+
+  cl.command([
+    { 
+      method: 'getrawtransaction', 
+      parameters: {
+        txid: urlTxid,
+        verbose: true
+      }
+    }
+  ]).then(async (responses) => {
+    let results = [];
+    let response = responses[0]
+    for(var vin of response.vin) {
+      if(vin.txid) {
+        await cl.command([
+          { 
+            method: 'getrawtransaction', 
+            parameters: {
+              txid: vin.txid,
+              verbose: true
+            }
+          }
+        ]).then((responses) => {
+          results.push(responses[0]);
+        });
+      } else {
+        results.push({});
+      }
+    }
+    response.vinRaw = results;
+    console.log(response.vinRaw)
+    res.json(response);
+  });
+
+});
+
 app.get('/transaction/:txid/rawData', (req, res) => {
   // bitcoin-cli getblock ${blockHash} 0
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
