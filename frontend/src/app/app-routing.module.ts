@@ -30,6 +30,10 @@ const routes: Routes = [
   {
     path: 'transaction-rawdata',
     loadChildren: () => import('./transaction-rawdata/transaction-rawdata.module').then( m => m.TransactionRawdataPageModule)
+  },
+  {
+    path: 'addresses/:address',
+    loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
   }
 ];
 

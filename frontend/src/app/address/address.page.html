@@ -1,0 +1,40 @@
+<ion-content class="pb-footer">
+  <div class="ion-padding">
+    <div class="bg-white ion-padding">
+    <ion-row>
+      <ion-col size="8">
+        <div class="flex">
+          <ion-icon  size="large" name="chevron-back-circle-outline" id="arrow-icon" (click)="goToBlocks()"></ion-icon>
+          <p id="block-header-text">Address</p>
+          <p>{{ address }}</p>
+          <ion-icon name="copy-outline" color="primary" style="margin:16px 2px;" id="copy-icon"></ion-icon>
+        </div>
+        <div id="block-hash-bg" class="font-14">
+          Balance <p class="text-color" id="block-hash-text">{{ block.blockHash }} TPC</p>
+        </div>
+      </ion-col>
+      <ion-col size="4" class="ion-text-end">
+        <ngx-qrcode
+          [(qrc-value)]="address"
+          qrc-element-type="url"
+        ></ngx-qrcode>
+      </ion-col>
+    </ion-row>
+      <ion-item-divider></ion-item-divider>
+      <ion-grid class="font-14 text-color">
+        <ion-row>
+          <ion-col size="4" class="font-w500">Total Received:</ion-col>
+          <ion-col size="8">{{ block.ntx }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Total Sent:</ion-col>
+          <ion-col size="8">{{ block.height }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">No. Transactions:</ion-col>
+          <ion-col size="8">{{ block.timestamp }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+</ion-content>

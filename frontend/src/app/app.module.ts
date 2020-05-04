@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedPipeModule } from './modules/sharePipe.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FooterComponent } from './components/footer/footer.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 @NgModule({
   declarations: [AppComponent, FooterComponent],
@@ -22,7 +23,8 @@ import { FooterComponent } from './components/footer/footer.component';
     AppRoutingModule,
     HttpClientModule,
     SharedPipeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgxQRCodeModule
   ],
   providers: [
     StatusBar,

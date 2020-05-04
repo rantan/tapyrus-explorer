@@ -72,7 +72,32 @@
             </ion-col>
           </ion-row>
           <ion-item-divider></ion-item-divider>
-
+          <ion-row class="word-break ion-margin-top">
+            <ion-col size="5">
+              <b>Input Scripts: </b><br/><br/>
+              <div *ngFor="let vin of transaction.vin; let i=index;">
+                <div>
+                  <div class="mb-5">
+                    <ion-row class="vin-vout-input">
+                      <ion-col class="ion-no-margin text-primary">{{ vin.scriptSig.asm }}</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="2" class="ion-text-center ion-margin-top">
+              <ion-icon name="arrow-forward" size="large"></ion-icon>
+            </ion-col>
+            <ion-col size="5" class="word-break ion-margin-top">
+              <b>Output Scripts: </b><br/><br/>
+              <div *ngFor="let vout of transaction.vout" class="mb-5">
+                <ion-row class="vin-vout-input">
+                  <ion-col class="text-primary">{{ vout.scriptPubKey.asm }}</ion-col>
+                </ion-row >
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
           <ion-row>
             <ion-col size="4">
               <ion-button class="btn-gray" *ngIf="transaction.totalFee > 0">
