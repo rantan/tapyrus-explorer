@@ -93,3 +93,72 @@ ion-item.selected {
   bottom: 0px;
   width: 100%;
 }
+
+.mt-56 {
+  margin-top: 56px;
+}
+
+.display-none-min-lg {
+  @media (min-width: 992px) {
+    display: none;
+  }
+}
+
+.display-none-max-lg {
+  @media (max-width: 991px) {
+    display: none;
+  }
+}
+
+.mt-56-max-lg {
+  @media (max-width: 991px) {
+    margin-top: 56px;
+  }
+}
+
+.circle-container {
+  display: flex;
+}
+
+.circle {
+  background: white;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+}
+
+.pt-5 {
+  padding-top: 5px;
+}
+
+.pt-6 {
+  padding-top: 6px;
+}
+
+.pt-8 {
+  padding-top: 8px;
+}
+
+#menu-tapyrus-logo {
+  margin-left: -20px;
+}
+
+.border-white {
+  border-top: 1px solid white;
+  margin: 30px 0px;
+}
+
+.powered-text {
+  font-size: 12px;
+}
+
+.copyright-text {
+  font-size: 10px;
+}
+
+.absolute-bottom {
+  position: absolute;
+  bottom: 0px;
+  width: 100%
+}
