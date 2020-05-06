@@ -6,7 +6,7 @@
         <p id="block-header-text">Transaction Details</p>
         <ion-button color="primary" size="small" id="raw-data-btn" (click)="goToTransactionRawData()">Raw Data</ion-button>
       </div>
-      <div id="block-hash-bg" class="font-14">
+      <div id="block-hash-bg" class="font-14 text-wrap">
         TXID <p class="text-color" id="block-hash-text">{{ transaction.txid }}</p>
       </div>
       <ion-item-divider></ion-item-divider>
@@ -31,7 +31,7 @@
     </div>
 
     <div>
-      <div class="bg-white ion-padding ion-margin-bottom">
+      <div class="bg-white ion-padding ion-margin-bottom ion-margin-top">
         <ion-row>
           <ion-col size="1">
             <ion-icon name="add-circle" color="primary"></ion-icon>
@@ -79,7 +79,7 @@
                 <div>
                   <div class="mb-5">
                     <ion-row class="vin-vout-input">
-                      <ion-col class="ion-no-margin text-primary">{{ vin.scriptSig.asm }}</ion-col>
+                      <ion-col class="ion-no-margin text-primary" *ngIf="vin.scriptSig">{{ vin.scriptSig.asm }}</ion-col>
                     </ion-row>
                   </div>
                 </div>

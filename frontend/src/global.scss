@@ -59,8 +59,14 @@
     display: flex !important;
 }
 
-.raw-data-modal {
-    .modal-wrapper {
-        --height: 50% !important;
+.raw-data-modal {    @media (max-width: 575px) {
+    ion-content {
+        --background: transparent !important;
+    }
+}
+    @media (min-width: 992px) {
+        .modal-wrapper {
+            --height: 50% !important;
+        }
     }
 }

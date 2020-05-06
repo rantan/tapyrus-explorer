@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NavParams } from '@ionic/angular';
+import { NavParams, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -15,7 +15,8 @@ export class BlockRawdataPage implements OnInit {
 
   constructor(
     private navParams: NavParams,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -52,6 +53,10 @@ export class BlockRawdataPage implements OnInit {
     }
 
     document.body.removeChild(textArea);
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 
 }

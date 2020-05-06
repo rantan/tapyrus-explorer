@@ -21,3 +21,9 @@ ion-content {
 .table-border-bottom {
     border-bottom: 1px solid #F6F6F6;
 }
+
+.display-none-max-md {
+    @media (max-width: 768px) {
+        display: none;
+    }  
+}
