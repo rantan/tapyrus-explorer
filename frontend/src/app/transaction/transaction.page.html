@@ -46,7 +46,7 @@
   
         <ion-grid>
           <ion-row class="word-break">
-            <ion-col size="5">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vin of transaction.vinRaw; let i=index;">
                 <div *ngIf="transaction.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
                 <div *ngIf="!transaction.vin[i].coinbase">
@@ -59,10 +59,11 @@
                 </div>
               </div>
             </ion-col>
-            <ion-col size="2" class="ion-text-center">
-              <ion-icon name="arrow-forward" size="large"></ion-icon>
+            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center">
+              <ion-icon name="arrow-forward" size="large" class="display-none-max-md"></ion-icon>
+              <ion-icon name="chevron-down-outline" size="large" class="display-none-min-md"></ion-icon>
             </ion-col>
-            <ion-col size="5">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vout of transaction.vout" class="mb-5">
                 <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
                   <ion-col size="8"  class="text-primary">{{ add }}</ion-col>
@@ -73,7 +74,7 @@
           </ion-row>
           <ion-item-divider></ion-item-divider>
           <ion-row class="word-break ion-margin-top">
-            <ion-col size="5">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
               <b>Input Scripts: </b><br/><br/>
               <div *ngFor="let vin of transaction.vin; let i=index;">
                 <div>
@@ -85,10 +86,10 @@
                 </div>
               </div>
             </ion-col>
-            <ion-col size="2" class="ion-text-center ion-margin-top">
+            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center display-none-max-md ion-margin-top">
               <ion-icon name="arrow-forward" size="large"></ion-icon>
             </ion-col>
-            <ion-col size="5" class="word-break ion-margin-top">
+            <ion-col size-xs="12" size-sm="12" size-md="5" class="word-break ion-margin-top">
               <b>Output Scripts: </b><br/><br/>
               <div *ngFor="let vout of transaction.vout" class="mb-5">
                 <ion-row class="vin-vout-input">
@@ -98,7 +99,7 @@
             </ion-col>
           </ion-row>
           <ion-item-divider></ion-item-divider>
-          <ion-row>
+          <ion-row class="display-none-max-md">
             <ion-col size="4">
               <ion-button class="btn-gray" *ngIf="transaction.totalFee > 0">
                 FEE: {{ transaction.totalFee }} TPC
@@ -110,6 +111,24 @@
               </ion-button>
               <ion-button color="primary">
                 {{ transaction.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="display-none-min-md">
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray">
+                {{ transaction.confirmations }} CONFIRMATIONS
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary">
+                {{ transaction.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray" *ngIf="transaction.totalFee > 0">
+                FEE: {{ transaction.totalFee }} TPC
               </ion-button>
             </ion-col>
           </ion-row>

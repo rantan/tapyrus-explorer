@@ -3,7 +3,7 @@
     <ion-grid>
       <ion-row>
         <ion-col offset-md="2" offset-sm="2" size-md="6" size-sm="8">
-          <ion-input class="bg-white" [(ngModel)]="searchValue" placeholder="Search address, transactions, blocks"></ion-input>
+          <ion-input class="bg-white" [(ngModel)]="searchValue" placeholder="Search hash"></ion-input>
         </ion-col>
         <ion-col class="ion-no-padding" size="2">
           <ion-button color="primary" (click)="onSearch()">
@@ -23,11 +23,11 @@
         <ion-col size="2">TIME</ion-col>
         <ion-col size="2">SIZE</ion-col>
       </ion-row>
-      <ion-row class="table-border-bottom" *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: bestHeight }">
-        <ion-col size="2" class="font-14 link-color" (click)="goToBlock(txn.hash)">{{ txn.height }}</ion-col>
-        <ion-col size="6" class="font-14 link-color" (click)="goToBlock(txn.hash)">{{ txn.hash }}</ion-col>
-        <ion-col size="2" class="font-14 text-color">{{ txn.time | momentFromNow }}</ion-col>
-        <ion-col  size="2" class="font-14 text-color">{{ txn.size }}</ion-col>
+      <ion-row class="table-border-bottom" *ngFor="let block of blocks | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: bestHeight }">
+        <ion-col size="2" class="font-14 link-color" (click)="goToBlock(block.hash)">{{ block.height }}</ion-col>
+        <ion-col size="6" class="font-14 link-color" (click)="goToBlock(block.hash)">{{ block.hash }}</ion-col>
+        <ion-col size="2" class="font-14 text-color">{{ block.time | momentFromNow }}</ion-col>
+        <ion-col  size="2" class="font-14 text-color">{{ block.size }}</ion-col>
       </ion-row>
     </ion-grid>
   </div>

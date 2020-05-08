@@ -75,3 +75,31 @@ ion-content {
 .text-wrap {
     word-break: break-all;
 }
+
+.display-none-min-lg {
+    @media (min-width: 992px) {
+      display: none;
+    }
+}
+  
+.display-none-max-lg {
+    @media (max-width: 991px) {
+      display: none;
+    }
+}
+
+.display-none-min-md {
+    @media (min-width: 768px) {
+        display: none;
+    }
+}
+
+.display-none-max-md {
+    @media (max-width: 767px) {
+        display: none;
+    }
+}
+
+.font-24 {
+    font-size: 24px;
+}

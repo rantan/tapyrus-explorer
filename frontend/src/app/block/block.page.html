@@ -55,12 +55,26 @@
       </ion-grid>
     </div>
 
-    <div class="bg-white ion-padding ion-margin-top">
+    <div class="bg-white ion-padding ion-margin-top display-none-max-lg">
       <div class="flex">
         <ion-icon size="large" name="chevron-down-circle-outline" id="arrow-icon" *ngIf="!openTxns" (click)="getBlockTxnsInfo()"></ion-icon>
         <ion-icon size="large" name="chevron-up-circle-outline" id="arrow-icon" *ngIf="openTxns" (click)="closeTxns()"></ion-icon>
         <p id="transactions-header">View Transactions</p>
       </div>
+    </div>
+
+    <div class="ion-text-right display-none-min-lg" *ngIf="!openTxns">
+      <p id="transactions-header">
+        <u class="ion-margin-right">View All Transactions</u>
+        <ion-icon class="font-24" color="primary" name="chevron-forward-circle-outline" id="arrow-icon" (click)="getBlockTxnsInfo()"></ion-icon>
+      </p>
+    </div>
+
+    <div class="display-none-min-lg" *ngIf="openTxns">
+      <p id="transactions-header">
+        <ion-icon class="font-24" color="danger"  name="chevron-back-circle-outline" id="arrow-icon" (click)="closeTxns()"></ion-icon>
+        <u class="ion-margin-right">Close All Transactions</u>
+      </p>
     </div>
 
     <div *ngIf="openTxns">
@@ -80,7 +94,7 @@
   
         <ion-grid>
           <ion-row class="word-break">
-            <ion-col size="5">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vin of tx.vinRaw; let i=index;">
                 <div *ngIf="tx.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
                 <div *ngIf="!tx.vin[i].coinbase">
@@ -93,10 +107,11 @@
                 </div>
               </div>
             </ion-col>
-            <ion-col size="2" class="ion-text-center">
-              <ion-icon name="arrow-forward" size="large"></ion-icon>
+            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center">
+              <ion-icon name="arrow-forward" size="large" class="display-none-max-md"></ion-icon>
+              <ion-icon name="chevron-down-outline" size="large" class="display-none-min-md"></ion-icon>
             </ion-col>
-            <ion-col size="5">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vout of tx.vout" class="mb-5">
                 <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
                   <ion-col size="8"  class="text-primary">{{ add }}</ion-col>
@@ -107,7 +122,7 @@
           </ion-row>
           <ion-item-divider></ion-item-divider>
 
-          <ion-row>
+          <ion-row class="display-none-max-md">
             <ion-col size="4">
               <ion-button class="btn-gray" *ngIf="tx.totalFee > 0">
                 FEE: {{ tx.totalFee }} TPC
@@ -119,6 +134,24 @@
               </ion-button>
               <ion-button color="primary">
                 {{ tx.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="display-none-min-md">
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray">
+                {{ txConfirmation }} CONFIRMATIONS
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary">
+                {{ tx.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray" *ngIf="tx.totalFee > 0">
+                FEE: {{ tx.totalFee }} TPC
               </ion-button>
             </ion-col>
           </ion-row>

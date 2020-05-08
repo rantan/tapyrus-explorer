@@ -11,7 +11,7 @@ export class BlocksPage implements OnInit {
   perPage = 25; // default with 20 per page
   page = 1; // default start with page 1
   pages = 1; // number of pages
-  transactions: any = [];
+  blocks: any = [];
   searchValue: string;
   bestHeight = 0;
 
@@ -36,7 +36,7 @@ export class BlocksPage implements OnInit {
       data => {
         const resultData: any = data || {};
         const txnsData: any = resultData.results || [];
-        this.transactions = txnsData.sort(this.compareHeight);
+        this.blocks = txnsData.sort(this.compareHeight);
         this.bestHeight = resultData.bestHeight;
         this.calculatePagination();
       },
@@ -73,7 +73,24 @@ export class BlocksPage implements OnInit {
   }
 
   onSearch() {
-    console.log('onSearch', this.searchValue);
+    this.httpClient.get(`http://localhost:3001/block/${this.searchValue}`).subscribe(
+      data => {
+        const result: any = data || {};
+        this.blocks = [{
+          height: result.height,
+          hash: result.blockHash,
+          time: result.timestamp,
+          size: result.sizeBytes
+        }];
+        this.pages = 1;
+        this.page = 1;
+        this.bestHeight = 1;
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 }

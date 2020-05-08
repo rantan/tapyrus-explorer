@@ -64,7 +64,18 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    console.log('onSearch', this.searchValue);
+    this.httpClient.get(`http://localhost:3001/transaction/${this.searchValue}/get`).subscribe(
+      data => {
+        this.transactions = [data];
+        this.pages = 1;
+        this.page = 1;
+        this.txCount = 1;
+        console.log(data);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 }

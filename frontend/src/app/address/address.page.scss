@@ -3,9 +3,17 @@ ion-content {
 }
 
 #block-header-text {
-    font-size: 36px;
+    @media (max-width: 539px) {
+        font-size: 16px;
+        margin: 17px 10px 10px;
+    }
+
+    @media (min-width: 540px) {
+        font-size: 36px;
+        margin: 0px 10px 20px;
+    }
+
     font-weight: 500;
-    margin: 0px 10px 20px;
 }
 
 #block-hash-bg {

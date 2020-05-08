@@ -198,7 +198,6 @@ app.get('/address/:address', (req, res) => {
 
 app.get('/transaction/:txid/get', (req, res) => {
   const urlTxid = req.params.txid;
-  // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
   cl.command([
     {
       method: 'gettransaction', 
