@@ -37,7 +37,7 @@
             <ion-icon name="add-circle" color="primary"></ion-icon>
           </ion-col>
           <ion-col size="7" class="ion-text-left">
-            <div class="text-primary" class="pl-5">{{ transaction.txid }}</div>
+            <div class="text-primary pl-5">{{ transaction.txid }}</div>
           </ion-col>
           <ion-col size="4" class="ion-text-right">
             <div>Verified: {{ transaction.blocktime * 1000 | date: 'MMM dd, yyyy hh:mm:ss' }}</div>
@@ -52,7 +52,7 @@
                 <div *ngIf="!transaction.vin[i].coinbase">
                   <div *ngFor="let vout of vin.vout" class="mb-5">
                     <ion-row *ngFor="let add of vout.scriptPubKey.addresses" class="vin-vout-input">
-                      <ion-col size="8" class="ion-no-margin text-primary">{{ add }}</ion-col>
+                      <ion-col size="8" class="ion-no-margin text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
                       <ion-col size="4" class="ion-no-margin ion-text-right text-gray">{{ vout.value }} TPC</ion-col>
                     </ion-row>
                   </div>
@@ -66,7 +66,7 @@
             <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vout of transaction.vout" class="mb-5">
                 <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
-                  <ion-col size="8"  class="text-primary">{{ add }}</ion-col>
+                  <ion-col size="8" class="text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
                   <ion-col size="4" class="ion-text-right text-gray">{{ vout.value }} TPC(s)</ion-col>
                 </ion-row >
               </div>

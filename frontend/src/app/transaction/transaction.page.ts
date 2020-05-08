@@ -70,6 +70,10 @@ export class TransactionPage implements OnInit {
     this.navCtrl.navigateBack('/transactions');
   }
 
+  goToAddress(add = '') {
+    this.navCtrl.navigateForward(`/addresses/${add}`);
+  }
+
   async goToTransactionRawData() {
     const modal = await this.modalCtrl.create({
       component: TransactionRawdataPage,

@@ -99,4 +99,12 @@ export class BlockPage implements OnInit {
       tx.totalFee = vinValue - voutValue;
     });
   }
+
+  goToAddress(add = '') {
+    this.navCtrl.navigateForward(`/addresses/${add}`);
+  }
+
+  goToTransaction(txid = '') {
+    this.navCtrl.navigateForward(`/transactions/${txid}`);
+  }
 }
