@@ -1,12 +1,8 @@
 const Client = require('bitcoin-core');
 const app = require('../app.js');
+const config = require('/Users/chaintope/Desktop/config.json');
 
-const cl = new Client({
-  network: 'regtest',
-  username: 'user',
-  password: 'password',
-  port: 18443,
-});
+const cl = new Client(config);
 
 function getBlock(blockHash, callback) {
   cl.getBlock(blockHash).then((result) => callback(result));

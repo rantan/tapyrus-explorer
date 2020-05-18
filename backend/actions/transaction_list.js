@@ -1,13 +1,9 @@
 const app = require('../app.js');
 const Client = require('bitcoin-core');
+const config = require('/Users/chaintope/Desktop/config.json');
 
-const cl = new Client({
-  network: 'regtest',
-  username: 'user',
-  password: 'password',
-  port: 18443,
-});
-  
+const cl = new Client(config);
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
