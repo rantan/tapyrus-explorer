@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "pretest": "eslint actions/"
+    "pretest": "eslint actions/",
+    "prestart": "cross-env ENV='dev' node ./script.js", 
+    "predeploy": "cross-env ENV='prod' node ./script.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
     "wss": "^3.3.4"
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-strongloop": "^2.1.0"
   }

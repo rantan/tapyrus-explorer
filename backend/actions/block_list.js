@@ -6,7 +6,8 @@ const elect = jayson.client.tcp({
 });
 const Client = require('bitcoin-core');
 const app = require('../app.js');
-const config = require('/Users/chaintope/Desktop/config.json');
+const environment = require('../environments/environment');
+const config = require(environment.CONFIG);
 
 const cl = new Client(config);
 
