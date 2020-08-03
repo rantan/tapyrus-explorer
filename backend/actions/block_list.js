@@ -6,13 +6,10 @@ const elect = jayson.client.tcp({
 });
 const Client = require('bitcoin-core');
 const app = require('../app.js');
+const environment = require('../environments/environment');
+const config = require(environment.CONFIG);
 
-const cl = new Client({
-  network: 'regtest',
-  username: 'user',
-  password: 'password',
-  port: 18443,
-});
+const cl = new Client(config);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -46,11 +43,18 @@ async function getBlockchainInfo() {
   return result.headers;
 }
 
-app.get('/list/:linesPerPage', (req, res) => {
-  const linesPerPage = +req.params.linesPerPage;
+app.get('/blocks', (req, res) => {
+  var perPage = Number(req.query.perPage);
+  var page = Number(req.query.page);
 
   getBlockchainInfo().then((bestBlockHeight) => {
-    elect.request('blockchain.block.headers', [bestBlockHeight - linesPerPage + 1, linesPerPage, 0], async (err, rep) => {
+    var startFromBlock = bestBlockHeight - perPage*page + 1;
+    if(Math.sign(startFromBlock) == -1) {
+      //if last page's remainder should use different value of startFromBlock and perPage
+      startFromBlock = bestBlockHeight%perPage;
+      perPage = bestBlockHeight%perPage;
+    }
+    elect.request('blockchain.block.headers', [startFromBlock, perPage, 0], async (err, rep) => {
       if (err) throw err;
 
       const headersHex = rep.result.hex;
@@ -58,7 +62,10 @@ app.get('/list/:linesPerPage', (req, res) => {
       const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
 
       const result = await Promise.all(promiseArray);
-      res.json(result);
+      res.json({
+        results: result,
+        bestHeight: bestBlockHeight
+      });
     });
   });
 });

@@ -1,0 +1,44 @@
+#copy-icon {
+    background-color: white;
+    border-radius: 50%;
+    padding: 4px;
+    margin-right: 7px;
+    font-size: 15px;
+}
+
+#copy-content {
+    background: #EBEBEB;
+    border-radius: 6px;
+}
+
+#copied-text {
+    margin: auto 15px;
+}
+
+//for smaller screen
+#copied-text-md {
+    color: white;
+}
+
+.bg-dark-md {
+    @media (min-width: 0px) and (max-width: 768px) {
+        background: #282828 !important;
+        --background: #282828 !important;
+    }
+}
+
+.hide-md {
+    @media (max-width: 768px) {
+        display: none !important;
+    }
+}
+
+.block-md {
+    @media (max-width: 768px) {
+        display: block !important;
+    }
+
+    @media (min-width: 769px) {
+        display: none !important;
+    }  
+}

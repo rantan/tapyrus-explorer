@@ -1,0 +1,162 @@
+<ion-content class="pb-footer">
+  <div class="ion-padding">
+    <div class="bg-white ion-padding">
+      <div class="flex">
+        <!-- <ion-back-button defaultHref="/blocks"></ion-back-button> -->
+        <ion-icon  size="large" name="chevron-back-circle-outline" id="arrow-icon" (click)="goToBlocks()"></ion-icon>
+        <p id="block-header-text">Block #{{ block.height }}</p>
+        <ion-button color="primary" size="small" id="raw-data-btn" (click)="goToBlockRawData()">Raw Data</ion-button>
+      </div>
+      <div id="block-hash-bg" class="font-14">
+        BlockHash <p class="text-color text-wrap" id="block-hash-text">{{ block.blockHash }}</p>
+      </div>
+      <ion-item-divider></ion-item-divider>
+      <ion-grid class="font-14 text-color">
+        <ion-row>
+          <ion-col size="4" class="font-w500">No. of Transactions:</ion-col>
+          <ion-col size="8">{{ block.ntx }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Height:</ion-col>
+          <ion-col size="8">{{ block.height }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Timestamp:</ion-col>
+          <ion-col size="8">{{ block.timestamp }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Proof:</ion-col>
+          <ion-col size="8">{{ block.proof }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Size(Bytes):</ion-col>
+          <ion-col size="8">{{ block.sizeBytes }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Version:</ion-col>
+          <ion-col size="8">{{ block.version }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Merkle Root:</ion-col>
+          <ion-col size="8">{{ block.merkleRoot }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Immutable Merkle Root:</ion-col>
+          <ion-col size="8">{{ block.immutableMerkleRoot }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Previous Block:</ion-col>
+          <ion-col size="8">{{ block.previousBlock }}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="4" class="font-w500">Next Block:</ion-col>
+          <ion-col size="8">{{ block.nextBlock }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <div class="bg-white ion-padding ion-margin-top display-none-max-lg">
+      <div class="flex">
+        <ion-icon size="large" name="chevron-down-circle-outline" id="arrow-icon" *ngIf="!openTxns" (click)="getBlockTxnsInfo()"></ion-icon>
+        <ion-icon size="large" name="chevron-up-circle-outline" id="arrow-icon" *ngIf="openTxns" (click)="closeTxns()"></ion-icon>
+        <p id="transactions-header">View Transactions</p>
+      </div>
+    </div>
+
+    <div class="ion-text-right display-none-min-lg" *ngIf="!openTxns">
+      <p id="transactions-header">
+        <u class="ion-margin-right">View All Transactions</u>
+        <ion-icon class="font-24" color="primary" name="chevron-forward-circle-outline" id="arrow-icon" (click)="getBlockTxnsInfo()"></ion-icon>
+      </p>
+    </div>
+
+    <div class="display-none-min-lg" *ngIf="openTxns">
+      <p id="transactions-header">
+        <ion-icon class="font-24" color="danger"  name="chevron-back-circle-outline" id="arrow-icon" (click)="closeTxns()"></ion-icon>
+        <u class="ion-margin-right">Close All Transactions</u>
+      </p>
+    </div>
+
+    <div *ngIf="openTxns">
+      <div class="bg-white ion-padding ion-margin-bottom" *ngFor="let tx of blockTxns.tx;">
+        <ion-row>
+          <ion-col size="1">
+            <ion-icon name="add-circle" color="primary" (click)="goToTransaction(tx.txid)"></ion-icon>
+          </ion-col>
+          <ion-col size="7" class="ion-text-left">
+            <div class="text-primary pl-5" (click)="goToTransaction(tx.txid)">{{ tx.txid }}</div>
+          </ion-col>
+          <ion-col size="4" class="ion-text-right">
+            <div>Verified: {{ txTime * 1000 | date: 'MMM dd, yyyy hh:mm:ss' }}</div>
+          </ion-col>   
+          <!-- {{ tx.time }} -->
+        </ion-row>
+  
+        <ion-grid>
+          <ion-row class="word-break">
+            <ion-col size-xs="12" size-sm="12" size-md="5">
+              <div *ngFor="let vin of tx.vinRaw; let i=index;">
+                <div *ngIf="tx.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
+                <div *ngIf="!tx.vin[i].coinbase">
+                  <div *ngFor="let vout of vin.vout" class="mb-5">
+                    <ion-row *ngFor="let add of vout.scriptPubKey.addresses" class="vin-vout-input">
+                      <ion-col size="8" class="ion-no-margin text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
+                      <ion-col size="4" class="ion-no-margin ion-text-right text-gray">{{ vout.value }} TPC</ion-col>
+                    </ion-row>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center">
+              <ion-icon name="arrow-forward" size="large" class="display-none-max-md"></ion-icon>
+              <ion-icon name="chevron-down-outline" size="large" class="display-none-min-md"></ion-icon>
+            </ion-col>
+            <ion-col size-xs="12" size-sm="12" size-md="5">
+              <div *ngFor="let vout of tx.vout" class="mb-5">
+                <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
+                  <ion-col size="8" class="text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
+                  <ion-col size="4" class="ion-text-right text-gray">{{ vout.value }} TPC(s)</ion-col>
+                </ion-row >
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-item-divider></ion-item-divider>
+
+          <ion-row class="display-none-max-md">
+            <ion-col size="4">
+              <ion-button class="btn-gray" *ngIf="tx.totalFee > 0">
+                FEE: {{ tx.totalFee }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="8" class="ion-text-end">
+              <ion-button class="btn-gray">
+                {{ txConfirmation }} CONFIRMATIONS
+              </ion-button>
+              <ion-button color="primary">
+                {{ tx.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="display-none-min-md">
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray">
+                {{ txConfirmation }} CONFIRMATIONS
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" color="primary">
+                {{ tx.totalVout }} TPC
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button expand="block" class="btn-gray" *ngIf="tx.totalFee > 0">
+                FEE: {{ tx.totalFee }} TPC
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+  </div>
+</ion-content>

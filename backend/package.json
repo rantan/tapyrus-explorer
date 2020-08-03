@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "jslint": "eslint *.js actions/"
+    "pretest": "eslint actions/",
+    "prestart": "cross-env ENV='dev' node ./script.js", 
+    "predeploy": "cross-env ENV='prod' node ./script.js"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +23,8 @@
     "wss": "^3.3.4"
   },
   "devDependencies": {
-    "eslint": "^6.7.2",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.16.0"
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-strongloop": "^2.1.0"
   }
 }

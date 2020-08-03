@@ -1,12 +1,9 @@
 const Client = require('bitcoin-core');
 const app = require('../app.js');
+const environment = require('../environments/environment');
+const config = require(environment.CONFIG);
 
-const cl = new Client({
-  network: 'regtest',
-  username: 'user',
-  password: 'password',
-  port: 18443,
-});
+const cl = new Client(config);
 
 function getBlock(blockHash, callback) {
   cl.getBlock(blockHash).then((result) => callback(result));
@@ -45,3 +42,56 @@ app.get('/block/:blockHash', (req, res) => {
     res.json(output);
   });
 });
+
+app.get('/block/:blockHash/rawData', (req, res) => {
+  // bitcoin-cli getblock ${blockHash} 0
+  const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+  const urlBlockHash = req.params.blockHash;
+
+  if (!regex.test(urlBlockHash)) {
+    res.status(400).send('Bad request');
+    return;
+  }
+
+  cl.getBlock(urlBlockHash, 0).then((result) => {
+    res.json(result);
+  });
+  
+})
+
+app.get('/block/:blockHash/txns', (req, res) => {
+  // bitcoin-cli getblock ${blockHash} 2
+  const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
+  const urlBlockHash = req.params.blockHash;
+
+  if (!regex.test(urlBlockHash)) {
+    res.status(400).send('Bad request');
+    return;
+  }
+
+  cl.getBlock(urlBlockHash, 2).then(async (result) => {
+    var data = result;
+    for(var tx of data.tx) {
+      let res = [];
+      for(var vin of tx.vin) {
+        if(vin.txid) {
+          await cl.command([
+            { 
+              method: 'getrawtransaction', 
+              parameters: {
+                txid: vin.txid,
+                verbose: true
+              }
+            }
+          ]).then((responses) => {
+            res.push(responses[0]);
+          });
+        } else {
+          res.push({});
+        }
+      }
+      tx.vinRaw = res;
+    }
+    res.json(data);
+  });
+})
