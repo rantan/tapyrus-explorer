@@ -30,15 +30,14 @@ app.get('/block/:blockHash', (req, res) => {
       ntx: blockInfo.nTx,
       height: blockInfo.height,
       timestamp: blockInfo.time,
-      proof: blockInfo.nonce,
+      proof: blockInfo.proof,
       sizeBytes: blockInfo.size,
-      version: blockInfo.version,
+      version: blockInfo.features,
       merkleRoot: blockInfo.merkleroot,
       immutableMerkleRoot: 'immutable',
       previousBlock: blockInfo.previousblockhash,
       nextBlock: blockInfo.nextblockhash,
     };
-
     res.json(output);
   });
 });

@@ -35,9 +35,10 @@ export class TransactionsPage implements OnInit {
     }).subscribe(
       data => {
         const resultData: any = data || {};
-        this.transactions = resultData.transactions || [];
-        this.txCount = resultData.txStats.txcount;
+        this.transactions = resultData.results || [];
+        this.txCount = resultData.txCount;
         this.calculatePagination();
+        console.log("trans",this.transactions)
       },
       err => {
         console.log(err);

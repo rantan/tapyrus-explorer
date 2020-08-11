@@ -1,13 +1,13 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "The backend of tapyrus-explorer",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "pretest": "eslint actions/",
-    "prestart": "cross-env ENV='dev' node ./script.js", 
+    "prestart": "cross-env ENV='dev' node ./script.js",
     "predeploy": "cross-env ENV='prod' node ./script.js"
   },
   "keywords": [],
@@ -25,6 +25,9 @@
   "devDependencies": {
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
-    "eslint-config-strongloop": "^2.1.0"
+    "eslint-config-strongloop": "^2.1.0",
+    "mocha": "^8.1.1",
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }

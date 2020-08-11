@@ -2,7 +2,7 @@ const jayson = require('jayson/promise');
 const Jssha = require('jssha');
 
 const elect = jayson.client.tcp({
-  port: 60401,
+  port: 50001,
 });
 const Client = require('bitcoin-core');
 const app = require('../app.js');
@@ -44,28 +44,36 @@ async function getBlockchainInfo() {
 }
 
 app.get('/blocks', (req, res) => {
-  var perPage = Number(req.query.perPage);
-  var page = Number(req.query.page);
+  
+  try{
+    var perPage = Number(req.query.perPage);
+    var page = Number(req.query.page);
 
-  getBlockchainInfo().then((bestBlockHeight) => {
-    var startFromBlock = bestBlockHeight - perPage*page + 1;
-    if(Math.sign(startFromBlock) == -1) {
-      //if last page's remainder should use different value of startFromBlock and perPage
-      startFromBlock = bestBlockHeight%perPage;
-      perPage = bestBlockHeight%perPage;
-    }
-    elect.request('blockchain.block.headers', [startFromBlock, perPage, 0], async (err, rep) => {
-      if (err) throw err;
+    getBlockchainInfo().then( async (bestBlockHeight) => {
+      
+      var startFromBlock = bestBlockHeight - perPage*page + 1;
+      if(Math.sign(startFromBlock) == -1) {
+        //if last page's remainder should use different value of startFromBlock and perPage
+        startFromBlock = 0;
+        perPage = bestBlockHeight%perPage;
+      }
 
-      const headersHex = rep.result.hex;
-      const headerHex = headersHex.match(/.{160}/g);
-      const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
-
+      let headers = [];
+      for(let i=startFromBlock; i< startFromBlock + perPage; i++){
+        const rep = await elect.request('blockchain.block.header', [i, 0]);
+        headers.push(rep.result);        
+      } 
+      
+      const promiseArray = headers.map((x) => getBlock(internalByteOrder(x)));
       const result = await Promise.all(promiseArray);
       res.json({
         results: result,
         bestHeight: bestBlockHeight
       });
     });
-  });
+
+  } catch (err) {
+    res.status(500).send("Server Error");
+    } 
+
 });
