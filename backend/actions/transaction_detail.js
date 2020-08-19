@@ -49,7 +49,6 @@ app.get('/transaction/:txid', (req, res) => {
       }
     }
     response.vinRaw = results;
-    console.log(response.vinRaw)
     res.json(response);
   });
 });

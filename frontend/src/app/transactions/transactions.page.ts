@@ -15,35 +15,34 @@ export class TransactionsPage implements OnInit {
   searchValue: string;
   txCount = 0;
 
-  constructor(
-    private httpClient: HttpClient,
-    private navCtrl: NavController
-  ) {}
+  constructor(private httpClient: HttpClient, private navCtrl: NavController) {}
 
   ngOnInit() {
     this.getTransactionLists();
   }
 
   getTransactionLists() {
-    this.httpClient.get('http://localhost:3001/transactions', {
-      params: new HttpParams({
-        fromObject: {
-          page: this.page.toString(),
-          perPage: this.perPage.toString(),
-        }
+    this.httpClient
+      .get('http://localhost:3001/transactions', {
+        params: new HttpParams({
+          fromObject: {
+            page: this.page.toString(),
+            perPage: this.perPage.toString(),
+          },
+        }),
       })
-    }).subscribe(
-      data => {
-        const resultData: any = data || {};
-        this.transactions = resultData.results || [];
-        this.txCount = resultData.txCount;
-        this.calculatePagination();
-        console.log("trans",this.transactions)
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      .subscribe(
+        (data) => {
+          const resultData: any = data || {};
+          this.transactions = resultData.results || [];
+          this.txCount = resultData.txCount;
+          this.calculatePagination();
+          console.log('trans', this.transactions);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
   onPageChange(pageNumber: number) {
@@ -65,18 +64,19 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    this.httpClient.get(`http://localhost:3001/transaction/${this.searchValue}/get`).subscribe(
-      data => {
-        this.transactions = [data];
-        this.pages = 1;
-        this.page = 1;
-        this.txCount = 1;
-        console.log(data);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.httpClient
+      .get(`http://localhost:3001/transaction/${this.searchValue}/get`)
+      .subscribe(
+        (data) => {
+          this.transactions = [data];
+          this.pages = 1;
+          this.page = 1;
+          this.txCount = 1;
+          console.log(data);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
-
 }

@@ -79,15 +79,9 @@ app.get('/transactions', async (req, res) => {
 
       let count = 0, transList= [], overheadTxCount = 0;
       const memTxList = await getMemTx();
-      if((overheadTxCount + memTxList.length) <= (perPage*(page-1))){
-        overheadTxCount += memTxList.length;
-      }
-      else {
-        let j;
-        if(overheadTxCount == (perPage*(page-1)))
-          j=0;
-        else
-          j = (overheadTxCount + block.nTx) - (perPage*(page-1));
+      if(( memTxList.length) > (perPage*(page-1))){
+
+        let j = (perPage*(page-1));
         while(j < memTxList.length){ 
           let amount = 0;
           memTxList[j].vout.forEach( (vout) => {amount += vout.value})
@@ -145,7 +139,6 @@ app.get('/transactions', async (req, res) => {
         }
         bestBlockHeight--;
       }
-      
       res.json({
         results: transList,
         txCount

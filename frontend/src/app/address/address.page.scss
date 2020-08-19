@@ -18,12 +18,14 @@ ion-content {
 
 #block-hash-bg {
     display:flex;
+    flex-wrap: wrap;
     background-color:#F6F6F6;
-    padding: 6px;
 }
 
 #block-hash-text {
-    margin: 0px 5px;
+    font-size: 19px;
+    margin: 3px 2px 3px 7px;
+    color: black;
 }
 
 #raw-data-btn {
