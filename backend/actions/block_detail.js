@@ -93,4 +93,9 @@ app.get('/block/:blockHash/txns', (req, res) => {
     }
     res.json(data);
   });
-})
+});
+
+module.exports = {
+  app,
+  client: cl
+};
