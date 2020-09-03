@@ -23,7 +23,7 @@
         <ion-col size="2">TIME</ion-col>
         <ion-col size="2">SIZE</ion-col>
       </ion-row>
-      <ion-row class="table-border-bottom" *ngFor="let block of blocks | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: bestHeight }">
+      <ion-row class="table-border-bottom" *ngFor="let block of blocks | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: bestHeight +1 }">
         <ion-col size="2" class="font-14 link-color" (click)="goToBlock(block.hash)">{{ block.height }}</ion-col>
         <ion-col size="6" class="font-14 link-color" (click)="goToBlock(block.hash)">{{ block.hash }}</ion-col>
         <ion-col size="2" class="font-14 text-color">{{ block.time | momentFromNow }}</ion-col>

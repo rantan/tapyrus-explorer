@@ -9,7 +9,7 @@
             <ion-icon name="copy-outline" (click)="copyAddress()" color="primary" style="margin:16px 2px;" id="copy-icon"></ion-icon>
           </div>
           <div id="block-hash-bg" class="col-5">
-          <strong id="block-hash-text">  <strong>Balance:</strong>   {{ balanced }} TPC</strong>
+          <strong id="block-hash-text">  <strong>Balance:</strong>   {{ balanced || 0}} TPC</strong>
           </div>
         </ion-col>
         <ion-col size="4" class="ion-text-end">

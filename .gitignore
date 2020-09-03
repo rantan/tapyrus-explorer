@@ -1,5 +1,8 @@
 node_modules
 configurations
 
-## For Mac Users 
+## For Mac Users
 .DS_Store
+
+## For log files
+*.log

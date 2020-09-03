@@ -6,3 +6,5 @@ require('./actions/transaction_list.js');
 require('./actions/address_detail.js');
 
 app.listen(3001, () => console.log('Listening on port 3001!'));
+
+module.exports = app;

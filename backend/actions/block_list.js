@@ -1,13 +1,14 @@
 const jayson = require('jayson/promise');
 const Jssha = require('jssha');
 
-const elect = jayson.client.tcp({
-  port: 50001,
-});
 const Client = require('bitcoin-core');
 const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
+
+let elect = jayson.client.tcp({
+  port: 50001
+})
 
 const cl = new Client(config);
 
@@ -17,8 +18,13 @@ app.use((req, res, next) => {
   next();
 });
 
+var log4js = require("log4js");
+var logger = log4js.getLogger();
+logger.level = "ERRORS";
+
 function getBlock(blockHash) {
-  return cl.getBlock(blockHash);
+  const ret  = cl.getBlock(blockHash);
+  return ret;
 }
 
 function sha256(text) {
@@ -52,10 +58,11 @@ app.get('/blocks', (req, res) => {
     getBlockchainInfo().then( async (bestBlockHeight) => {
       
       var startFromBlock = bestBlockHeight - perPage*page + 1;
-      if(Math.sign(startFromBlock) == -1) {
+      
+      if(startFromBlock <= 0) {
         //if last page's remainder should use different value of startFromBlock and perPage
         startFromBlock = 0;
-        perPage = bestBlockHeight%perPage;
+        perPage = (bestBlockHeight)%perPage+1;
       }
 
       let headers = [];
@@ -73,7 +80,10 @@ app.get('/blocks', (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).send("Server Error");
+    console.log(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
+    logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
+    res.status(500).send(`Error Retrieving Blocks`);
     } 
-
 });
+
+module.exports  = {cl, elect}
