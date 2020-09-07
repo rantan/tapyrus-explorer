@@ -134,3 +134,5 @@ app.get('/address/:address', (req, res) => {
     logger.error(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
   });
 })
+
+module.exports = {cl, elect};

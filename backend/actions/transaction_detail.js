@@ -47,7 +47,7 @@ app.get('/transaction/:txid', (req, res) => {
     }
   ]).then(async (responses) => {
     let results = [];
-    let response = responses[0]
+    let response = responses[0];
     for(var vin of response.vin) {
       if(vin.txid) {
         await cl.command([
@@ -107,7 +107,6 @@ app.get('/transaction/:txid/rawData', (req, res) => {
 });
 
 app.get('/transaction/:txid/get', (req, res) => {
-
   const urlTxid = req.params.txid;
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
 
@@ -138,3 +137,5 @@ app.get('/transaction/:txid/get', (req, res) => {
     logger.error(`Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${err.message}`);  
   });
 })
+
+module.exports = cl;

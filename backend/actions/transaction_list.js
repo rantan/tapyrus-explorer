@@ -160,3 +160,5 @@ app.get('/transactions', async (req, res) => {
     res.status(500).send(`Error Retrieving Blocks`);
   } 
 });
+
+module.exports = cl;
