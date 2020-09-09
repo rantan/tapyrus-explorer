@@ -1,13 +1,14 @@
 const jayson = require('jayson/promise');
 const Jssha = require('jssha');
 
-const elect = jayson.client.tcp({
-  port: 60401,
-});
 const Client = require('bitcoin-core');
 const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
+
+let elect = jayson.client.tcp({
+  port: 50001
+})
 
 const cl = new Client(config);
 
@@ -17,8 +18,13 @@ app.use((req, res, next) => {
   next();
 });
 
+var log4js = require("log4js");
+var logger = log4js.getLogger();
+logger.level = "ERRORS";
+
 function getBlock(blockHash) {
-  return cl.getBlock(blockHash);
+  const ret  = cl.getBlock(blockHash);
+  return ret;
 }
 
 function sha256(text) {
@@ -44,28 +50,40 @@ async function getBlockchainInfo() {
 }
 
 app.get('/blocks', (req, res) => {
-  var perPage = Number(req.query.perPage);
-  var page = Number(req.query.page);
+  
+  try{
+    var perPage = Number(req.query.perPage);
+    var page = Number(req.query.page);
 
-  getBlockchainInfo().then((bestBlockHeight) => {
-    var startFromBlock = bestBlockHeight - perPage*page + 1;
-    if(Math.sign(startFromBlock) == -1) {
-      //if last page's remainder should use different value of startFromBlock and perPage
-      startFromBlock = bestBlockHeight%perPage;
-      perPage = bestBlockHeight%perPage;
-    }
-    elect.request('blockchain.block.headers', [startFromBlock, perPage, 0], async (err, rep) => {
-      if (err) throw err;
+    getBlockchainInfo().then( async (bestBlockHeight) => {
+      
+      var startFromBlock = bestBlockHeight - perPage*page + 1;
+      
+      if(startFromBlock <= 0) {
+        //if last page's remainder should use different value of startFromBlock and perPage
+        startFromBlock = 0;
+        perPage = (bestBlockHeight)%perPage+1;
+      }
 
-      const headersHex = rep.result.hex;
-      const headerHex = headersHex.match(/.{160}/g);
-      const promiseArray = headerHex.map((x) => getBlock(internalByteOrder(x)));
-
+      let headers = [];
+      for(let i=startFromBlock; i< startFromBlock + perPage; i++){
+        const rep = await elect.request('blockchain.block.header', [i, 0]);
+        headers.push(rep.result);        
+      } 
+      
+      const promiseArray = headers.map((x) => getBlock(internalByteOrder(x)));
       const result = await Promise.all(promiseArray);
       res.json({
         results: result,
         bestHeight: bestBlockHeight
       });
     });
-  });
+
+  } catch (err) {
+    console.log(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
+    logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
+    res.status(500).send(`Error Retrieving Blocks`);
+    } 
 });
+
+module.exports  = {cl, elect}

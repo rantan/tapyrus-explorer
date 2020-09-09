@@ -1,23 +1,23 @@
 # Setup
 
 ### Local
-##### Bitcoind/ Tapyrusd
-Run bitcoind
+##### Tapyrusd
+Run tapyrusd
 ```sh
-$ bitcoind -server=1 -txindex=1 -prune=0
+$ sudo ./src/tapyrusd -datadir=/var/lib/tapyrus-testnet -conf=/etc/tapyrus/tapyrus.conf 
 ```
-##### Electrs/ Electrs Tapyrus
-Current implementation was still using electrs. Once the previous step being changed to use tapyrusd, then here can change to use electrs-tapyrus.
+##### Electrs Tapyrus
+Current implementation uses electrs-tapyrus.
 Example of build and run in command line
 ```bash
 $ cargo build --release
 ```
 ```bash
-$ cargo run --release -- -vvvv --index-batch-size=10 --jsonrpc-import --db-dir ./db --electrum-rpc-addr="127.0.0.1:60401" --daemon-rpc-addr="127.0.0.1:18443" --network=regtest --monitoring-addr="127.0.0.1:24224"
+$ cargo run --release -- -vvvv --index-batch-size=10 --jsonrpc-import --db-dir ./db --electrum-rpc-addr="127.0.0.1:50001" --daemon-dir /var/lib/tapyrus-testnet/prod-1939510133/ --network-id 1939510133  --txid-limit=0
 ```
 
 ##### Tapyrus explorer
-consists of backend (calling Bitcoind/ Tapyrusd & Electrs/ Electrs Tapyrus to get data) and frontend
+consists of backend (calling Tapyrusd & Electrs-Tapyrus to get data) and frontend
 
 To setup dev and prod environment
 create files
@@ -26,10 +26,10 @@ create files
 these files will only appear in your local. Eg.
 ```json
 {
-  "network": "regtest",
+  "network": "testnet",
   "username": "user",
-  "password": "password",
-  "port": 18443
+  "password": "pass",
+  "port": 2377
 }
 ```
 

@@ -65,7 +65,7 @@ export class BlocksPage implements OnInit {
   }
 
   calculatePagination() {
-    this.pages = Math.ceil(this.bestHeight / this.perPage);
+    this.pages = Math.ceil((this.bestHeight + 1) / this.perPage);
   }
 
   goToBlock(hash: string) {
