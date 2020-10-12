@@ -84,10 +84,10 @@ const sinon = require('sinon');
   });
   
   
-  describe("GET /block/:blockHash/rawData return type check", function() {
+  describe("GET /block/:blockHash/raw return type check", function() {
     it("type check raw", function(done) {
       supertest(app)
-        .get("/block/b9deaab16abe5f28967aebd0c6e94ce18c8309dec39816ea883885265b681f7c/rawData")
+        .get("/block/b9deaab16abe5f28967aebd0c6e94ce18c8309dec39816ea883885265b681f7c/raw")
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res){
@@ -103,16 +103,16 @@ const sinon = require('sinon');
   });
   
   
-  describe("GET /block/:blockHash/rawData with sinon.stub", function() {
+  describe("GET /block/:blockHash/raw with sinon.stub", function() {
     beforeEach(() => {
       sinon.stub(cl, "getBlock")
         .withArgs("5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6", 0)
         .resolves("0100000075adc0f804073eee1c74988e1e1bd83c85f987e34a95fd714813e379a724e85f97d679310470c26fdfaed7167075c7a8a1fa34d9c67be9c45c246281c15ffb231d0ef017e1b2147099d84709bcc0fbe89ef4d579fa8a95192ce89671765ec90459d4455f0040e7f72ce96424573b0d18f707333d02a2bc546491ba197c3af7b52d559eb55765d00a1e99d6ef4175ec4aae134c6b496a87c78d3a41ed77c7c2fd4ba684cd4abd01010000000100000000000000000000000000000000000000000000000000000000000000008a69000005028a690101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000");
     });
   
-    it("/block/:blockHash/rawData", function(done) {
+    it("/block/:blockHash/raw", function(done) {
       supertest(app)
-        .get("/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/rawData")
+        .get("/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/raw")
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res){

@@ -30,7 +30,6 @@ app.get('/transaction/:txid', (req, res) => {
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    console.log(`Regex Test didn't pass for URL - /transaction/${urlTxid}`)
     logger.error(`Regex Test didn't pass for URL - /transaction/${urlTxid}`);
 
     res.status(400).send('Bad request');
@@ -66,10 +65,10 @@ app.get('/transaction/:txid', (req, res) => {
       }
     }
     response.vinRaw = results;
+    console.log("vinRaw",response )
     res.json(response);
   })
   .catch((err) => {
-    console.log(`Error retrieving information for transaction - ${urlTxid}. Error Message - ${err.message}`);
     logger.error(`Error retrieving information for transaction - ${urlTxid}. Error Message - ${err.message}`);  
   });
 });
@@ -79,7 +78,6 @@ app.get('/transaction/:txid/rawData', (req, res) => {
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    console.log(`Regex Test didn't pass for URL - /transaction/${urlTxid}/rawData`)
     logger.error(`Regex Test didn't pass for URL - /transaction/${urlTxid}/rawData`);
 
     res.status(400).send('Bad request');
@@ -95,13 +93,11 @@ app.get('/transaction/:txid/rawData', (req, res) => {
     }
   ]).then((responses) => {
     if(responses[0].name === "RpcError"){
-      console.log(`Error retrieving rawdata for transaction - ${urlTxid}. Error Message - ${responses[0].message}`);
       logger.error(`Error retrieving rawdata for transaction - ${urlTxid}. Error Message - ${responses[0].message}`);    
     }
     res.json(responses[0]);
   })
   .catch((err) => {
-    console.log(`Error retrieving rawdata for transaction - ${urlTxid}. Error Message - ${err.message}`);
     logger.error(`Error retrieving rawdata for transaction - ${urlTxid}. Error Message - ${err.message}`);  
   });
 });
@@ -111,7 +107,6 @@ app.get('/transaction/:txid/get', (req, res) => {
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
 
   if (!regex.test(urlTxid)) {
-    console.log(`Regex Test didn't pass for URL - /transaction/${urlTxid}/get`)
     logger.error(`Regex Test didn't pass for URL - /transaction/${urlTxid}/get`);
 
     res.status(400).send('Bad request');
@@ -119,21 +114,26 @@ app.get('/transaction/:txid/get', (req, res) => {
   }
   cl.command([
     {
-      method: 'gettransaction', 
+      method: 'getrawtransaction', 
+      parameters: {
+        txid: urlTxid,
+        verbose : true
+      }
+
+      // Wallet RPC
+      /*method: 'gettransaction', 
       parameters: {
         txid: urlTxid,
         include_watchonly: true
-      }
+      }*/
     }
   ]).then((responses) => {
     if(responses[0].name === "RpcError"){
-      console.log(`Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${responses[0].message}`);
       logger.error(`Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${responses[0].message}`);    
     }
     res.json(responses[0]);
   })
   .catch((err) => {
-    console.log(`Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${err.message}`);
     logger.error(`Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${err.message}`);  
   });
 })

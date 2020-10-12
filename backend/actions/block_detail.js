@@ -11,7 +11,6 @@ function getBlock(blockHash, callback) {
   cl.getBlock(blockHash)
     .then((result) => callback(result))
     .catch((err) => {
-      console.log(`Error retrieving information for block - ${blockHash}. Error Message - ${err.message}`);
       logger.error(`Error retrieving information for block  - ${blockHash}. Error Message - ${err.message}`);  
     });
 }
@@ -39,7 +38,6 @@ app.get('/block/:blockHash', (req, res) => {
   const urlBlockHash = req.params.blockHash;
 
   if (!regex.test(urlBlockHash)) {
-    console.log(`Regex Test didn't pass for URL - /block/${urlBlockHash}`)
     logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}`);
 
     res.status(400).send('Bad request');
@@ -63,7 +61,6 @@ app.get('/block/:blockHash', (req, res) => {
       res.json(output);
     });
   } catch (err) {
-    console.log(`Error retrieving information for block - ${urlBlockHash}. Error Message - ${err.message}`);
     logger.error(`Error retrieving information for block  - ${urlBlockHash}. Error Message - ${err.message}`);
   }
 
@@ -71,14 +68,13 @@ app.get('/block/:blockHash', (req, res) => {
 
 
 
-app.get('/block/:blockHash/rawData', (req, res) => {
+app.get('/block/:blockHash/raw', (req, res) => {
   // bitcoin-cli getblock ${blockHash} 0
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
   const urlBlockHash = req.params.blockHash;
 
   if (!regex.test(urlBlockHash)) {
-    console.log(`Regex Test didn't pass for URL - /block/${urlBlockHash}/rawData`)
-    logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}/rawData`);
+    logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}/raw`);
 
     res.status(400).send('Bad request');
     return;
@@ -89,7 +85,6 @@ app.get('/block/:blockHash/rawData', (req, res) => {
       res.json(result);
     })
     .catch((err) => {
-      console.log(`Error retrieving raw data for block - ${urlBlockHash}. Error Message - ${err.message}`);
       logger.error(`Error retrieving raw data for block  - ${urlBlockHash}. Error Message - ${err.message}`);
     });
 })
@@ -102,7 +97,6 @@ app.get('/block/:blockHash/txns', (req, res) => {
   const urlBlockHash = req.params.blockHash;
 
   if (!regex.test(urlBlockHash)) {
-    console.log(`Regex Test didn't pass for URL - /block/${urlBlockHash}/txns`)
     logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}/txns`);
 
     res.status(400).send('Bad request');
@@ -135,7 +129,6 @@ app.get('/block/:blockHash/txns', (req, res) => {
     res.json(data);
   })
   .catch((err) => {
-    console.log(`Error retrieving txns for block - ${urlBlockHash}. Error Message - ${err.message}`);
     logger.error(`Error retrieving txns for block  - ${urlBlockHash}. Error Message - ${err.message}`);
   });
 })

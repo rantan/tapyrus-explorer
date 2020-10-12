@@ -19,6 +19,7 @@ export class AddressPage implements OnInit {
   result: any;
   transactions = [];
   unspentDatas = [];
+  outputs = [];
   copied = false;
   perPage = 25; // default with 20 per page
   page = 1; // default start with page 1
@@ -39,6 +40,10 @@ export class AddressPage implements OnInit {
 
   goToTransaction(txid: string) {
     this.navCtrl.navigateForward(`/transactions/${txid}`);
+  }
+
+  goToAddressPage(hash: string) {
+    this.navCtrl.navigateForward(`/addresses/${hash}`);
   }
 
   copyAddress() {
@@ -91,7 +96,22 @@ export class AddressPage implements OnInit {
 
         if (this.result) {
           this.txidsCount = this.result.length;
+
+          this.result.map((transaction) => {
+            let outputs = [], amounts = [];
+            for(let vout of transaction["vout"]){
+              for(let address of vout.scriptPubKey.addresses){
+                outputs.push(address);
+              }
+              amounts.push(vout.value)
+            }
+            transaction["outputs"] = outputs;
+            transaction["amounts"] = amounts;
+            return transaction;
+          })
+
           this.transactions = this.result;
+          console.log("trans", this.transactions)
           // this.getTransactionsInfo(this.result);
         }
         if (this.unspentDatas) {

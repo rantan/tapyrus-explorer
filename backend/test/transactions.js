@@ -77,7 +77,6 @@ describe("GET /transactions and then call individual transaction using /transact
         if (err) done(err);
         else {
           assert.equal(res.body.results.length,  25);
-          //console.log((JSON.parse(res.text)).results)
           supertest(app)
           .get(`/transaction/${res.body.results[0].txid}`)
           .expect('Content-Type', /json/)
