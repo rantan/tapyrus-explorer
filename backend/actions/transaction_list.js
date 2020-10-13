@@ -2,11 +2,9 @@ const app = require('../app.js');
 const Client = require('bitcoin-core');
 const log4js = require("log4js");
 const flatCache = require('flat-cache');
-
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
-
-const cl = new Client(config);
+const cl = new Client(config.tapyrusd);
 
 log4js.configure({
   appenders: {
@@ -54,7 +52,7 @@ async function getMemTx() {
       }
     ])
     return response;
-  }); 
+  });
 
   const promiseArray = await Promise.all(list);
   const memTxArray = promiseArray.map((list) => list[0]);
@@ -82,12 +80,12 @@ async function getMemTx() {
 
 
 const createCache = function(){
-  
+
 
   return new Promise( (resolve, reject) => {
 
   try{
-     
+
       const cache = flatCache.load('transactionCache');
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
@@ -109,26 +107,26 @@ const createCache = function(){
 
         while((cacheBestBlockHeight <=  bestBlockHeight)){
           const block = await getBlockWithTx(cacheBestBlockHeight);
-          
+
           for(let i =0; i<block.nTx; i++){
             cache.setKey(`${count++}`, block.tx[i]);
 
 
             await cl.command([
-              { 
-                method: 'getrawtransaction', 
+              {
+                method: 'getrawtransaction',
                 parameters: {
                   txid: block.tx[i],
                   verbose: true
                 }
               }
-            ]).then(async (responses) => { 
+            ]).then(async (responses) => {
 
               for(var vin of responses[0].vin) {
                 if(vin.txid) {
                   await cl.command([
-                    { 
-                      method: 'getrawtransaction', 
+                    {
+                      method: 'getrawtransaction',
                       parameters: {
                         txid: vin.txid,
                         verbose: true
@@ -137,10 +135,10 @@ const createCache = function(){
                   ]).then((vinResponses) => {
                     for(let vout of vinResponses[0].vout){
                       for(let address of vout.scriptPubKey.addresses){
-                        
+
                         //flag to represent the availability of this address in the vout of original Transaction
                         let isPresent = false;
-  
+
                         for(let originalVout of responses[0]["vout"]){
                           //avoiding multiple entries of the same address for transaction cache
                           if(originalVout.scriptPubKey.addresses  && (originalVout.scriptPubKey.addresses.indexOf(address))){
@@ -148,16 +146,16 @@ const createCache = function(){
                             break;
                           }
                         }
-  
+
                         if(isPresent){
                           continue;
                         }
-  
+
                         let addressTxCount = cache.getKey(`${address}_count`);
-    
+
                         if((!addressTxCount) && (addressTxCount !== 0))
                           addressTxCount = -1;
-    
+
                         addressTxCount++;
                         cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
                         cache.setKey(`${address}_count`, addressTxCount);
@@ -167,34 +165,34 @@ const createCache = function(){
                   });
                 }
               }
-  
+
               for(let vout of responses[0]["vout"]){
                 if(vout.scriptPubKey.addresses){
                   for(let address of vout.scriptPubKey.addresses){
-  
+
                     let addressTxCount = cache.getKey(`${address}_count`);
-      
+
                     if((!addressTxCount) && (addressTxCount !== 0))
                       addressTxCount = -1;
-    
+
                     addressTxCount++;
                     cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
                     cache.setKey(`${address}_count`, addressTxCount);
-  
+
                     let addressReceived = cache.getKey(`${address}_received`);
                     if(!addressReceived)
                       addressReceived = 0;
-                    
+
                     addressReceived += vout.value;
                     cache.setKey(`${address}_received`, addressReceived);
-  
+
                     cache.save(true /* noPrune */);
                   }
                 }
               }
             });
         }
-        
+
           cacheBestBlockHeight++;
         }
 
@@ -207,7 +205,7 @@ const createCache = function(){
 
         cache.save(true /* noPrune */);
         return resolve();
-        
+
         });
   } catch (err) {
     return reject(err);
@@ -229,13 +227,13 @@ app.get('/transactions', (req, res) => {
         createCache().then( async () => {
 
           const cache = flatCache.load('transactionCache');
-          
+
           let count = 0, transList= [];
           const memTxList = await getMemTx();
           if(( memTxList.length) > (perPage*(page-1))){
-  
+
             let j = (perPage*(page-1));
-            while(j < memTxList.length){ 
+            while(j < memTxList.length){
               let amount = 0;
               memTxList[j].vout.forEach( (vout) => {amount += vout.value})
               memTxList[j].amount = amount;
@@ -252,13 +250,13 @@ app.get('/transactions', (req, res) => {
           if(cache.getKey(`bestBlockHeight`) === bestBlockHeight){
             const transactionCount = txCount;
             var startingTrans =  transactionCount - perPage*page;
-                        
+
             if(startingTrans < 0) {
               //if last page's remainder should use different value of startingTrans and perPage
               startingTrans = 0;
               perPage = transactionCount%perPage;
             }
-      
+
             for(let i= startingTrans + perPage -1 ; i>= startingTrans; i--){
               let amount = 0;
               const response = await cl.command([
@@ -284,7 +282,7 @@ app.get('/transactions', (req, res) => {
               txCount
             });
             return;
-          } 
+          }
           else {
             throw "Cache's best Block Height is not updated"
           }
