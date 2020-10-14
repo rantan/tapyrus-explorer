@@ -1,7 +1,7 @@
 const Client = require('bitcoin-core');
-const Jssha = require('jssha');
 const jayson = require('jayson/promise');
 const log4js = require("log4js");
+var flatCache = require('flat-cache');
 
 const app = require('../app.js');
 const environment = require('../environments/environment');
@@ -29,26 +29,136 @@ app.use((req, res, next) => {
   next();
 });
 
-function sha256(text) {
-  const hashFunction = new Jssha('SHA-256', 'HEX');
-  hashFunction.update(text);
-  return hashFunction.getHash('HEX');
+async function getBlockchainInfo() {
+  const result = await cl.getBlockchainInfo();
+  return result.headers;
 }
 
-function convertP2PKHHash(p2pkh) {
-  const hash = sha256(p2pkh);
-  let newHash = "";
-  for(let i=hash.length-2; i>=0; i -= 2){
-   newHash = newHash.concat(hash.slice(i, i+2))    
+async function getBlockWithTx(blockNum) {
+  const blockHash = await cl.getBlockHash(blockNum);
+  const result = await cl.getBlock(blockHash);
+  return result;
+}
+
+const createCache = function(){
+  
+
+  return new Promise( (resolve, reject) => {
+
+  try{
+     
+      const cache = flatCache.load('transCache');
+
+      getBlockchainInfo().then( async (bestBlockHeight) => {
+
+        let count = 0;
+        let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
+        //bestBlockHeight = bestBlockHeight - 40000;
+
+
+        if(!cacheBestBlockHeight)
+          cacheBestBlockHeight = 0;
+
+        else if( cacheBestBlockHeight == bestBlockHeight){
+            return resolve();
+          }
+        else{
+            cacheBestBlockHeight++;
+            count = cache.getKey(`transactionCount`);
+        }
+        while((cacheBestBlockHeight <=  bestBlockHeight)){
+          const block = await getBlockWithTx(cacheBestBlockHeight);
+          
+          for(let i =0; i<block.nTx; i++){
+            cache.setKey(`${count++}`, block.tx[i]);
+
+            await cl.command([
+              { 
+                method: 'getrawtransaction', 
+                parameters: {
+                  txid: block.tx[i],
+                  verbose: true
+                }
+              }
+            ]).then(async (responses) => { 
+
+              let inputAddress = [];
+              let outputAddress = [];
+
+              for(var vin of responses[0].vin) {
+                if(vin.txid) {
+                  await cl.command([
+                    { 
+                      method: 'getrawtransaction', 
+                      parameters: {
+                        txid: vin.txid,
+                        verbose: true
+                      }
+                    }
+                  ]).then((responses) => {
+                    for(let vout of responses[0].vout){
+                      for(let address of vout.scriptPubKey.addresses){
+
+                        if(outputAddress.indexOf(address) === -1 ){
+                          inputAddress.push(address);
+
+                          let addressTxCount = cache.getKey(`${address}_count`);
+                        
+                          if((!addressTxCount) && (addressTxCount !== 0))
+                            addressTxCount = -1;
+                        
+                          addressTxCount++;
+                          cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                          cache.setKey(`${address}_count`, addressTxCount);
+                          cache.save(true /* noPrune */);
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+
+              for(let vout of responses[0]["vout"]){
+                if(vout.scriptPubKey.addresses){
+                  for(let address of vout.scriptPubKey.addresses){
+                    if(inputAddress.indexOf(address) === -1){
+                      outputAddress.push(address);
+                    
+                      let addressTxCount = cache.getKey(`${address}_count`);
+                    
+                      if((!addressTxCount) && (addressTxCount !== 0))
+                        addressTxCount = -1;
+                    
+                      addressTxCount++;
+                      cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                      cache.setKey(`${address}_count`, addressTxCount);
+                      cache.save(true /* noPrune */);
+                    }  
+                  }
+                }
+              }
+            });
+        }
+
+          cacheBestBlockHeight++;
+        }
+
+        cache.setKey('bestBlockHeight', bestBlockHeight);
+        cache.setKey('transactionCount', count);
+
+        console.log("Updated cache till block height -> ", bestBlockHeight)
+        console.log("New transaction count -> ", count)
+
+
+        cache.save(true /* noPrune */);
+        return resolve();
+        
+        });
+  } catch (err) {
+    return reject(err);
   }
-  return newHash;
+ });
 }
-
-async function getTransactions(scriptPubKey)  {   
-  const revHash = convertP2PKHHash(scriptPubKey)
-  return await elect.request('blockchain.scripthash.get_history', [revHash])
-}
-
 
 app.get('/address/:address', (req, res) => {
   var perPage = Number(req.query.perPage);
@@ -66,72 +176,85 @@ app.get('/address/:address', (req, res) => {
     return;
   }
 
-  // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
-  cl.command([
-    {
-      method: 'getreceivedbyaddress', 
-      parameters: {
-        address: urlAddress
-      }
-    },
-    { 
-      method: 'getAddressInfo', 
-      parameters: {
-        address: urlAddress
-      }
-    },
-    { 
-      method: 'listunspent', 
-      parameters: {
-        addresses: [urlAddress]
-      }
-    }
-  ]).then(async (responses) => {
-    const getTransactionsObj = await getTransactions(responses[1].scriptPubKey);
-    let txids = getTransactionsObj.result;
-    txids = txids.sort( (txid1, txid2) => txid2.height - txid1.height);
-    let transactions = [];
+  getBlockchainInfo().then( async (bestBlockHeight) => {
 
-    for(let i = perPage*(page-1); (i<(perPage*page)) && i<txids.length; i++){
+    createCache().then( async () => {
+
+      const cache = flatCache.load('transCache');
+      // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
       cl.command([
         {
-          method: 'gettransaction', 
+          method: 'getreceivedbyaddress', 
           parameters: {
-            txid: txids[i].tx_hash,
-            include_watchonly: true
+            address: urlAddress
+          }
+        },
+        { 
+          method: 'getAddressInfo', 
+          parameters: {
+            address: urlAddress
+          }
+        },
+        { 
+          method: 'listunspent', 
+          parameters: {
+            addresses: [urlAddress]
           }
         }
-      ]).then((transResponse) => {
-          transResponse[0]["blockheight"] = txids[i].height;
-          transactions.push(transResponse[0]);
-          if((transactions.length == perPage) || transactions.length === (txids.length - (perPage*(page-1)))){
+      ]).then(async (responses) => {
+      
+      if(cache.getKey(`bestBlockHeight`) === bestBlockHeight){
 
-            while( (i < txids.length -1) && txids[i].height === txids[i+1].height){
-              cl.command([
-                {
-                  method: 'gettransaction', 
-                  parameters: {
-                    txid: txids[i+1].tx_hash,
-                    include_watchonly: true
-                  }
-                }
-              ]).then((overheadTransResponse) => {
-                overheadTransResponse[0]["blockheight"] = txids[i+1].height;
-                transactions.push(overheadTransResponse[0]);
-              });
-              i++;
+        let transactions = [];
+        const addressTransCount = cache.getKey(`${urlAddress}_count`);
+
+        var startFromTrans = addressTransCount - perPage*(page) + 1;
+      
+        if(startFromTrans < 0) {
+          //if last page's remainder should use different value of startFromBlock and perPage
+          startFromTrans = 0;
+          perPage = (addressTransCount+1)%perPage;
+        }
+      
+        for(let i=startFromTrans; i< startFromTrans + perPage; i++){
+          const transId =  cache.getKey(`${urlAddress}_${i}`);
+          cl.command([
+            {
+              method: 'getrawtransaction', 
+              parameters: {
+                txid: transId,
+                verbose: true
+              }
             }
-            transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
-            responses[3] = txids.length;
-            responses[1] = transactions;
-            res.json(responses);
+          ]).then((transResponse) => {
+
+            cl.command([
+              {
+                method: 'getBlock', 
+                parameters: {
+                  blockhash: transResponse[0].blockhash,
+                }
+              }
+            ]).then((blockResponse) => {
+              transResponse[0]["blockheight"] = blockResponse[0].height;
+              transactions.push(transResponse[0]);
+              if((transactions.length == perPage)){
+              
+                transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
+                responses[3] = addressTransCount;
+                responses[1] = transactions;
+                res.json(responses);
+                }
+              });
+            });
           }
+        }  
+      })
+      .catch((err) => {
+        console.log(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
+        logger.error(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
       });
-    }
-  })
-  .catch((err) => {
-    console.log(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
-    logger.error(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
+    });
   });
 })
 

@@ -1,7 +1,7 @@
 const app = require('../app.js');
 const Client = require('bitcoin-core');
 const log4js = require("log4js");
-const flatCache = require('flat-cache')
+const flatCache = require('flat-cache');
 
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
@@ -88,22 +88,20 @@ const createCache = function(){
 
   try{
      
-      const cache = flatCache.load('cacheId');
+      const cache = flatCache.load('transCache');
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
         let count = 0;
         let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
-
+        //bestBlockHeight = bestBlockHeight - 40000;
 
         if(!cacheBestBlockHeight)
           cacheBestBlockHeight = 0;
 
         else if( cacheBestBlockHeight == bestBlockHeight){
-            console.log("Transaction Cache is up-to-date");
-            cacheBestBlockHeight++;
-              return resolve();
-          }
+          return resolve();
+        }
         else{
             cacheBestBlockHeight++;
             count = cache.getKey(`transactionCount`);
@@ -112,20 +110,89 @@ const createCache = function(){
         while((cacheBestBlockHeight <=  bestBlockHeight)){
           const block = await getBlockWithTx(cacheBestBlockHeight);
           
-          for(let i =0; i<block.nTx; i++)
-            await cache.setKey(`${count++}`, block.tx[i]);
+          for(let i =0; i<block.nTx; i++){
+            cache.setKey(`${count++}`, block.tx[i]);
 
+
+            await cl.command([
+              { 
+                method: 'getrawtransaction', 
+                parameters: {
+                  txid: block.tx[i],
+                  verbose: true
+                }
+              }
+            ]).then(async (responses) => { 
+
+              let inputAddress = [];
+              let outputAddress = [];
+
+              for(var vin of responses[0].vin) {
+                if(vin.txid) {
+                  await cl.command([
+                    { 
+                      method: 'getrawtransaction', 
+                      parameters: {
+                        txid: vin.txid,
+                        verbose: true
+                      }
+                    }
+                  ]).then((responses) => {
+                    for(let vout of responses[0].vout){
+                      for(let address of vout.scriptPubKey.addresses){
+
+                        if(outputAddress.indexOf(address) === -1 ){
+                          inputAddress.push(address);
+
+                          let addressTxCount = cache.getKey(`${address}_count`);
+                        
+                          if((!addressTxCount) && (addressTxCount !== 0))
+                            addressTxCount = -1;
+                        
+                          addressTxCount++;
+                          cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                          cache.setKey(`${address}_count`, addressTxCount);
+                          cache.save(true /* noPrune */);
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+
+              for(let vout of responses[0]["vout"]){
+                if(vout.scriptPubKey.addresses){
+                  for(let address of vout.scriptPubKey.addresses){
+                    if(inputAddress.indexOf(address) === -1){
+                      outputAddress.push(address);
+                    
+                      let addressTxCount = cache.getKey(`${address}_count`);
+                    
+                      if((!addressTxCount) && (addressTxCount !== 0))
+                        addressTxCount = -1;
+                    
+                      addressTxCount++;
+                      cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                      cache.setKey(`${address}_count`, addressTxCount);
+                      cache.save(true /* noPrune */);
+                    }  
+                  }
+                }
+              }
+            });
+        }
+        
           cacheBestBlockHeight++;
         }
 
-        await cache.setKey('bestBlockHeight', bestBlockHeight);
-        await cache.setKey('transactionCount', count);
+        cache.setKey('bestBlockHeight', bestBlockHeight);
+        cache.setKey('transactionCount', count);
 
         console.log("Updated cache till block height -> ", bestBlockHeight)
         console.log("New transaction count -> ", count)
 
 
-        await cache.save(true /* noPrune */);
+        cache.save(true /* noPrune */);
         return resolve();
         
         });
@@ -138,20 +205,17 @@ const createCache = function(){
 app.get('/transactions', (req, res) => {
   //Return a List of transactions
 
-  //try {
-
     var perPage = Number(req.query.perPage);
     var page = Number(req.query.page);
     
     getTxCount().then( (txCount) => {
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
-
-        //let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
+        //bestBlockHeight = bestBlockHeight - 40000;
 
         createCache().then( async () => {
 
-          const cache = flatCache.load('cacheId');
+          const cache = flatCache.load('transCache');
           
           let count = 0, transList= [];
           const memTxList = await getMemTx();
@@ -171,12 +235,11 @@ app.get('/transactions', (req, res) => {
               }
             }
           }
-                    
           if(cache.getKey(`bestBlockHeight`) === bestBlockHeight){
-            const transactionCount = await getTxCount();
+            const transactionCount = txCount;
             var startingTrans =  transactionCount - perPage*page;
                         
-            if(startingTrans <= 0) {
+            if(startingTrans < 0) {
               //if last page's remainder should use different value of startingTrans and perPage
               startingTrans = 0;
               perPage = transactionCount%perPage;
@@ -193,7 +256,6 @@ app.get('/transactions', (req, res) => {
                   }
                 }
               ]);
-              //overheadTxCount = (perPage*(page-1));
               const trans = response[0];
               trans.vout.forEach( (vout) => {amount += vout.value})
               trans.amount = amount;
@@ -203,7 +265,6 @@ app.get('/transactions', (req, res) => {
                 break;
               }
             }
-            
             res.json({
               results: transList.reverse(),
               txCount
@@ -214,50 +275,6 @@ app.get('/transactions', (req, res) => {
             throw "Cache's best Block Height is not updated"
           }
         });
-
-        /*
-        while((bestBlockHeight >= 0) && (count < perPage)){ 
-          const block = await getBlockWithTx(bestBlockHeight);
-        
-          if((overheadTxCount + block.nTx) <= (perPage*(page-1))){
-              overheadTxCount += block.nTx;
-            }
-          else {
-            let i;
-            if(overheadTxCount == (perPage*(page-1))){
-              i=0;
-            }
-            else
-              i = (overheadTxCount + block.nTx) - (perPage*(page-1));
-            while(i < block.nTx){
-              let amount = 0;
-              const response = await cl.command([
-                { 
-                  method: 'getrawtransaction', 
-                  parameters: {
-                    txid: block.tx[i],
-                    verbose: true
-                  }
-                }
-              ]);
-              overheadTxCount = (perPage*(page-1));
-              const trans = response[0];
-              trans.vout.forEach( (vout) => {amount += vout.value})
-              trans.amount = amount;
-              transList.push(trans);
-              count++;
-              if(count == perPage){
-                break;
-              }
-              i++;
-            }
-          }
-          bestBlockHeight--;
-        }
-        res.json({
-          results: transList,
-          txCount
-        });*/
       });
     })
     .catch( err => {
@@ -265,11 +282,6 @@ app.get('/transactions', (req, res) => {
       logger.error(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);  
       res.status(500).send(`Error Retrieving Blocks`);  
     })
-  /*} catch (err) {
-    console.log(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);
-    logger.error(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);  
-    res.status(500).send(`Error Retrieving Blocks`);
-  } */
 });
 
 module.exports = cl;
