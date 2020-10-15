@@ -89,36 +89,36 @@ export class AddressPage implements OnInit {
       }),
     }).subscribe(
       data => {
-        this.received = data[0];
+        this.received = 0;
+        this.sent = 0;
         this.result = data[1];
-        this.unspentDatas = data[2];
+        this.balanced = data[0] / 100000000;
         this.txCount = data[3];
 
         if (this.result) {
           this.txidsCount = this.result.length;
 
           this.result.map((transaction) => {
-            let outputs = [], amounts = [];
-            for(let vout of transaction["vout"]){
-              for(let address of vout.scriptPubKey.addresses){
+            const outputs = [], amounts = [];
+            for (const vout of transaction['vout']) {
+              for (const address of vout.scriptPubKey.addresses) {
                 outputs.push(address);
               }
-              amounts.push(vout.value)
+              amounts.push(vout.value);
             }
-            transaction["outputs"] = outputs;
-            transaction["amounts"] = amounts;
+            transaction['outputs'] = outputs;
+            transaction['amounts'] = amounts;
             return transaction;
-          })
+          });
 
           this.transactions = this.result;
-          console.log("trans", this.transactions)
           // this.getTransactionsInfo(this.result);
         }
-        if (this.unspentDatas) {
+        /*if (this.unspentDatas) {
           this.calculateBalanceAndTotal();
         } else {
           this.balanced = 0;
-        }
+        }*/
         this.calculatePagination();
       },
       err => {

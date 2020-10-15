@@ -65,7 +65,6 @@ app.get('/transaction/:txid', (req, res) => {
       }
     }
     response.vinRaw = results;
-    console.log("vinRaw",response )
     res.json(response);
   })
   .catch((err) => {
@@ -119,13 +118,6 @@ app.get('/transaction/:txid/get', (req, res) => {
         txid: urlTxid,
         verbose : true
       }
-
-      // Wallet RPC
-      /*method: 'gettransaction', 
-      parameters: {
-        txid: urlTxid,
-        include_watchonly: true
-      }*/
     }
   ]).then((responses) => {
     if(responses[0].name === "RpcError"){

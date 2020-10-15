@@ -48,12 +48,17 @@ async function getTransactions(scriptPubKey)  {
   const revHash = convertP2PKHHash(scriptPubKey)
   return await elect.request('blockchain.scripthash.get_history', [revHash])
 }
-/*
+
 async function listUnspentTransactions(scriptPubKey)  {   
   const revHash = convertP2PKHHash(scriptPubKey)
   return await elect.request('blockchain.scripthash.listunspent', [revHash])
 }
-*/
+
+async function getBalance(scriptPubKey)  {   
+  const revHash = convertP2PKHHash(scriptPubKey)
+  return await elect.request('blockchain.scripthash.get_balance', [revHash])
+}
+
 app.get('/address/:address', (req, res) => {
   var perPage = Number(req.query.perPage);
   var page = Number(req.query.page);
@@ -70,31 +75,51 @@ app.get('/address/:address', (req, res) => {
 
   // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
   cl.command([
-    {
-      //wallet rpc
-      method: 'getreceivedbyaddress', 
-      parameters: {
-        address: urlAddress
-      }
-    },
     { 
       //wallet rpc
       method: 'getAddressInfo', 
       parameters: {
         address: urlAddress
       }
-    },
-    { 
-      //wallet rpc
-      method: 'listunspent', 
-      parameters: {
-        addresses: [urlAddress]
-      }
     }
   ]).then(async (responses) => {
-    const getTransactionsObj = await getTransactions(responses[1].scriptPubKey);
+    const scriptPubKey = responses[0].scriptPubKey;
+    const getTransactionsObj = await getTransactions(scriptPubKey);
+    
     let txids = getTransactionsObj.result;
     txids = txids.sort( (txid1, txid2) => txid2.height - txid1.height);
+
+    const balance = await getBalance(scriptPubKey);
+    if(balance.result.length === 0){
+      responses[0] = 0;
+    }
+    else
+      responses[0] = balance.result[0].confirmed;
+    const unspentList = await listUnspentTransactions(scriptPubKey);
+
+    let unspentTransactions = [];
+    for(let listItem of unspentList.result){
+      await cl.command([
+        {
+          method: 'getrawtransaction', 
+          parameters: {
+            txid: listItem.tx_hash,
+            verbose: true
+          }
+        }
+      ]).then((unspentTransResponse) => {
+        unspentTransResponse[0]["blockheight"] = listItem.height;
+        
+        let amount = 0;
+        unspentTransResponse[0].vout.forEach( (vout) => { if(vout.scriptPubKey && vout.scriptPubKey.addresses && (vout.scriptPubKey.addresses.indexOf(urlAddress) !== -1))amount += vout.value})
+        unspentTransResponse[0].amount = amount;
+        unspentTransactions.push(unspentTransResponse[0]);
+        if(unspentTransactions.length === unspentList.result.length){
+          responses[2] = unspentTransactions;
+        }
+      });
+    }
+
 
     let transactions = [];
 
@@ -135,13 +160,7 @@ app.get('/address/:address', (req, res) => {
           
           transResponse[0]["inputs"] = results;
 
-          transactions.push(transResponse[0]);
-
-          console.log("res",txids[i].tx_hash,  transResponse[0].vout[0])
-          //console.log("vin", txids[i].tx_hash, transResponse[0].vin, transResponse[0].vout[0].scriptPubKey.addresses, transResponse[0].vout[1].scriptPubKey.addresses)
-          //console.log("transResponse", transResponse[0], transResponse[0].vin[0].scriptSig)
-          
-          
+          transactions.push(transResponse[0]);          
           
           if((transactions.length == perPage) || transactions.length === (txids.length - (perPage*(page-1)))){
 
@@ -189,7 +208,6 @@ app.get('/address/:address', (req, res) => {
             transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
             responses[3] = txids.length;
             responses[1] = transactions;
-            //console.log("res",responses[1][24], "vin", responses[1][24].vin, "vout", responses[1][24].vout[0].scriptPubKey.addresses, responses[1][24].vout[1].scriptPubKey.addresses)
             res.json(responses);
           }
       });
@@ -201,74 +219,3 @@ app.get('/address/:address', (req, res) => {
 });
 
 module.exports = {cl, elect};
-
-
-
-/*
-
-{
-    const getTransactionsObj = await getTransactions(responses[1].scriptPubKey);
-    const unspentList = await listUnspentTransactions(responses[1].scriptPubKey);
-    
-    let unspentTransactions = [];
-    
-    for(let listItem of unspentList.result){
-      cl.command([
-        {
-          method: 'gettransaction', 
-          parameters: {
-            txid: listItem.tx_hash,
-            include_watchonly: true
-          }
-        }
-      ]).then((unspentTransResponse) => {
-        unspentTransResponse[0]["blockheight"] = listItem.height;
-        unspentTransactions.push(unspentTransResponse[0]);
-      });
-    }
-
-    responses[2] = unspentTransactions;
-
-    let txids = getTransactionsObj.result;
-    txids = txids.sort( (txid1, txid2) => txid2.height - txid1.height);
-    let transactions = [];
-
-    for(let i = perPage*(page-1); (i<(perPage*page)) && i<txids.length; i++){
-      cl.command([
-        {
-          method: 'gettransaction', 
-          parameters: {
-            txid: txids[i].tx_hash,
-            include_watchonly: true
-          }
-        }
-      ]).then((transResponse) => {
-          transResponse[0]["blockheight"] = txids[i].height;
-          transactions.push(transResponse[0]);
-          if((transactions.length == perPage) || transactions.length === (txids.length - (perPage*(page-1)))){
-
-            while( (i < txids.length -1) && txids[i].height === txids[i+1].height){
-              cl.command([
-                {
-                  method: 'gettransaction', 
-                  parameters: {
-                    txid: txids[i+1].tx_hash,
-                    include_watchonly: true
-                  }
-                }
-              ]).then((overheadTransResponse) => {
-                overheadTransResponse[0]["blockheight"] = txids[i+1].height;
-                transactions.push(overheadTransResponse[0]);
-              });
-              i++;
-            }
-            transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
-            responses[3] = txids.length;
-            responses[1] = transactions;
-            res.json(responses);
-          }
-      });
-    }
-  }
-
-*/
