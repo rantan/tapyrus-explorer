@@ -6,9 +6,9 @@ const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
 
-let elect = jayson.client.tcp({
-  port: 50001
-})
+const elect = jayson.client.tcp({
+  port: 50001   
+});
 
 const cl = new Client(config);
 
@@ -50,7 +50,6 @@ async function getBlockchainInfo() {
 }
 
 app.get('/blocks', (req, res) => {
-  
   try{
     var perPage = Number(req.query.perPage);
     var page = Number(req.query.page);
@@ -77,10 +76,12 @@ app.get('/blocks', (req, res) => {
         results: result,
         bestHeight: bestBlockHeight
       });
-    });
+    })
+    .catch((err) => {
+      logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
+      });
 
   } catch (err) {
-    console.log(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
     logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
     res.status(500).send(`Error Retrieving Blocks`);
     } 

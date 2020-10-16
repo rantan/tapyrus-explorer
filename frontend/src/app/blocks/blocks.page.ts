@@ -85,7 +85,6 @@ export class BlocksPage implements OnInit {
         this.pages = 1;
         this.page = 1;
         this.bestHeight = 1;
-        console.log(data);
       },
       err => {
         console.log(err);

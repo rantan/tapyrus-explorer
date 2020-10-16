@@ -155,8 +155,9 @@ app.get('/transactions', async (req, res) => {
       });
     });
   } catch (err) {
-    console.log(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);
     logger.error(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);  
     res.status(500).send(`Error Retrieving Blocks`);
   } 
 });
+
+module.exports = cl;

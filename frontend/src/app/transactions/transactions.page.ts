@@ -37,7 +37,6 @@ export class TransactionsPage implements OnInit {
           this.transactions = resultData.results || [];
           this.txCount = resultData.txCount;
           this.calculatePagination();
-          console.log('trans', this.transactions);
         },
         (err) => {
           console.log(err);
@@ -72,7 +71,6 @@ export class TransactionsPage implements OnInit {
           this.pages = 1;
           this.page = 1;
           this.txCount = 1;
-          console.log(data);
         },
         (err) => {
           console.log(err);
