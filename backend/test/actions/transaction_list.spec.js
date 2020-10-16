@@ -1,7 +1,7 @@
 const supertest = require("supertest");
 const assert = require('assert');
-const app = require("../server");
-const cl = require("../actions/transaction_list");
+const app = require("../../server");
+const cl = require("../../actions/transaction_list");
 const sinon = require('sinon');
 
 

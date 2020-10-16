@@ -4,7 +4,7 @@
   "description": "The backend of tapyrus-explorer",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test",
+    "test": "mocha test/actions",
     "start": "nodemon server.js",
     "pretest": "eslint actions/",
     "prestart": "cross-env ENV='dev' node ./script.js",

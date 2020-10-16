@@ -1,7 +1,7 @@
 const supertest = require("supertest");
 const assert = require('assert');
-const app = require("../server");
-const cl = require("../actions/transaction_detail");
+const app = require("../../server");
+const cl = require("../../actions/transaction_detail");
 const sinon = require('sinon');
 
   describe("GET /transaction/:txid return type check", function() {
