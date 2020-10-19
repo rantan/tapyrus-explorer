@@ -88,7 +88,7 @@ const createCache = function(){
 
   try{
      
-      const cache = flatCache.load('transCache');
+      const cache = flatCache.load('transactionCache');
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
@@ -124,9 +124,6 @@ const createCache = function(){
               }
             ]).then(async (responses) => { 
 
-              let inputAddress = [];
-              let outputAddress = [];
-
               for(var vin of responses[0].vin) {
                 if(vin.txid) {
                   await cl.command([
@@ -137,45 +134,61 @@ const createCache = function(){
                         verbose: true
                       }
                     }
-                  ]).then((responses) => {
-                    for(let vout of responses[0].vout){
+                  ]).then((vinResponses) => {
+                    for(let vout of vinResponses[0].vout){
                       for(let address of vout.scriptPubKey.addresses){
-
-                        if(outputAddress.indexOf(address) === -1 ){
-                          inputAddress.push(address);
-
-                          let addressTxCount = cache.getKey(`${address}_count`);
                         
-                          if((!addressTxCount) && (addressTxCount !== 0))
-                            addressTxCount = -1;
-                        
-                          addressTxCount++;
-                          cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
-                          cache.setKey(`${address}_count`, addressTxCount);
-                          cache.save(true /* noPrune */);
+                        //flag to represent the availability of this address in the vout of original Transaction
+                        let isPresent = false;
+  
+                        for(let originalVout of responses[0]["vout"]){
+                          //avoiding multiple entries of the same address for transaction cache
+                          if(originalVout.scriptPubKey.addresses  && (originalVout.scriptPubKey.addresses.indexOf(address))){
+                            isPresent = true;
+                            break;
+                          }
                         }
+  
+                        if(isPresent){
+                          continue;
+                        }
+  
+                        let addressTxCount = cache.getKey(`${address}_count`);
+    
+                        if((!addressTxCount) && (addressTxCount !== 0))
+                          addressTxCount = -1;
+    
+                        addressTxCount++;
+                        cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                        cache.setKey(`${address}_count`, addressTxCount);
+                        cache.save(true /* noPrune */);
                       }
                     }
                   });
                 }
               }
-
+  
               for(let vout of responses[0]["vout"]){
                 if(vout.scriptPubKey.addresses){
                   for(let address of vout.scriptPubKey.addresses){
-                    if(inputAddress.indexOf(address) === -1){
-                      outputAddress.push(address);
+  
+                    let addressTxCount = cache.getKey(`${address}_count`);
+      
+                    if((!addressTxCount) && (addressTxCount !== 0))
+                      addressTxCount = -1;
+    
+                    addressTxCount++;
+                    cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                    cache.setKey(`${address}_count`, addressTxCount);
+  
+                    let addressReceived = cache.getKey(`${address}_received`);
+                    if(!addressReceived)
+                      addressReceived = 0;
                     
-                      let addressTxCount = cache.getKey(`${address}_count`);
-                    
-                      if((!addressTxCount) && (addressTxCount !== 0))
-                        addressTxCount = -1;
-                    
-                      addressTxCount++;
-                      cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
-                      cache.setKey(`${address}_count`, addressTxCount);
-                      cache.save(true /* noPrune */);
-                    }  
+                    addressReceived += vout.value;
+                    cache.setKey(`${address}_received`, addressReceived);
+  
+                    cache.save(true /* noPrune */);
                   }
                 }
               }
@@ -215,10 +228,11 @@ app.get('/transactions', (req, res) => {
 
         createCache().then( async () => {
 
-          const cache = flatCache.load('transCache');
+          const cache = flatCache.load('transactionCache');
           
           let count = 0, transList= [];
           const memTxList = await getMemTx();
+          console.log(memTxList)
           if(( memTxList.length) > (perPage*(page-1))){
   
             let j = (perPage*(page-1));
@@ -245,7 +259,7 @@ app.get('/transactions', (req, res) => {
               perPage = transactionCount%perPage;
             }
       
-            for(let i=startingTrans; i< startingTrans + perPage; i++){
+            for(let i= startingTrans + perPage -1 ; i>= startingTrans; i--){
               let amount = 0;
               const response = await cl.command([
                 { 
@@ -266,7 +280,7 @@ app.get('/transactions', (req, res) => {
               }
             }
             res.json({
-              results: transList.reverse(),
+              results: transList,
               txCount
             });
             return;

@@ -47,14 +47,13 @@ const createCache = function(){
 
   try{
      
-      const cache = flatCache.load('transCache');
+      const cache = flatCache.load('transactionCache');
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
         let count = 0;
         let cacheBestBlockHeight = cache.getKey(`bestBlockHeight`);
         //bestBlockHeight = bestBlockHeight - 40000;
-
 
         if(!cacheBestBlockHeight)
           cacheBestBlockHeight = 0;
@@ -82,9 +81,6 @@ const createCache = function(){
               }
             ]).then(async (responses) => { 
 
-              let inputAddress = [];
-              let outputAddress = [];
-
               for(var vin of responses[0].vin) {
                 if(vin.txid) {
                   await cl.command([
@@ -95,45 +91,61 @@ const createCache = function(){
                         verbose: true
                       }
                     }
-                  ]).then((responses) => {
-                    for(let vout of responses[0].vout){
+                  ]).then((vinResponses) => {
+                    for(let vout of vinResponses[0].vout){
                       for(let address of vout.scriptPubKey.addresses){
-
-                        if(outputAddress.indexOf(address) === -1 ){
-                          inputAddress.push(address);
-
-                          let addressTxCount = cache.getKey(`${address}_count`);
                         
-                          if((!addressTxCount) && (addressTxCount !== 0))
-                            addressTxCount = -1;
-                        
-                          addressTxCount++;
-                          cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
-                          cache.setKey(`${address}_count`, addressTxCount);
-                          cache.save(true /* noPrune */);
+                        //flag to represent the availability of this address in the vout of original Transaction
+                        let isPresent = false;
+  
+                        for(let originalVout of responses[0]["vout"]){
+                          //avoiding multiple entries of the same address for transaction cache
+                          if(originalVout.scriptPubKey.addresses  && (originalVout.scriptPubKey.addresses.indexOf(address))){
+                            isPresent = true;
+                            break;
+                          }
                         }
+  
+                        if(isPresent){
+                          continue;
+                        }
+  
+                        let addressTxCount = cache.getKey(`${address}_count`);
+    
+                        if((!addressTxCount) && (addressTxCount !== 0))
+                          addressTxCount = -1;
+    
+                        addressTxCount++;
+                        cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                        cache.setKey(`${address}_count`, addressTxCount);
+                        cache.save(true /* noPrune */);
                       }
                     }
                   });
                 }
               }
-
+  
               for(let vout of responses[0]["vout"]){
                 if(vout.scriptPubKey.addresses){
                   for(let address of vout.scriptPubKey.addresses){
-                    if(inputAddress.indexOf(address) === -1){
-                      outputAddress.push(address);
+  
+                    let addressTxCount = cache.getKey(`${address}_count`);
+      
+                    if((!addressTxCount) && (addressTxCount !== 0))
+                      addressTxCount = -1;
+    
+                    addressTxCount++;
+                    cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
+                    cache.setKey(`${address}_count`, addressTxCount);
+  
+                    let addressReceived = cache.getKey(`${address}_received`);
+                    if(!addressReceived)
+                      addressReceived = 0;
                     
-                      let addressTxCount = cache.getKey(`${address}_count`);
-                    
-                      if((!addressTxCount) && (addressTxCount !== 0))
-                        addressTxCount = -1;
-                    
-                      addressTxCount++;
-                      cache.setKey(`${address}_${addressTxCount}`, block.tx[i]);
-                      cache.setKey(`${address}_count`, addressTxCount);
-                      cache.save(true /* noPrune */);
-                    }  
+                    addressReceived += vout.value;
+                    cache.setKey(`${address}_received`, addressReceived);
+  
+                    cache.save(true /* noPrune */);
                   }
                 }
               }
@@ -149,10 +161,8 @@ const createCache = function(){
         console.log("Updated cache till block height -> ", bestBlockHeight)
         console.log("New transaction count -> ", count)
 
-
         cache.save(true /* noPrune */);
         return resolve();
-        
         });
   } catch (err) {
     return reject(err);
@@ -180,7 +190,9 @@ app.get('/address/:address', (req, res) => {
 
     createCache().then( async () => {
 
-      const cache = flatCache.load('transCache');
+      const cache = flatCache.load('transactionCache');
+      //bestBlockHeight = bestBlockHeight - 40000;
+
       // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
       cl.command([
         {
@@ -241,8 +253,9 @@ app.get('/address/:address', (req, res) => {
               if((transactions.length == perPage)){
               
                 transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
-                responses[3] = addressTransCount;
+                responses[3] = addressTransCount + 1;
                 responses[1] = transactions;
+                responses[0] = cache.getKey(`${urlAddress}_received`)
                 res.json(responses);
                 }
               });
