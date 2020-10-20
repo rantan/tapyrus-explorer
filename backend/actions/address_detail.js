@@ -1,4 +1,5 @@
 const Client = require('bitcoin-core');
+const Jssha = require('jssha');
 const jayson = require('jayson/promise');
 const log4js = require("log4js");
 var flatCache = require('flat-cache');
@@ -38,6 +39,26 @@ async function getBlockWithTx(blockNum) {
   const blockHash = await cl.getBlockHash(blockNum);
   const result = await cl.getBlock(blockHash);
   return result;
+}
+
+function sha256(text) {
+  const hashFunction = new Jssha('SHA-256', 'HEX');
+  hashFunction.update(text);
+  return hashFunction.getHash('HEX');
+}
+
+function convertP2PKHHash(p2pkh) {
+  const hash = sha256(p2pkh);
+  let newHash = "";
+  for(let i=hash.length-2; i>=0; i -= 2){
+   newHash = newHash.concat(hash.slice(i, i+2))    
+  }
+  return newHash;
+}
+
+async function getBalance(scriptPubKey)  {   
+  const revHash = convertP2PKHHash(scriptPubKey)
+  return await elect.request('blockchain.scripthash.get_balance', [revHash])
 }
 
 const createCache = function(){
@@ -166,7 +187,7 @@ const createCache = function(){
         });
   } catch (err) {
     return reject(err);
-  }
+    }
  });
 }
 
@@ -174,12 +195,10 @@ app.get('/address/:address', (req, res) => {
   var perPage = Number(req.query.perPage);
   var page = Number(req.query.page);
   
-  //const regex = new RegExp(/^[13][a-km-zA-HJ-NP-Z0-9]{26,33}$/);
   const regex = new RegExp(/^[0-9a-zA-Z]{26,35}$/);
   const urlAddress = req.params.address;
   
   if (!regex.test(urlAddress)) {
-    console.log(`Regex Test didn't pass for URL - /address/${urlAddress}`);
     logger.error(`Regex Test didn't pass for URL - /address/${urlAddress}`);
 
     res.status(400).send('Bad request');
@@ -194,23 +213,11 @@ app.get('/address/:address', (req, res) => {
       //bestBlockHeight = bestBlockHeight - 40000;
 
       // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc
-      cl.command([
-        {
-          method: 'getreceivedbyaddress', 
-          parameters: {
-            address: urlAddress
-          }
-        },
-        { 
+      cl.command([{ 
+          //wallet rpc
           method: 'getAddressInfo', 
           parameters: {
             address: urlAddress
-          }
-        },
-        { 
-          method: 'listunspent', 
-          parameters: {
-            addresses: [urlAddress]
           }
         }
       ]).then(async (responses) => {
@@ -218,6 +225,15 @@ app.get('/address/:address', (req, res) => {
       if(cache.getKey(`bestBlockHeight`) === bestBlockHeight){
 
         let transactions = [];
+        const scriptPubKey = responses[0].scriptPubKey;
+
+        const balance = await getBalance(scriptPubKey);
+        if(balance.result.length === 0){
+          responses[0] = 0;
+        }
+        else
+          responses[0] = balance.result[0].confirmed;
+        
         const addressTransCount = cache.getKey(`${urlAddress}_count`);
 
         var startFromTrans = addressTransCount - perPage*(page) + 1;
@@ -247,15 +263,40 @@ app.get('/address/:address', (req, res) => {
                   blockhash: transResponse[0].blockhash,
                 }
               }
-            ]).then((blockResponse) => {
+            ]).then(async (blockResponse) => {
               transResponse[0]["blockheight"] = blockResponse[0].height;
+
+              let results = [];
+
+              for(var vin of transResponse[0].vin) {
+                if(vin.txid) {
+                  await cl.command([
+                    { 
+                      method: 'getrawtransaction', 
+                      parameters: {
+                        txid: vin.txid,
+                        verbose: true
+                      }
+                    }
+                  ]).then((vinResponses) => {
+                    for(let vout of vinResponses[0].vout){
+                      for(let address of vout.scriptPubKey.addresses)
+                        results.push(address);
+                    }
+                  });
+                } else {
+                  results.push("");
+                }
+              }
+              transResponse[0]["inputs"] = results;
+
               transactions.push(transResponse[0]);
               if((transactions.length == perPage)){
               
                 transactions = transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
                 responses[3] = addressTransCount + 1;
                 responses[1] = transactions;
-                responses[0] = cache.getKey(`${urlAddress}_received`)
+                responses[2] = cache.getKey(`${urlAddress}_received`)
                 res.json(responses);
                 }
               });
@@ -264,11 +305,13 @@ app.get('/address/:address', (req, res) => {
         }  
       })
       .catch((err) => {
-        console.log(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
         logger.error(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
       });
     });
+  })
+  .catch((err) => {
+    logger.error(`Error retrieving information for addresss - ${urlAddress}. Error Message - ${err.message}`);
   });
-})
+});
 
 module.exports = {cl, elect};

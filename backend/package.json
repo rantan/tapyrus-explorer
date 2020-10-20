@@ -4,7 +4,8 @@
   "description": "The backend of tapyrus-explorer",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test",
+    "setup" : "node setup/setup.js",
+    "test": "mocha test/actions",
     "start": "nodemon server.js",
     "pretest": "eslint actions/",
     "prestart": "cross-env ENV='dev' node ./script.js",
@@ -21,7 +22,7 @@
     "jayson": "^3.1.1",
     "jssha": "^2.3.1",
     "log4js": "^6.3.0",
-    "sinon": "^9.0.3",
+    "sinon": "^9.2.0",
     "socket.io": "^2.3.0",
     "ws": "^7.1.2",
     "wss": "^3.3.4"

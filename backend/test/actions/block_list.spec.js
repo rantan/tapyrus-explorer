@@ -1,9 +1,9 @@
 const supertest = require("supertest");
 const assert = require('assert');
-const app = require("../server");
-const block_list = require("../actions/block_list");
+const app = require("../../server");
+const block_list = require("../../actions/block_list");
 const sinon = require('sinon');
-  
+
   
 describe("GET /blocks return type check", function() {
     it("/blocks", function(done) {

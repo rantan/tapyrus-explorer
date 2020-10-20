@@ -19,6 +19,7 @@ export class AddressPage implements OnInit {
   result: any;
   transactions = [];
   unspentDatas = [];
+  outputs = [];
   copied = false;
   perPage = 25; // default with 20 per page
   page = 1; // default start with page 1
@@ -39,6 +40,10 @@ export class AddressPage implements OnInit {
 
   goToTransaction(txid: string) {
     this.navCtrl.navigateForward(`/transactions/${txid}`);
+  }
+
+  goToAddressPage(hash: string) {
+    this.navCtrl.navigateForward(`/addresses/${hash}`);
   }
 
   copyAddress() {
@@ -84,21 +89,37 @@ export class AddressPage implements OnInit {
       }),
     }).subscribe(
       data => {
-        this.received = data[0];
+        this.received = data[2];
+        this.balanced = data[0] / 100000000;
+        this.sent = this.received - this.balanced;
         this.result = data[1];
-        this.unspentDatas = data[2];
         this.txCount = data[3];
 
         if (this.result) {
           this.txidsCount = this.result.length;
+
+          this.result.map((transaction) => {
+            const outputs = [], amounts = [];
+            for (const vout of transaction['vout']) {
+              for (const address of vout.scriptPubKey.addresses) {
+                outputs.push(address);
+              }
+              amounts.push(vout.value);
+            }
+            transaction['outputs'] = outputs;
+            transaction['amounts'] = amounts;
+            console.log(transaction);
+            return transaction;
+          });
+
           this.transactions = this.result;
           // this.getTransactionsInfo(this.result);
         }
-        if (this.unspentDatas) {
+        /*if (this.unspentDatas) {
           this.calculateBalanceAndTotal();
         } else {
           this.balanced = 0;
-        }
+        }*/
         this.calculatePagination();
       },
       err => {

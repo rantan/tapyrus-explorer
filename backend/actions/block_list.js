@@ -78,12 +78,10 @@ app.get('/blocks', (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
       logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
       });
 
   } catch (err) {
-    console.log(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
     logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
     res.status(500).send(`Error Retrieving Blocks`);
     } 

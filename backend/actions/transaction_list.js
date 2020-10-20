@@ -217,7 +217,7 @@ const createCache = function(){
 
 app.get('/transactions', (req, res) => {
   //Return a List of transactions
-
+  try{
     var perPage = Number(req.query.perPage);
     var page = Number(req.query.page);
     
@@ -232,7 +232,6 @@ app.get('/transactions', (req, res) => {
           
           let count = 0, transList= [];
           const memTxList = await getMemTx();
-          console.log(memTxList)
           if(( memTxList.length) > (perPage*(page-1))){
   
             let j = (perPage*(page-1));
@@ -249,6 +248,7 @@ app.get('/transactions', (req, res) => {
               }
             }
           }
+
           if(cache.getKey(`bestBlockHeight`) === bestBlockHeight){
             const transactionCount = txCount;
             var startingTrans =  transactionCount - perPage*page;
@@ -290,12 +290,11 @@ app.get('/transactions', (req, res) => {
           }
         });
       });
-    })
-    .catch( err => {
-      console.log(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);
-      logger.error(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);  
-      res.status(500).send(`Error Retrieving Blocks`);  
-    })
+    });
+  } catch (err) {
+    logger.error(`Error retrieving ${perPage} transactions for page#${page}. Error Message - ${err.message}`);  
+    res.status(500).send(`Error Retrieving Blocks`);
+  } 
 });
 
 module.exports = cl;

@@ -25,7 +25,7 @@ export class BlockRawdataPage implements OnInit {
   }
 
   getBlockRawData() {
-    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/rawData`).subscribe(
+    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/raw`).subscribe(
       data => {
         const result: any = data || '';
         this.blockRawData = result;
