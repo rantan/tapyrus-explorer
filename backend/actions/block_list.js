@@ -87,4 +87,4 @@ app.get('/blocks', (req, res) => {
     } 
 });
 
-module.exports  = {cl, elect}
+module.exports  = elect;

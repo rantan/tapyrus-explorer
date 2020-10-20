@@ -33,10 +33,28 @@ these files will only appear in your local. Eg.
 }
 ```
 
-To start backend, Run:
+To setup backend, from `/backend`, run:
 ```bash
-$ cd backend; npm start;
+npm install
+npm run setup
 ```
+
+To start backend, from `/backend`, run:
+```bash
+npm start
+```
+
+To update cache manually, from `/backend`, run:
+```bash
+npm run setup
+```
+
+To test backend, first update cache and then run tests from `/backend` :
+```bash
+npm run setup
+npm run test
+```
+
 backend environment can be changed before you run `npm start` or `npm deploy` by changing the ENV to `'dev'` or `'prod'` in the package.json file as below
 ```json
   "scripts": {
