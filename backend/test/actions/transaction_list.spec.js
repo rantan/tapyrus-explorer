@@ -42,17 +42,6 @@ describe("GET /transactions return type check", function() {
 
 describe("GET /transactions and then call individual transaction using /transaction/:txid", function() {
   beforeEach(() => {
-    
-    /*sinon.stub(cl, "getBlockchainInfo")
-      .resolves({
-        "headers": 41836,
-      });
-      
-    sinon.stub(cl, "getChainTxStats")
-    .resolves({
-      "txcount": 41919,
-    }); */
-
     sinon.stub(cl, "command")
     .resolves([{
         txid: '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
@@ -113,8 +102,10 @@ describe("GET /transactions and then call individual transaction using /transact
             assert.strictEqual(transaction.blockhash, "aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5");
             assert.strictEqual(transaction.time, 1603108230);
             assert.strictEqual(transaction.blocktime, 1603108230);
+            
             assert.strictEqual(transaction.vin[0].coinbase, "0342a3000101");
             assert.strictEqual(transaction.vin[0].sequence, 4294967295);
+            
             assert.strictEqual(transaction.vout[0].value, 50);
             assert.strictEqual(transaction.vout[0].n, 0);
             assert.strictEqual(transaction.vout[0].scriptPubKey.asm, "OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG");

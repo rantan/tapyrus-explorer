@@ -314,4 +314,4 @@ app.get('/address/:address', (req, res) => {
   });
 });
 
-module.exports = {cl, elect};
+module.exports = elect;

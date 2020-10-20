@@ -44,8 +44,14 @@ To start backend, from `/backend`, run:
 npm start
 ```
 
-To test backend, from `/backend`, run:
+To update cache manually, from `/backend`, run:
 ```bash
+npm run setup
+```
+
+To test backend, first update cache and then run tests from `/backend` :
+```bash
+npm run setup
 npm run test
 ```
 

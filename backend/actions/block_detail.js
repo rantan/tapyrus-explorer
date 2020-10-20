@@ -133,4 +133,4 @@ app.get('/block/:blockHash/txns', (req, res) => {
   });
 })
 
-module.exports  = {cl}
+module.exports  = cl;
