@@ -5,12 +5,8 @@ const Client = require('bitcoin-core');
 const app = require('../app.js');
 const environment = require('../environments/environment');
 const config = require(environment.CONFIG);
-
-const elect = jayson.client.tcp({
-  port: 50001   
-});
-
-const cl = new Client(config);
+const cl = new Client(config.tapyrusd);
+const elect = jayson.client.tcp(config.electrs);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -78,7 +74,7 @@ app.get('/blocks', (req, res) => {
       });
     })
     .catch((err) => {
-      logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);  
+      logger.error(`Error retrieving ${perPage} blocks for page#${page}. Error Message - ${err.message}`);
       });
 
   } catch (err) {
