@@ -1,3 +1,4 @@
+const path = require('path');
 const app = require('../app.js');
 const Client = require('bitcoin-core');
 const log4js = require("log4js");
@@ -86,7 +87,7 @@ const createCache = function(){
 
   try{
 
-      const cache = flatCache.load('transactionCache');
+      const cache = flatCache.load('transactionCache', path.resolve('./tmp/cache'));
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
@@ -226,7 +227,7 @@ app.get('/transactions', (req, res) => {
 
         createCache().then( async () => {
 
-          const cache = flatCache.load('transactionCache');
+          const cache = flatCache.load('transactionCache', path.resolve('./tmp/cache'));
 
           let count = 0, transList= [];
           const memTxList = await getMemTx();

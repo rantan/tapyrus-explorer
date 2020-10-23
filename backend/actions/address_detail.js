@@ -1,3 +1,4 @@
+const path = require('path');
 const Client = require('bitcoin-core');
 const Jssha = require('jssha');
 const jayson = require('jayson/promise');
@@ -65,7 +66,7 @@ const createCache = function(){
 
   try{
      
-      const cache = flatCache.load('transactionCache');
+      const cache = flatCache.load('transactionCache', path.resolve('./tmp/cache'));
 
       getBlockchainInfo().then( async (bestBlockHeight) => {
 
@@ -206,7 +207,7 @@ app.get('/address/:address', (req, res) => {
 
     createCache().then( async () => {
 
-      const cache = flatCache.load('transactionCache');
+      const cache = flatCache.load('transactionCache', path.resolve('./tmp/cache'));
       //bestBlockHeight = bestBlockHeight - 40000;
 
       // bitcoin-cli listreceivedbyaddress 0 true true  bcrt1q83ttww2z7d20gwsze4eq9py5s45j48y7smvtdc

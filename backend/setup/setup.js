@@ -1,4 +1,5 @@
 var flatCache = require('flat-cache');
+const path = require('path');
 const Client = require('bitcoin-core');
 const log4js = require("log4js");
 
@@ -32,7 +33,7 @@ const createCache = function (){
   
   try{
      
-      const cache = flatCache.load('transactionCache');
+      const cache = flatCache.load('transactionCache', path.resolve('./tmp/cache'));
       
       getBlockchainInfo().then( async (bestBlockHeight) => {
         

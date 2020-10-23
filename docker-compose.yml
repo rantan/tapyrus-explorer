@@ -7,6 +7,11 @@ services:
       - tapyrusd
     ports:
       - "3001:3001"
+    volumes:
+      - ./backend:/app:cached
+      - /app/node_modules
+      - /app/tmp
+      - backend-cache:/app/tmp/cache
   frontend:
     build: ./frontend
     depends_on:
@@ -14,6 +19,9 @@ services:
     ports:
       - "4200:4200"
     command: ng serve --host 0.0.0.0
+    volumes:
+      - ./frontend:/app:cached
+      - /app/node_modules
   tapyrusd:
     image: rantan39/tapyrusd:latest
     environment:
@@ -36,5 +44,6 @@ services:
       - tapyrusd
     command: electrs -vvvv --timestamp --conf /etc/electrs/config.toml --db-dir /var/lib/electrs --daemon-rpc-addr tapyrusd:2377 --daemon-dir /var/lib/tapyrus/prod-1939510133 --network-id 1939510133  --electrum-rpc-addr 0.0.0.0:50001
 volumes:
+  backend-cache:
   tapyrus:
   electrs:
