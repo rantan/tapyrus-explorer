@@ -4,15 +4,15 @@ if [ ! -e ${CONF_DIR}/dev.json ]; then
   cat << EOS > ${CONF_DIR}/dev.json
 {
   "tapyrusd": {
-    "network": "testnet",
-    "username": "rpcuser",
-    "password": "rpcpassword",
-    "host": "tapyrusd",
-    "port": 2377
+    "network": "mainnet",
+    "username": ${TAPYRUSD_RPC_USER},
+    "password": ${TAPYRUSD_RPC_PASSWORD},
+    "host": ${TAPYRUSD_RPC_HOST},
+    "port": ${TAPYRUSD_RPC_PORT}
   },
   "electrs": {
-    "port": 50001,
-    "host": "electrs"
+    "port": ${ELECTRS_RPC_PORT},
+    "host":  ${ELECTRS_RPC_HOST}
   }
 }
 EOS
