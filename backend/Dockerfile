@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:14.13.1-stretch
 
 ENV CONF_DIR='/app/configurations'
 
