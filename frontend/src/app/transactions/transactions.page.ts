@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
+import { BackendService } from "../backend.service";
+
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.page.html',
   styleUrls: ['./transactions.page.scss'],
+  providers: [BackendService]
 })
 export class TransactionsPage implements OnInit {
   perPage = 25; // default with 20 per page
@@ -15,22 +18,18 @@ export class TransactionsPage implements OnInit {
   searchValue: string;
   txCount = 0;
 
-  constructor(private httpClient: HttpClient, private navCtrl: NavController) {}
+  constructor(
+    private httpClient: HttpClient,
+    private navCtrl: NavController,
+    private backendService: BackendService
+  ) {}
 
   ngOnInit() {
     this.getTransactionLists();
   }
 
   getTransactionLists() {
-    this.httpClient
-      .get('http://localhost:3001/transactions', {
-        params: new HttpParams({
-          fromObject: {
-            page: this.page.toString(),
-            perPage: this.perPage.toString(),
-          },
-        }),
-      })
+    this.backendService.getTransactions(this.page, this.perPage)
       .subscribe(
         (data) => {
           const resultData: any = data || {};
@@ -63,8 +62,7 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    this.httpClient
-      .get(`http://localhost:3001/transaction/${this.searchValue}/get`)
+    this.backendService.searchTransaction(this.searchValue)
       .subscribe(
         (data) => {
           this.transactions = [data];

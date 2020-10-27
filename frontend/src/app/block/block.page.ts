@@ -3,11 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ModalController, NavController } from '@ionic/angular';
 import { BlockRawdataPage } from '../block-rawdata/block-rawdata.page';
+import { BackendService } from "../backend.service";
 
 @Component({
   selector: 'app-block',
   templateUrl: './block.page.html',
   styleUrls: ['./block.page.scss'],
+  providers: [BackendService]
 })
 export class BlockPage implements OnInit {
 
@@ -23,7 +25,8 @@ export class BlockPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private httpClient: HttpClient,
     private modalCtrl: ModalController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private backendService: BackendService
   ) { }
 
   ngOnInit() {
@@ -32,7 +35,7 @@ export class BlockPage implements OnInit {
   }
 
   getBlockInfo() {
-    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}`).subscribe(
+    this.backendService.getBlock(this.blockHash).subscribe(
       data => {
         this.block = data || {};
       },
@@ -58,7 +61,7 @@ export class BlockPage implements OnInit {
   }
 
   getBlockTxnsInfo() {
-    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/txns`).subscribe(
+    this.backendService.getBlockTransactions(this.blockHash).subscribe(
       data => {
         this.blockTxns = data || {};
         this.txConfirmation = this.blockTxns.confirmations;
