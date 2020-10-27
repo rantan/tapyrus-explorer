@@ -69,6 +69,17 @@ backend environment can be changed before you run `npm start` or `npm deploy` by
 ```
 
 To start frontend, Run:
+
+Set configuration file if you need. So far, it can configure backend URL like below.
+
+```json
+{
+  "backendUrl": "https://some.tapyrusexploler.example.com/api"
+}
+```
+
+Then put this json as `frontend/src/assets/config.json'. After this you can start frontend server like below.
+
 ```bash
 $ cd frontend; ionic serve;
 ```

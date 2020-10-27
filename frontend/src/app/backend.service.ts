@@ -2,10 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { ConfigService } from './config.service';
+
 @Injectable()
 export class BackendService {
-  backendUrl = 'http://192.168.0.80:3001'
-  constructor(private http: HttpClient) { }
+  backendUrl = 'http://localhost:3001';
+  constructor(
+    private http: HttpClient,
+    private configService: ConfigService
+  ) {
+    if (configService.config && configService.config.backendUrl) {
+      this.backendUrl = configService.config.backendUrl;
+    }
+  }
 
   getBlocks(page: Number, perPage: Number): Observable<any> {
     return this.http.get(`${this.backendUrl}/blocks`, {
@@ -31,7 +40,7 @@ export class BackendService {
 
   getTransactions(page: Number, perPage: Number): Observable<any> {
     return this.http.get(`${this.backendUrl}/transactions`, {
-      params: new HttpParams({ fromObject: { page, perPage } })
+      params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
     });
   }
 
