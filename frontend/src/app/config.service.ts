@@ -29,7 +29,7 @@ export class ConfigService {
         this.config = config;
       },
       error => console.error(error)
-    )
+    );
   }
 
   getConfig(): Observable<Config> {
@@ -37,7 +37,7 @@ export class ConfigService {
       .pipe(
         retry(3), // retry a failed request up to 3 times
         catchError(this.handleError) // then handle the error
-      )
+      );
   }
 
   private handleError(error: HttpErrorResponse) {

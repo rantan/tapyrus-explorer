@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ModalController, NavController } from '@ionic/angular';
 import { BlockRawdataPage } from '../block-rawdata/block-rawdata.page';
-import { BackendService } from "../backend.service";
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-block',

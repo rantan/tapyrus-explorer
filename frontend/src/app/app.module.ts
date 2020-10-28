@@ -13,7 +13,7 @@ import { SharedPipeModule } from './modules/sharePipe.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
-import {ConfigService} from "./config.service";
+import {ConfigService} from './config.service';
 
 @NgModule({
   declarations: [AppComponent, FooterComponent],

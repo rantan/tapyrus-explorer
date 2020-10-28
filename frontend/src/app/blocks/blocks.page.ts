@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
-import { BackendService } from "../backend.service";
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-blocks',

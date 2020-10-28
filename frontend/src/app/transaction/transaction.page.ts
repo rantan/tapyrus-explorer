@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ModalController, NavController } from '@ionic/angular';
 
 import { TransactionRawdataPage } from '../transaction-rawdata/transaction-rawdata.page';
-import { BackendService } from "../backend.service";
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-transaction',

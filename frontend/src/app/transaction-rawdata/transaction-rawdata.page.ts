@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 
-import { BackendService } from "../backend.service";
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-transaction-rawdata',

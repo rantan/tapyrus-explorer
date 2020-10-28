@@ -16,7 +16,7 @@ export class BackendService {
     }
   }
 
-  getBlocks(page: Number, perPage: Number): Observable<any> {
+  getBlocks(page: number, perPage: number): Observable<any> {
     return this.http.get(`${this.backendUrl}/blocks`, {
       params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
     });
@@ -38,7 +38,7 @@ export class BackendService {
     return this.http.get(`${this.backendUrl}/block/${blockHash}/txns`);
   }
 
-  getTransactions(page: Number, perPage: Number): Observable<any> {
+  getTransactions(page: number, perPage: number): Observable<any> {
     return this.http.get(`${this.backendUrl}/transactions`, {
       params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
     });
@@ -52,7 +52,7 @@ export class BackendService {
     return this.http.get(`${this.backendUrl}/transaction/${txId}/rawData`);
   }
 
-  getAddressInfo(address: string, page: Number, perPage: Number): Observable<any> {
+  getAddressInfo(address: string, page: number, perPage: number): Observable<any> {
     return this.http.get(`${this.backendUrl}/address/${address}`, {
       params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
     });
