@@ -2,10 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 
+import { BackendService } from '../backend.service';
+
 @Component({
   selector: 'app-block-rawdata',
   templateUrl: './block-rawdata.page.html',
   styleUrls: ['./block-rawdata.page.scss'],
+  providers: [BackendService]
 })
 export class BlockRawdataPage implements OnInit {
 
@@ -16,7 +19,8 @@ export class BlockRawdataPage implements OnInit {
   constructor(
     private navParams: NavParams,
     private httpClient: HttpClient,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private backendService: BackendService
   ) { }
 
   ngOnInit() {
@@ -25,7 +29,7 @@ export class BlockRawdataPage implements OnInit {
   }
 
   getBlockRawData() {
-    this.httpClient.get(`http://localhost:3001/block/${this.blockHash}/raw`).subscribe(
+    this.backendService.getRawBlock(this.blockHash).subscribe(
       data => {
         const result: any = data || '';
         this.blockRawData = result;

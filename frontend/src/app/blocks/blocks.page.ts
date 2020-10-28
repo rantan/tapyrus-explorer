@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
+import { BackendService } from '../backend.service';
+
 @Component({
   selector: 'app-blocks',
   templateUrl: './blocks.page.html',
+  providers: [BackendService],
   styleUrls: ['./blocks.page.scss'],
 })
 export class BlocksPage implements OnInit {
@@ -17,7 +20,8 @@ export class BlocksPage implements OnInit {
 
   constructor(
     private httpClient: HttpClient,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private backendService: BackendService
   ) {}
 
   ngOnInit() {
@@ -25,14 +29,7 @@ export class BlocksPage implements OnInit {
   }
 
   getBlockLists() {
-    this.httpClient.get('http://localhost:3001/blocks', {
-      params: new HttpParams({
-        fromObject: {
-          page: this.page.toString(),
-          perPage: this.perPage.toString(),
-        }
-      })
-    }).subscribe(
+    this.backendService.getBlocks(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
         const txnsData: any = resultData.results || [];
@@ -73,7 +70,7 @@ export class BlocksPage implements OnInit {
   }
 
   onSearch() {
-    this.httpClient.get(`http://localhost:3001/block/${this.searchValue}`).subscribe(
+    this.backendService.searchBlock(this.searchValue).subscribe(
       data => {
         const result: any = data || {};
         this.blocks = [{

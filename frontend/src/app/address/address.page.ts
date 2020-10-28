@@ -3,10 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
+import { BackendService } from '../backend.service';
+
 @Component({
   selector: 'app-address',
   templateUrl: './address.page.html',
   styleUrls: ['./address.page.scss'],
+  providers: [BackendService],
 })
 export class AddressPage implements OnInit {
   block = {};
@@ -29,7 +32,8 @@ export class AddressPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private httpClient: HttpClient,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private backendService: BackendService
   ) { }
 
   ngOnInit() {
@@ -80,15 +84,9 @@ export class AddressPage implements OnInit {
   }
 
   getAddressInfo() {
-    this.httpClient.get(`http://localhost:3001/address/${this.address}`, {
-      params: new HttpParams({
-        fromObject: {
-          page: this.page.toString(),
-          perPage: this.perPage.toString(),
-        },
-      }),
-    }).subscribe(
-      data => {
+    this.backendService
+      .getAddressInfo(this.address, this.page, this.perPage)
+      .subscribe(data => {
         this.received = data[2];
         this.balanced = data[0] / 100000000;
         this.sent = this.received - this.balanced;
@@ -131,9 +129,9 @@ export class AddressPage implements OnInit {
   getTransactionsInfo(txids = []) {
     this.transactions = [];
     for (const txid of txids) {
-      this.httpClient.get(`http://localhost:3001/transaction/${txid.tx_hash}/get`).subscribe(
+      this.backendService.getTransaction(txid.tx_hash).subscribe(
         data => {
-          this.httpClient.get(`http://localhost:3001/block/${data['blockhash']}`).subscribe(
+          this.backendService.getBlock(data['blockhash']).subscribe(
             block => {
               data['blockheight'] = block['height'];
               this.transactions.push(data);

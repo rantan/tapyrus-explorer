@@ -7,3 +7,6 @@ RUN npm install && \
     npm install -g @angular/cli@8.3.29
 
 EXPOSE 4200
+
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["ng", "serve", "--host 0.0.0.0"]

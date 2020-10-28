@@ -25,7 +25,6 @@ services:
       - backend
     ports:
       - "4200:4200"
-    command: ng serve --host 0.0.0.0
     volumes:
       - ./frontend:/app:cached
       - /app/node_modules
@@ -49,7 +48,7 @@ services:
       - "50001:50001"
     depends_on:
       - tapyrusd
-    command: electrs -vvvv --timestamp --conf /etc/electrs/config.toml --db-dir /var/lib/electrs --daemon-rpc-addr tapyrusd:2377 --daemon-dir /var/lib/tapyrus/prod-1939510133 --network-id 1939510133  --electrum-rpc-addr 0.0.0.0:50001
+    command: electrs -vvvv --timestamp --conf /etc/electrs/config.toml --db-dir /var/lib/electrs --daemon-rpc-addr tapyrusd:2377 --daemon-dir /var/lib/tapyrus/prod-1939510133 --network-id 1939510133  --electrum-rpc-addr 0.0.0.0:50001 --txid-limit 0
 volumes:
   backend-cache:
   tapyrus:

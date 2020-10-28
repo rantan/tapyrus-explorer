@@ -5,14 +5,14 @@ if [ ! -e ${CONF_DIR}/dev.json ]; then
 {
   "tapyrusd": {
     "network": "mainnet",
-    "username": ${TAPYRUSD_RPC_USER},
-    "password": ${TAPYRUSD_RPC_PASSWORD},
-    "host": ${TAPYRUSD_RPC_HOST},
-    "port": ${TAPYRUSD_RPC_PORT}
+    "username": "${TAPYRUSD_RPC_USER}",
+    "password": "${TAPYRUSD_RPC_PASSWORD}",
+    "host": "${TAPYRUSD_RPC_HOST}",
+    "port": "${TAPYRUSD_RPC_PORT}"
   },
   "electrs": {
-    "port": ${ELECTRS_RPC_PORT},
-    "host":  ${ELECTRS_RPC_HOST}
+    "port": "${ELECTRS_RPC_PORT}",
+    "host":  "${ELECTRS_RPC_HOST}"
   }
 }
 EOS

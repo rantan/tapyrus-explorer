@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ModalController, NavController } from '@ionic/angular';
+
 import { TransactionRawdataPage } from '../transaction-rawdata/transaction-rawdata.page';
+import { BackendService } from '../backend.service';
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.page.html',
   styleUrls: ['./transaction.page.scss'],
+  providers: [BackendService]
 })
 export class TransactionPage implements OnInit {
   txid: string;
@@ -17,7 +20,8 @@ export class TransactionPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private httpClient: HttpClient,
     private modalCtrl: ModalController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private backendService: BackendService
   ) { }
 
   ngOnInit() {
@@ -26,7 +30,7 @@ export class TransactionPage implements OnInit {
   }
 
   getTransactionInfo() {
-    this.httpClient.get(`http://localhost:3001/transaction/${this.txid}`).subscribe(
+    this.backendService.getTransaction(this.txid).subscribe(
       data => {
         this.transaction = data || {};
         this.calculateTxSize();
@@ -52,7 +56,7 @@ export class TransactionPage implements OnInit {
         voutValue += vout.value;
       }
     }
-    for (const vin of this.transaction.vinRaw) {
+    for (const vin of this.transaction.vin) {
       if (vin && vin.vout) {
         for (const vout of vin.vout) {
           if (vout && vout.value) {

@@ -2,10 +2,13 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 
+import { BackendService } from '../backend.service';
+
 @Component({
   selector: 'app-transaction-rawdata',
   templateUrl: './transaction-rawdata.page.html',
   styleUrls: ['./transaction-rawdata.page.scss'],
+  providers: [BackendService]
 })
 export class TransactionRawdataPage implements OnInit {
 
@@ -16,7 +19,8 @@ export class TransactionRawdataPage implements OnInit {
   constructor(
     private navParams: NavParams,
     private httpClient: HttpClient,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private backendService: BackendService
   ) { }
 
   ngOnInit() {
@@ -25,7 +29,7 @@ export class TransactionRawdataPage implements OnInit {
   }
 
   getTxRawData() {
-    this.httpClient.get(`http://localhost:3001/transaction/${this.txid}/rawData`).subscribe(
+    this.backendService.getRawTransaction(this.txid).subscribe(
       data => {
         const result: any = data || '';
         this.txRawData = result;
