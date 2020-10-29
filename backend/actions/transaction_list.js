@@ -1,11 +1,9 @@
 const path = require('path');
 const app = require('../app.js');
-const Client = require('bitcoin-core');
 const log4js = require('log4js');
 const flatCache = require('flat-cache');
-const environment = require('../environments/environment');
-const config = require(environment.CONFIG);
-const cl = new Client(config.tapyrusd);
+
+const cl = require('../libs/tapyrusd').client;
 
 log4js.configure({
   appenders: {
@@ -305,5 +303,3 @@ app.get('/transactions', (req, res) => {
     res.status(500).send(`Error Retrieving Blocks`);
   }
 });
-
-module.exports = cl;

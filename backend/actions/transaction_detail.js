@@ -1,9 +1,7 @@
-const Client = require('bitcoin-core');
 const app = require('../app.js');
 const log4js = require('log4js');
-const environment = require('../environments/environment');
-const config = require(environment.CONFIG);
-const cl = new Client(config.tapyrusd);
+
+const cl = require('../libs/tapyrusd').client;
 
 log4js.configure({
   appenders: {
@@ -148,5 +146,3 @@ app.get('/transaction/:txid/get', (req, res) => {
       );
     });
 });
-
-module.exports = cl;

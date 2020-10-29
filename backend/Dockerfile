@@ -1,12 +1,9 @@
 FROM node:14.13.1-stretch
 
-ENV CONF_DIR='/app/configurations'
-
 WORKDIR /app
 COPY . .
 
-RUN npm install && \
-    mkdir $CONF_DIR
+RUN npm ci
 
 EXPOSE 3001
 

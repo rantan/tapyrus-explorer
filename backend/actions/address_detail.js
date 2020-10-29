@@ -1,15 +1,12 @@
 const path = require('path');
-const Client = require('bitcoin-core');
 const Jssha = require('jssha');
-const jayson = require('jayson/promise');
 const log4js = require('log4js');
 var flatCache = require('flat-cache');
 
 const app = require('../app.js');
-const environment = require('../environments/environment');
-const config = require(environment.CONFIG);
-const cl = new Client(config.tapyrusd);
-const elect = jayson.client.tcp(config.electrs);
+
+const cl = require('../libs/tapyrusd').client;
+const elect = require('../libs/electrs').client;
 
 log4js.configure({
   appenders: {
@@ -326,5 +323,3 @@ app.get('/address/:address', (req, res) => {
       );
     });
 });
-
-module.exports = elect;

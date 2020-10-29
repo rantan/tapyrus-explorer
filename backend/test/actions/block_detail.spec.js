@@ -1,7 +1,9 @@
 const supertest = require('supertest');
 const assert = require('assert');
 const app = require('../../server');
-const cl = require('../../actions/block_detail');
+require('../../actions/block_detail');
+const cl = require('../../libs/tapyrusd').client;
+
 const sinon = require('sinon');
 
 describe('GET /block/:blockHash return type check', function () {
@@ -62,6 +64,10 @@ describe('GET /block/:blockHash with sinon.stub', function () {
       });
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/block/:blockHash', function (done) {
     supertest(app)
       .get(
@@ -107,10 +113,6 @@ describe('GET /block/:blockHash with sinon.stub', function () {
         done();
       });
   });
-
-  afterEach(function () {
-    sinon.restore();
-  });
 });
 
 describe('GET /block/:blockHash/raw return type check', function () {
@@ -146,6 +148,10 @@ describe('GET /block/:blockHash/raw with sinon.stub', function () {
       );
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/block/:blockHash/raw', function (done) {
     supertest(app)
       .get(
@@ -163,10 +169,6 @@ describe('GET /block/:blockHash/raw with sinon.stub', function () {
         );
         done();
       });
-  });
-
-  afterEach(function () {
-    sinon.restore();
   });
 });
 
@@ -287,6 +289,10 @@ describe('GET /block/:blockHash/txns with sinon.stub', function () {
       });
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/block/:blockHash/txns', function (done) {
     supertest(app)
       .get(
@@ -374,9 +380,5 @@ describe('GET /block/:blockHash/txns with sinon.stub', function () {
 
         done();
       });
-  });
-
-  afterEach(function () {
-    sinon.restore();
   });
 });
