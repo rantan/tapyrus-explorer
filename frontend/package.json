@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "prettier-ci": "prettier --check ."
   },
   "private": true,
   "dependencies": {

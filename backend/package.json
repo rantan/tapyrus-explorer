@@ -10,7 +10,8 @@
     "pretest": "eslint actions/",
     "prestart": "cross-env ENV='dev' node ./script.js",
     "predeploy": "cross-env ENV='prod' node ./script.js",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "prettier-ci": "prettier --check ."
   },
   "keywords": [],
   "author": "",

@@ -13,8 +13,8 @@ jobs:
           cd frontend
           npm install
           npm run lint
+          npm run prettier-ci
           cd ../backend
           npm install
+          npm run prettier-ci
           npm run pretest
-          
-  
