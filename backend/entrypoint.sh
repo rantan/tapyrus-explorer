@@ -20,7 +20,6 @@ fi
 
 chmod 600 ${CONF_DIR}/dev.json
 
-npm run prestart
 npm run setup
 
 exec sh -c "$*"

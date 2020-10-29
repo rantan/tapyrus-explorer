@@ -8,8 +8,6 @@
     "test": "mocha test/actions",
     "start": "nodemon server.js",
     "pretest": "eslint actions/",
-    "prestart": "cross-env ENV='dev' node ./script.js",
-    "predeploy": "cross-env ENV='prod' node ./script.js",
     "prettier": "prettier --write .",
     "prettier-ci": "prettier --check ."
   },
@@ -30,7 +28,6 @@
     "wss": "^3.3.4"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.1.1",
