@@ -3,11 +3,19 @@
     <ion-toolbar color="primary">
       <ion-buttons slot="end">
         <ion-button>
-          <img src="../assets/images/tapyrus-paradium-logo.png" height="32" width="32">
+          <img
+            src="../assets/images/tapyrus-paradium-logo.png"
+            height="32"
+            width="32"
+          />
         </ion-button>
       </ion-buttons>
       <ion-buttons slot="start">
-        <ion-icon name="reorder-three-outline" size="large" (click)="openFirst()"></ion-icon>
+        <ion-icon
+          name="reorder-three-outline"
+          size="large"
+          (click)="openFirst()"
+        ></ion-icon>
       </ion-buttons>
       <ion-title class="ion-text-center ion-padding">
         TAPYRUS FOR PARADIUM
@@ -15,44 +23,87 @@
     </ion-toolbar>
   </ion-header>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" side="start" menuId="side-menu" type="overlay" [ngClass]="{'mt-56': menuToggle}">
+    <ion-menu
+      contentId="main-content"
+      side="start"
+      menuId="side-menu"
+      type="overlay"
+      [ngClass]="{ 'mt-56': menuToggle }"
+    >
       <ion-content color="secondary">
-        <ion-list id="inbox-list"  class="bg-dark">
+        <ion-list id="inbox-list" class="bg-dark">
           <div class="relative text-center">
-            <img class="relative" src="../assets/images/tapyrus-logo.png">
-            <img class="absolute" id="paradium-logo" src="../assets/images/paradium-logo.png">  
+            <img class="relative" src="../assets/images/tapyrus-logo.png" />
+            <img
+              class="absolute"
+              id="paradium-logo"
+              src="../assets/images/paradium-logo.png"
+            />
           </div>
           <p id="header-text">
-            TAPYRUS EXPLORER<br/>
+            TAPYRUS EXPLORER<br />
             FOR <b class="text-paradium">PARADIUM</b>
           </p>
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index" color="secondary" >
-            <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
-              <ion-label class="text-center text-white">{{ p.title }}</ion-label>
+          <ion-menu-toggle
+            auto-hide="false"
+            *ngFor="let p of appPages; let i = index"
+            color="secondary"
+          >
+            <ion-item
+              (click)="selectedIndex = i"
+              routerDirection="root"
+              [routerLink]="[p.url]"
+              lines="none"
+              detail="false"
+              [class.selected]="selectedIndex == i"
+            >
+              <ion-label class="text-center text-white">{{
+                p.title
+              }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
         <div class="display-none-min-lg ion-padding absolute-bottom">
-          <img src="../assets/images/menu-tapyrus-logo.png" id="menu-tapyrus-logo">
+          <img
+            src="../assets/images/menu-tapyrus-logo.png"
+            id="menu-tapyrus-logo"
+          />
           <p class="powered-text">Tapyrus powered by <u>Chaintope</u></p>
           <div class="border-white"></div>
           <div class="circle-container">
-            <div class="circle ion-margin-end" (click)="goTo('https://github.com/chaintope')">
-              <img src="../assets/images/footer-link-github.png" class="pt-5">
+            <div
+              class="circle ion-margin-end"
+              (click)="goTo('https://github.com/chaintope')"
+            >
+              <img src="../assets/images/footer-link-github.png" class="pt-5" />
             </div>
-            <div class="circle ion-margin-end" (click)="goTo('mailto:info@chaintope.com')">
-              <img src="../assets/images/footer-link-mail.png" class="pt-6">
+            <div
+              class="circle ion-margin-end"
+              (click)="goTo('mailto:info@chaintope.com')"
+            >
+              <img src="../assets/images/footer-link-mail.png" class="pt-6" />
             </div>
-            <div class="circle ion-margin-end" (click)="goTo('https://www.chaintope.com/')">
-              <img src="../assets/images/footer-link-chaintope.png" class="pt-8">
+            <div
+              class="circle ion-margin-end"
+              (click)="goTo('https://www.chaintope.com/')"
+            >
+              <img
+                src="../assets/images/footer-link-chaintope.png"
+                class="pt-8"
+              />
             </div>
           </div>
-          <p class="copyright-text">Copyright © 2019 Chaintope Inc. All rights reserved.</p>
+          <p class="copyright-text">
+            Copyright © 2019 Chaintope Inc. All rights reserved.
+          </p>
         </div>
       </ion-content>
     </ion-menu>
-    <ion-router-outlet id="main-content" class="mt-56-max-lg"></ion-router-outlet>
+    <ion-router-outlet
+      id="main-content"
+      class="mt-56-max-lg"
+    ></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
 <app-footer id="footer" class="display-none-max-lg"></app-footer>

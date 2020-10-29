@@ -4,11 +4,12 @@
   "description": "The backend of tapyrus-explorer",
   "main": "server.js",
   "scripts": {
-    "setup" : "node setup/setup.js",
+    "setup": "node setup/setup.js",
     "test": "mocha test/actions",
     "start": "nodemon server.js",
     "pretest": "eslint actions/",
     "prestart": "cross-env ENV='dev' node ./script.js",
+    "predeploy": "cross-env ENV='prod' node ./script.js",
     "prettier": "prettier --write ."
   },
   "keywords": [],

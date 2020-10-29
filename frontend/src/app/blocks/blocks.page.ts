@@ -8,7 +8,7 @@ import { BackendService } from '../backend.service';
   selector: 'app-blocks',
   templateUrl: './blocks.page.html',
   providers: [BackendService],
-  styleUrls: ['./blocks.page.scss'],
+  styleUrls: ['./blocks.page.scss']
 })
 export class BlocksPage implements OnInit {
   perPage = 25; // default with 20 per page
@@ -73,12 +73,14 @@ export class BlocksPage implements OnInit {
     this.backendService.searchBlock(this.searchValue).subscribe(
       data => {
         const result: any = data || {};
-        this.blocks = [{
-          height: result.height,
-          hash: result.blockHash,
-          time: result.timestamp,
-          size: result.sizeBytes
-        }];
+        this.blocks = [
+          {
+            height: result.height,
+            hash: result.blockHash,
+            time: result.timestamp,
+            size: result.sizeBytes
+          }
+        ];
         this.pages = 1;
         this.page = 1;
         this.bestHeight = 1;
@@ -88,5 +90,4 @@ export class BlocksPage implements OnInit {
       }
     );
   }
-
 }

@@ -9,7 +9,7 @@ describe('AddressPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddressPage ],
+      declarations: [AddressPage],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

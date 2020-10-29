@@ -9,31 +9,46 @@ const routes: Routes = [
   },
   {
     path: 'blocks',
-    loadChildren: () => import('./blocks/blocks.module').then( m => m.BlocksPageModule)
+    loadChildren: () =>
+      import('./blocks/blocks.module').then(m => m.BlocksPageModule)
   },
   {
     path: 'blocks/:hash',
-    loadChildren: () => import('./block/block.module').then( m => m.BlockPageModule)
+    loadChildren: () =>
+      import('./block/block.module').then(m => m.BlockPageModule)
   },
   {
     path: 'block-rawdata',
-    loadChildren: () => import('./block-rawdata/block-rawdata.module').then( m => m.BlockRawdataPageModule)
+    loadChildren: () =>
+      import('./block-rawdata/block-rawdata.module').then(
+        m => m.BlockRawdataPageModule
+      )
   },
   {
     path: 'transactions',
-    loadChildren: () => import('./transactions/transactions.module').then( m => m.TransactionsPageModule)
+    loadChildren: () =>
+      import('./transactions/transactions.module').then(
+        m => m.TransactionsPageModule
+      )
   },
   {
     path: 'transactions/:txid',
-    loadChildren: () => import('./transaction/transaction.module').then( m => m.TransactionPageModule)
+    loadChildren: () =>
+      import('./transaction/transaction.module').then(
+        m => m.TransactionPageModule
+      )
   },
   {
     path: 'transaction-rawdata',
-    loadChildren: () => import('./transaction-rawdata/transaction-rawdata.module').then( m => m.TransactionRawdataPageModule)
+    loadChildren: () =>
+      import('./transaction-rawdata/transaction-rawdata.module').then(
+        m => m.TransactionRawdataPageModule
+      )
   },
   {
     path: 'addresses/:address',
-    loadChildren: () => import('./address/address.module').then( m => m.AddressPageModule)
+    loadChildren: () =>
+      import('./address/address.module').then(m => m.AddressPageModule)
   }
 ];
 

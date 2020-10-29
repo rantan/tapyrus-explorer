@@ -9,7 +9,7 @@ describe('BlocksPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BlocksPage ],
+      declarations: [BlocksPage],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 

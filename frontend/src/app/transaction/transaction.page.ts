@@ -22,7 +22,7 @@ export class TransactionPage implements OnInit {
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private backendService: BackendService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.txid = this.activatedRoute.snapshot.paramMap.get('txid');
@@ -88,5 +88,4 @@ export class TransactionPage implements OnInit {
     });
     return await modal.present();
   }
-
 }
