@@ -2,12 +2,24 @@
   <div class="ion-padding">
     <div class="bg-white ion-padding">
       <div class="flex">
-        <ion-icon  size="large" name="chevron-back-circle-outline" id="arrow-icon" (click)="goToTransactions()"></ion-icon>
+        <ion-icon
+          size="large"
+          name="chevron-back-circle-outline"
+          id="arrow-icon"
+          (click)="goToTransactions()"
+        ></ion-icon>
         <p id="block-header-text">Transaction Details</p>
-        <ion-button color="primary" size="small" id="raw-data-btn" (click)="goToTransactionRawData()">Raw Data</ion-button>
+        <ion-button
+          color="primary"
+          size="small"
+          id="raw-data-btn"
+          (click)="goToTransactionRawData()"
+          >Raw Data</ion-button
+        >
       </div>
       <div id="block-hash-bg" class="font-14 text-wrap">
-        TXID <p class="text-color" id="block-hash-text">{{ transaction.txid }}</p>
+        TXID
+        <p class="text-color" id="block-hash-text">{{ transaction.txid }}</p>
       </div>
       <ion-item-divider></ion-item-divider>
       <ion-grid class="font-14 text-color">
@@ -40,61 +52,117 @@
             <div class="text-primary pl-5">{{ transaction.txid }}</div>
           </ion-col>
           <ion-col size="4" class="ion-text-right">
-            <div>Verified: {{ transaction.blocktime * 1000 | date: 'MMM dd, yyyy hh:mm:ss' }}</div>
-          </ion-col>   
+            <div>
+              Verified: {{ transaction.blocktime * 1000 | date: 'MMM dd, yyyy
+              hh:mm:ss' }}
+            </div>
+          </ion-col>
         </ion-row>
-  
+
         <ion-grid>
           <ion-row class="word-break">
             <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vin of transaction.vinRaw; let i=index;">
-                <div *ngIf="transaction.vin[i].coinbase">No Inputs (Newly Generated Coins)</div>
+                <div *ngIf="transaction.vin[i].coinbase">
+                  No Inputs (Newly Generated Coins)
+                </div>
                 <div *ngIf="!transaction.vin[i].coinbase">
                   <div *ngFor="let vout of vin.vout" class="mb-5">
-                    <ion-row *ngFor="let add of vout.scriptPubKey.addresses" class="vin-vout-input">
-                      <ion-col size="8" class="ion-no-margin text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
-                      <ion-col size="4" class="ion-no-margin ion-text-right text-gray">{{ vout.value }} TPC</ion-col>
+                    <ion-row
+                      *ngFor="let add of vout.scriptPubKey.addresses"
+                      class="vin-vout-input"
+                    >
+                      <ion-col
+                        size="8"
+                        class="ion-no-margin text-primary"
+                        (click)="goToAddress(add)"
+                        >{{ add }}</ion-col
+                      >
+                      <ion-col
+                        size="4"
+                        class="ion-no-margin ion-text-right text-gray"
+                        >{{ vout.value }} TPC</ion-col
+                      >
                     </ion-row>
                   </div>
                 </div>
               </div>
             </ion-col>
-            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center">
-              <ion-icon name="arrow-forward" size="large" class="display-none-max-md"></ion-icon>
-              <ion-icon name="chevron-down-outline" size="large" class="display-none-min-md"></ion-icon>
+            <ion-col
+              size-xs="12"
+              size-sm="12"
+              size-md="2"
+              class="ion-text-center"
+            >
+              <ion-icon
+                name="arrow-forward"
+                size="large"
+                class="display-none-max-md"
+              ></ion-icon>
+              <ion-icon
+                name="chevron-down-outline"
+                size="large"
+                class="display-none-min-md"
+              ></ion-icon>
             </ion-col>
             <ion-col size-xs="12" size-sm="12" size-md="5">
               <div *ngFor="let vout of transaction.vout" class="mb-5">
-                <ion-row class="vin-vout-input" *ngFor="let add of vout.scriptPubKey.addresses">
-                  <ion-col size="8" class="text-primary" (click)="goToAddress(add)">{{ add }}</ion-col>
-                  <ion-col size="4" class="ion-text-right text-gray">{{ vout.value }} TPC(s)</ion-col>
-                </ion-row >
+                <ion-row
+                  class="vin-vout-input"
+                  *ngFor="let add of vout.scriptPubKey.addresses"
+                >
+                  <ion-col
+                    size="8"
+                    class="text-primary"
+                    (click)="goToAddress(add)"
+                    >{{ add }}</ion-col
+                  >
+                  <ion-col size="4" class="ion-text-right text-gray"
+                    >{{ vout.value }} TPC(s)</ion-col
+                  >
+                </ion-row>
               </div>
             </ion-col>
           </ion-row>
           <ion-item-divider></ion-item-divider>
           <ion-row class="word-break ion-margin-top">
             <ion-col size-xs="12" size-sm="12" size-md="5">
-              <b>Input Scripts: </b><br/><br/>
+              <b>Input Scripts: </b><br /><br />
               <div *ngFor="let vin of transaction.vin; let i=index;">
                 <div>
                   <div class="mb-5">
                     <ion-row class="vin-vout-input">
-                      <ion-col class="ion-no-margin text-primary" *ngIf="vin.scriptSig">{{ vin.scriptSig.asm }}</ion-col>
+                      <ion-col
+                        class="ion-no-margin text-primary"
+                        *ngIf="vin.scriptSig"
+                        >{{ vin.scriptSig.asm }}</ion-col
+                      >
                     </ion-row>
                   </div>
                 </div>
               </div>
             </ion-col>
-            <ion-col size-xs="12" size-sm="12" size-md="2" class="ion-text-center display-none-max-md ion-margin-top">
+            <ion-col
+              size-xs="12"
+              size-sm="12"
+              size-md="2"
+              class="ion-text-center display-none-max-md ion-margin-top"
+            >
               <ion-icon name="arrow-forward" size="large"></ion-icon>
             </ion-col>
-            <ion-col size-xs="12" size-sm="12" size-md="5" class="word-break ion-margin-top">
-              <b>Output Scripts: </b><br/><br/>
+            <ion-col
+              size-xs="12"
+              size-sm="12"
+              size-md="5"
+              class="word-break ion-margin-top"
+            >
+              <b>Output Scripts: </b><br /><br />
               <div *ngFor="let vout of transaction.vout" class="mb-5">
                 <ion-row class="vin-vout-input">
-                  <ion-col class="text-primary">{{ vout.scriptPubKey.asm }}</ion-col>
-                </ion-row >
+                  <ion-col class="text-primary"
+                    >{{ vout.scriptPubKey.asm }}</ion-col
+                  >
+                </ion-row>
               </div>
             </ion-col>
           </ion-row>
@@ -127,7 +195,11 @@
               </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" class="btn-gray" *ngIf="transaction.totalFee > 0">
+              <ion-button
+                expand="block"
+                class="btn-gray"
+                *ngIf="transaction.totalFee > 0"
+              >
                 FEE: {{ transaction.totalFee }} TPC
               </ion-button>
             </ion-col>

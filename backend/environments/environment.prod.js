@@ -1,5 +1,4 @@
 module.exports = {
-    ENV: 'prod',
-    CONFIG: '../configurations/prod.json' //temporary
-}
-  
+  ENV: 'prod',
+  CONFIG: '../configurations/prod.json' //temporary
+};

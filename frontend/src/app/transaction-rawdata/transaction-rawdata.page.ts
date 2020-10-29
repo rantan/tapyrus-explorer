@@ -11,7 +11,6 @@ import { BackendService } from '../backend.service';
   providers: [BackendService]
 })
 export class TransactionRawdataPage implements OnInit {
-
   @Input() txid: string;
   txRawData = '';
   copied = false;
@@ -21,7 +20,7 @@ export class TransactionRawdataPage implements OnInit {
     private httpClient: HttpClient,
     private modalCtrl: ModalController,
     private backendService: BackendService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.txid = this.navParams.get('txid');
@@ -51,7 +50,9 @@ export class TransactionRawdataPage implements OnInit {
     try {
       document.execCommand('copy');
       this.copied = true;
-      setTimeout(() => { this.copied = false; }, 800);
+      setTimeout(() => {
+        this.copied = false;
+      }, 800);
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
     }
@@ -62,5 +63,4 @@ export class TransactionRawdataPage implements OnInit {
   dismiss() {
     this.modalCtrl.dismiss();
   }
-
 }

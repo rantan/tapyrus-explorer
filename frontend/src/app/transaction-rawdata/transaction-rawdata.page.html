@@ -1,6 +1,11 @@
 <ion-content class="ion-padding bg-dark-md">
   <div class="ion-text-right ion-margin block-md">
-    <ion-icon name="close-circle-outline" size="large" color="light" (click)="dismiss()"></ion-icon>
+    <ion-icon
+      name="close-circle-outline"
+      size="large"
+      color="light"
+      (click)="dismiss()"
+    ></ion-icon>
   </div>
   <div class="flex ion-margin-top ion-margin-start hide-md">
     <ion-button (click)="copyTxRawData()">
@@ -10,15 +15,13 @@
     <b *ngIf="copied" id="copied-text">Copied !</b>
   </div>
   <div class="ion-padding ion-margin" id="copy-content">
-    <p id="myInput" class="text-color">
-      {{ txRawData }}
-    </p>
+    <p id="myInput" class="text-color">{{ txRawData }}</p>
   </div>
-    <div class="ion-text-center block-md">
+  <div class="ion-text-center block-md">
     <ion-button (click)="copyTxRawData()">
       <ion-icon name="copy-outline" color="primary" id="copy-icon"></ion-icon>
-      Copy Raw Data
-    </ion-button><br/>
+      Copy Raw Data </ion-button
+    ><br />
     <b *ngIf="copied" id="copied-text-md">Copied !</b>
   </div>
 </ion-content>

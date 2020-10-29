@@ -12,7 +12,6 @@ import { BackendService } from '../backend.service';
   providers: [BackendService]
 })
 export class BlockPage implements OnInit {
-
   blockHash: string;
   block: any = {};
   blockTxns: any = {};
@@ -27,7 +26,7 @@ export class BlockPage implements OnInit {
     private modalCtrl: ModalController,
     private navCtrl: NavController,
     private backendService: BackendService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.blockHash = this.activatedRoute.snapshot.paramMap.get('hash');

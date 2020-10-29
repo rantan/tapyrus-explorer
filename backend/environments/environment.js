@@ -1,5 +1,4 @@
 module.exports = {
-    ENV: 'dev',
-    CONFIG: '../configurations/dev.json'
-}
-  
+  ENV: 'dev',
+  CONFIG: '../configurations/dev.json'
+};

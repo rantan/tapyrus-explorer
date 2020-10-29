@@ -9,7 +9,7 @@ import { BackendService } from '../backend.service';
   selector: 'app-address',
   templateUrl: './address.page.html',
   styleUrls: ['./address.page.scss'],
-  providers: [BackendService],
+  providers: [BackendService]
 })
 export class AddressPage implements OnInit {
   block = {};
@@ -34,7 +34,7 @@ export class AddressPage implements OnInit {
     private httpClient: HttpClient,
     private navCtrl: NavController,
     private backendService: BackendService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.address = this.activatedRoute.snapshot.paramMap.get('address');
@@ -61,7 +61,9 @@ export class AddressPage implements OnInit {
     try {
       document.execCommand('copy');
       this.copied = true;
-      setTimeout(() => { this.copied = false; }, 800);
+      setTimeout(() => {
+        this.copied = false;
+      }, 800);
     } catch (err) {
       console.error('Fallback: Oops, unable to copy', err);
     }
@@ -86,44 +88,46 @@ export class AddressPage implements OnInit {
   getAddressInfo() {
     this.backendService
       .getAddressInfo(this.address, this.page, this.perPage)
-      .subscribe(data => {
-        this.received = data[2];
-        this.balanced = data[0] / 100000000;
-        this.sent = this.received - this.balanced;
-        this.result = data[1];
-        this.txCount = data[3];
+      .subscribe(
+        data => {
+          this.received = data[2];
+          this.balanced = data[0] / 100000000;
+          this.sent = this.received - this.balanced;
+          this.result = data[1];
+          this.txCount = data[3];
 
-        if (this.result) {
-          this.txidsCount = this.result.length;
+          if (this.result) {
+            this.txidsCount = this.result.length;
 
-          this.result.map((transaction) => {
-            const outputs = [], amounts = [];
-            for (const vout of transaction['vout']) {
-              for (const address of vout.scriptPubKey.addresses) {
-                outputs.push(address);
+            this.result.map(transaction => {
+              const outputs = [],
+                amounts = [];
+              for (const vout of transaction['vout']) {
+                for (const address of vout.scriptPubKey.addresses) {
+                  outputs.push(address);
+                }
+                amounts.push(vout.value);
               }
-              amounts.push(vout.value);
-            }
-            transaction['outputs'] = outputs;
-            transaction['amounts'] = amounts;
-            console.log(transaction);
-            return transaction;
-          });
+              transaction['outputs'] = outputs;
+              transaction['amounts'] = amounts;
+              console.log(transaction);
+              return transaction;
+            });
 
-          this.transactions = this.result;
-          // this.getTransactionsInfo(this.result);
-        }
-        /*if (this.unspentDatas) {
+            this.transactions = this.result;
+            // this.getTransactionsInfo(this.result);
+          }
+          /*if (this.unspentDatas) {
           this.calculateBalanceAndTotal();
         } else {
           this.balanced = 0;
         }*/
-        this.calculatePagination();
-      },
-      err => {
-        console.log(err);
-      }
-    );
+          this.calculatePagination();
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   getTransactionsInfo(txids = []) {
@@ -135,12 +139,17 @@ export class AddressPage implements OnInit {
             block => {
               data['blockheight'] = block['height'];
               this.transactions.push(data);
-              if (txid === (txids[txids.length - 1])) {
-                this.transactions = this.transactions.sort( (transaction1, transaction2) => transaction2.time - transaction1.time);
+              if (txid === txids[txids.length - 1]) {
+                this.transactions = this.transactions.sort(
+                  (transaction1, transaction2) =>
+                    transaction2.time - transaction1.time
+                );
               }
-            }, err => {
+            },
+            err => {
               console.log(err);
-            });
+            }
+          );
         },
         err => {
           console.log(err);
@@ -158,5 +167,4 @@ export class AddressPage implements OnInit {
     this.balanced = amount;
     this.sent = this.received - this.balanced;
   }
-
 }

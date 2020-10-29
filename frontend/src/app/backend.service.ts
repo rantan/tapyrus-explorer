@@ -7,10 +7,7 @@ import { ConfigService } from './config.service';
 @Injectable()
 export class BackendService {
   backendUrl = 'http://localhost:3001';
-  constructor(
-    private http: HttpClient,
-    private configService: ConfigService
-  ) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
     if (configService.config && configService.config.backendUrl) {
       this.backendUrl = configService.config.backendUrl;
     }
@@ -18,7 +15,9 @@ export class BackendService {
 
   getBlocks(page: number, perPage: number): Observable<any> {
     return this.http.get(`${this.backendUrl}/blocks`, {
-      params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
+      params: new HttpParams({
+        fromObject: { page: page.toString(), perPage: perPage.toString() }
+      })
     });
   }
 
@@ -40,7 +39,9 @@ export class BackendService {
 
   getTransactions(page: number, perPage: number): Observable<any> {
     return this.http.get(`${this.backendUrl}/transactions`, {
-      params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
+      params: new HttpParams({
+        fromObject: { page: page.toString(), perPage: perPage.toString() }
+      })
     });
   }
 
@@ -52,9 +53,15 @@ export class BackendService {
     return this.http.get(`${this.backendUrl}/transaction/${txId}/rawData`);
   }
 
-  getAddressInfo(address: string, page: number, perPage: number): Observable<any> {
+  getAddressInfo(
+    address: string,
+    page: number,
+    perPage: number
+  ): Observable<any> {
     return this.http.get(`${this.backendUrl}/address/${address}`, {
-      params: new HttpParams({ fromObject: { page: page.toString(), perPage: perPage.toString() } })
+      params: new HttpParams({
+        fromObject: { page: page.toString(), perPage: perPage.toString() }
+      })
     });
   }
 

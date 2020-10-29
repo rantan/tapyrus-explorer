@@ -29,18 +29,17 @@ export class TransactionsPage implements OnInit {
   }
 
   getTransactionLists() {
-    this.backendService.getTransactions(this.page, this.perPage)
-      .subscribe(
-        (data) => {
-          const resultData: any = data || {};
-          this.transactions = resultData.results || [];
-          this.txCount = resultData.txCount;
-          this.calculatePagination();
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    this.backendService.getTransactions(this.page, this.perPage).subscribe(
+      data => {
+        const resultData: any = data || {};
+        this.transactions = resultData.results || [];
+        this.txCount = resultData.txCount;
+        this.calculatePagination();
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   onPageChange(pageNumber: number) {
@@ -62,17 +61,16 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    this.backendService.searchTransaction(this.searchValue)
-      .subscribe(
-        (data) => {
-          this.transactions = [data];
-          this.pages = 1;
-          this.page = 1;
-          this.txCount = 1;
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    this.backendService.searchTransaction(this.searchValue).subscribe(
+      data => {
+        this.transactions = [data];
+        this.pages = 1;
+        this.page = 1;
+        this.txCount = 1;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }
