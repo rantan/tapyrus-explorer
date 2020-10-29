@@ -9,7 +9,7 @@
     "start": "nodemon server.js",
     "pretest": "eslint actions/",
     "prestart": "cross-env ENV='dev' node ./script.js",
-    "predeploy": "cross-env ENV='prod' node ./script.js"
+    "prettier": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,7 @@
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.1.1",
     "nodemon": "^2.0.4",
+    "prettier": "^2.1.2",
     "supertest": "^4.0.2"
   }
 }
