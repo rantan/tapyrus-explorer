@@ -1,12 +1,9 @@
-const jayson = require('jayson/promise');
 const Jssha = require('jssha');
 
-const Client = require('bitcoin-core');
 const app = require('../app.js');
-const environment = require('../environments/environment');
-const config = require(environment.CONFIG);
-const cl = new Client(config.tapyrusd);
-const elect = jayson.client.tcp(config.electrs);
+
+const cl = require('../libs/tapyrusd').client;
+const elect = require('../libs/electrs').client;
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -88,5 +85,3 @@ app.get('/blocks', (req, res) => {
     res.status(500).send(`Error Retrieving Blocks`);
   }
 });
-
-module.exports = elect;

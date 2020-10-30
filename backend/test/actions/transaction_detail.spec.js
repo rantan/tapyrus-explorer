@@ -1,7 +1,9 @@
 const supertest = require('supertest');
 const assert = require('assert');
 const app = require('../../server');
-const cl = require('../../actions/transaction_detail');
+require('../../actions/transaction_detail');
+const cl = require('../../libs/tapyrusd').client;
+
 const sinon = require('sinon');
 
 describe('GET /transaction/:txid return type check', function () {
@@ -94,6 +96,10 @@ describe('GET /transaction/:txid with sinon.stub', function () {
       ]);
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/transaction/:txid', function (done) {
     supertest(app)
       .get(
@@ -155,10 +161,6 @@ describe('GET /transaction/:txid with sinon.stub', function () {
         done();
       });
   });
-
-  afterEach(function () {
-    sinon.restore();
-  });
 });
 
 describe('GET /transaction/:txid/rawData return type check', function () {
@@ -196,6 +198,10 @@ describe('GET /transaction/:txid/rawData with sinon.stub', function () {
       .resolves([
         '01000000010000000000000000000000000000000000000000000000000000000000000000c57700000502c5770101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000'
       ]);
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
   it('/transaction/:txid/rawData', function (done) {
@@ -304,6 +310,10 @@ describe('GET /transaction/:txid/get with sinon.stub', function () {
       ]);
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/transaction/:txid/get', function (done) {
     supertest(app)
       .get(
@@ -365,9 +375,5 @@ describe('GET /transaction/:txid/get with sinon.stub', function () {
 
         done();
       });
-  });
-
-  afterEach(function () {
-    sinon.restore();
   });
 });

@@ -1,7 +1,9 @@
 const supertest = require('supertest');
 const assert = require('assert');
 const app = require('../../server');
-const cl = require('../../actions/transaction_list');
+require('../../actions/transaction_list');
+const cl = require('../../libs/tapyrusd').client;
+
 const sinon = require('sinon');
 
 describe('GET /transactions return type check', function () {
@@ -76,6 +78,10 @@ describe('GET /transactions and then call individual transaction using /transact
     ]);
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('/transactions', function (done) {
     this.timeout(5000);
     supertest(app)
@@ -130,7 +136,7 @@ describe('GET /transactions and then call individual transaction using /transact
               );
               assert.strictEqual(
                 transaction.vout[0].scriptPubKey.hex,
-                '76a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac'
+                'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a'
               );
               assert.strictEqual(transaction.vout[0].scriptPubKey.reqSigs, 1);
               assert.strictEqual(
@@ -145,9 +151,5 @@ describe('GET /transactions and then call individual transaction using /transact
             });
         }
       });
-  });
-
-  afterEach(function () {
-    sinon.restore();
   });
 });
