@@ -48,6 +48,10 @@ export class BlockPage implements OnInit {
     this.navCtrl.navigateBack('/blocks');
   }
 
+  goToBlock(hash: string) {
+    this.navCtrl.navigateForward(`/block/${hash}`);
+  }
+
   async goToBlockRawData() {
     const modal = await this.modalCtrl.create({
       component: BlockRawdataPage,

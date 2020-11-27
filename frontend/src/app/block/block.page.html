@@ -62,11 +62,21 @@
         </ion-row>
         <ion-row class="block">
           <ion-col size="2" class="font-w500">Previous Block:</ion-col>
-          <ion-col size="8">{{ block.previousBlock }}</ion-col>
+          <ion-col
+            size="8"
+            class="link-color cursor-pointer"
+            (click)="goToBlock(block.previousBlock)"
+            >{{ block.previousBlock }}</ion-col
+          >
         </ion-row>
         <ion-row class="block">
           <ion-col size="2" class="font-w500">Next Block:</ion-col>
-          <ion-col size="8">{{ block.nextBlock }}</ion-col>
+          <ion-col
+            size="8"
+            class="link-color cursor-pointer"
+            (click)="goToBlock(block.nextBlock)"
+            >{{ block.nextBlock }}</ion-col
+          >
         </ion-row>
       </ion-grid>
     </div>
