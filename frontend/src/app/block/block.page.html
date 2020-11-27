@@ -28,44 +28,44 @@
       </div>
       <ion-item-divider></ion-item-divider>
       <ion-grid class="font-14 text-color">
-        <ion-row>
-          <ion-col size="4" class="font-w500">No. of Transactions:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">No. of Transactions:</ion-col>
           <ion-col size="8">{{ block.ntx }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Height:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Height:</ion-col>
           <ion-col size="8">{{ block.height }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Timestamp:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Timestamp:</ion-col>
           <ion-col size="8">{{ block.timestamp }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Proof:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Proof:</ion-col>
           <ion-col size="8">{{ block.proof }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Size(Bytes):</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Size(Bytes):</ion-col>
           <ion-col size="8">{{ block.sizeBytes }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Version:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Version:</ion-col>
           <ion-col size="8">{{ block.version }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Merkle Root:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Merkle Root:</ion-col>
           <ion-col size="8">{{ block.merkleRoot }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Immutable Merkle Root:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Immutable Merkle Root:</ion-col>
           <ion-col size="8">{{ block.immutableMerkleRoot }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Previous Block:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Previous Block:</ion-col>
           <ion-col size="8">{{ block.previousBlock }}</ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col size="4" class="font-w500">Next Block:</ion-col>
+        <ion-row class="block">
+          <ion-col size="2" class="font-w500">Next Block:</ion-col>
           <ion-col size="8">{{ block.nextBlock }}</ion-col>
         </ion-row>
       </ion-grid>
@@ -127,7 +127,7 @@
         class="bg-white ion-padding ion-margin-bottom cursor-pointer"
         *ngFor="let tx of blockTxns.tx;"
       >
-        <ion-row>
+        <ion-row class="block">
           <ion-col size="1">
             <ion-icon
               name="add-circle"
