@@ -1,29 +1,37 @@
 # Setup
 
-### Local
-##### Tapyrusd
+## Local environment
+
+### Tapyrusd
+
 Run tapyrusd
 ```sh
 $ sudo ./src/tapyrusd -datadir=/var/lib/tapyrus-testnet -conf=/etc/tapyrus/tapyrus.conf 
 ```
-##### Electrs Tapyrus
-Current implementation uses electrs-tapyrus.
-Example of build and run in command line
+
+### Electrs Tapyrus
+
+Current implementation uses electrs-tapyrus. Example of build and run in command line:
+
 ```bash
 $ cargo build --release
 ```
+
 ```bash
 $ cargo run --release -- -vvvv --index-batch-size=10 --jsonrpc-import --db-dir ./db --electrum-rpc-addr="127.0.0.1:50001" --daemon-dir /var/lib/tapyrus-testnet/prod-1939510133/ --network-id 1939510133  --txid-limit=0
 ```
 
-##### Tapyrus explorer
-consists of backend (calling Tapyrusd & Electrs-Tapyrus to get data) and frontend
+### Tapyrus explorer
 
-To setup dev and prod environment
-create files
-/backend/configurations/dev.json
-/backend/configurations/prod.json
+Consists of backend (calling Tapyrusd & Electrs-Tapyrus to get data) and frontend
+
+To setup dev and prod environment, create files
+
+* /backend/configurations/dev.json
+* /backend/configurations/prod.json
+
 these files will only appear in your local. Eg.
+
 ```json
 {
   "tapyrusd": {
@@ -39,28 +47,32 @@ these files will only appear in your local. Eg.
 ```
 
 To setup backend, from `/backend`, run:
+
 ```bash
-npm install
-npm run setup
+$ npm install
+$ npm run setup
 ```
 
 To start backend, from `/backend`, run:
+
 ```bash
-npm start
+$ npm start
 ```
 
 To update cache manually, from `/backend`, run:
 ```bash
-npm run setup
+$ npm run setup
 ```
 
 To test backend, first update cache and then run tests from `/backend` :
+
 ```bash
-npm run setup
-npm run test
+$ npm run setup
+$ npm run test
 ```
 
-backend environment can be changed before you run `npm start` or `npm deploy` by changing the ENV to `'dev'` or `'prod'` in the package.json file as below
+Backend environment can be changed before you run `npm start` or `npm deploy` by changing the ENV to `'dev'` or `'prod'` in the package.json file as below
+
 ```json
   "scripts": {
     "prestart": "cross-env ENV='dev' node ./script.js", 
