@@ -20,6 +20,8 @@ services:
       - /app/tmp
   frontend:
     build: ./frontend
+    environment:
+      BACKEND_URL: http://localhost:3001
     depends_on:
       - backend
     ports:
