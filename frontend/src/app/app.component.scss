@@ -13,7 +13,6 @@ ion-menu.md ion-list {
 ion-menu.md ion-item {
   --padding-start: 10px;
   --padding-end: 10px;
-  border-radius: 4px;
   --background: rgba(var(--ion-color-secondary-rgb), 1) !important;
 }
 
@@ -85,7 +84,7 @@ ion-item.selected {
   line-height: 14px;
   text-align: center;
   letter-spacing: 0.05em;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 
 #footer {
