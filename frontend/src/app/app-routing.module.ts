@@ -13,7 +13,7 @@ const routes: Routes = [
       import('./blocks/blocks.module').then(m => m.BlocksPageModule)
   },
   {
-    path: 'blocks/:hash',
+    path: 'block/:hash',
     loadChildren: () =>
       import('./block/block.module').then(m => m.BlockPageModule)
   },

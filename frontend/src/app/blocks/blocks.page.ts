@@ -66,7 +66,7 @@ export class BlocksPage implements OnInit {
   }
 
   goToBlock(hash: string) {
-    this.navCtrl.navigateForward(`/blocks/${hash}`);
+    this.navCtrl.navigateForward(`/block/${hash}`);
   }
 
   onSearch() {
