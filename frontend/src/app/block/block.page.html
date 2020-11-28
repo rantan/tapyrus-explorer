@@ -138,19 +138,17 @@
         *ngFor="let tx of blockTxns.tx;"
       >
         <ion-row class="block">
-          <ion-col size="1">
-            <ion-icon
-              name="add-circle"
-              color="primary"
-              class="cursor-pointer"
-              (click)="goToTransaction(tx.txid)"
-            ></ion-icon>
-          </ion-col>
-          <ion-col size="7" class="ion-text-left">
+          <ion-col size="8" class="ion-text-left">
             <div
               class="text-primary pl-5 cursor-pointer"
               (click)="goToTransaction(tx.txid)"
             >
+              <ion-icon
+                name="add-circle"
+                color="primary"
+                class="cursor-pointer"
+                (click)="goToTransaction(tx.txid)"
+              ></ion-icon>
               {{ tx.txid }}
             </div>
           </ion-col>
