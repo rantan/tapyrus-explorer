@@ -170,40 +170,45 @@
           </ion-row>
           <ion-item-divider></ion-item-divider>
           <ion-row class="display-none-max-md">
-            <ion-col size="4">
-              <ion-button class="btn-gray" *ngIf="transaction.totalFee > 0">
-                FEE: {{ transaction.totalFee }} TPC
-              </ion-button>
+            <ion-col size="1">
+              <ion-item color="medium" *ngIf="transaction.totalFee > 0">
+                <ion-label class="ion-text-center">
+                  FEE: {{ transaction.totalFee }} TPC
+                </ion-label>
+              </ion-item>
             </ion-col>
-            <ion-col size="8" class="ion-text-end">
-              <ion-button class="btn-gray">
-                {{ transaction.confirmations }} CONFIRMATIONS
-              </ion-button>
-              <ion-button color="primary">
-                {{ transaction.totalVout }} TPC
-              </ion-button>
+            <ion-col size="9"></ion-col>
+            <ion-col size="1">
+              <ion-item color="medium">
+                <ion-label class="ion-text-center">
+                  {{ transaction.confirmations }} CONFIRMATIONS
+                </ion-label>
+              </ion-item>
+            </ion-col>
+            <ion-col size="1">
+              <ion-item color="primary">
+                <ion-label class="ion-text-center">
+                  {{ transaction.totalVout }} TPC
+                </ion-label>
+              </ion-item>
             </ion-col>
           </ion-row>
 
           <ion-row class="display-none-min-md">
             <ion-col size="6">
-              <ion-button expand="block" class="btn-gray">
-                {{ transaction.confirmations }} CONFIRMATIONS
-              </ion-button>
+              <ion-item color="medium">
+                <ion-label class="ion-text-center">{{ transaction.confirmations }} CONFIRMATIONS</ion-label>
+              </ion-item>
             </ion-col>
             <ion-col size="6">
-              <ion-button expand="block" color="primary">
-                {{ transaction.totalVout }} TPC
-              </ion-button>
+              <ion-item color="primary">
+                <ion-label class="ion-text-center">{{ transaction.totalVout }} TPC</ion-label>
+              </ion-item>
             </ion-col>
             <ion-col size="6">
-              <ion-button
-                expand="block"
-                class="btn-gray"
-                *ngIf="transaction.totalFee > 0"
-              >
-                FEE: {{ transaction.totalFee }} TPC
-              </ion-button>
+              <ion-item color="medium" *ngIf="transaction.totalFee > 0">
+                <ion-label class="ion-text-center">FEE: {{ transaction.totalFee }} TPC</ion-label>
+              </ion-item>
             </ion-col>
           </ion-row>
         </ion-grid>
