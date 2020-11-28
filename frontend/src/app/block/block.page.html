@@ -96,10 +96,12 @@
           name="chevron-up-circle-outline"
           id="arrow-icon"
           class="cursor-pointer"
+          color="danger"
           *ngIf="openTxns"
           (click)="closeTxns()"
         ></ion-icon>
-        <p id="transactions-header">View Transactions</p>
+        <p id="transactions-header" *ngIf="!openTxns">View All Transactions</p>
+        <p id="transactions-header" *ngIf="openTxns">Close All Transactions</p>
       </div>
     </div>
 
