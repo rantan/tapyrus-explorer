@@ -197,17 +197,23 @@
           <ion-row class="display-none-min-md">
             <ion-col size="6">
               <ion-item color="medium">
-                <ion-label class="ion-text-center">{{ transaction.confirmations }} CONFIRMATIONS</ion-label>
+                <ion-label class="ion-text-center"
+                  >{{ transaction.confirmations }} CONFIRMATIONS</ion-label
+                >
               </ion-item>
             </ion-col>
             <ion-col size="6">
               <ion-item color="primary">
-                <ion-label class="ion-text-center">{{ transaction.totalVout }} TPC</ion-label>
+                <ion-label class="ion-text-center"
+                  >{{ transaction.totalVout }} TPC</ion-label
+                >
               </ion-item>
             </ion-col>
             <ion-col size="6">
               <ion-item color="medium" *ngIf="transaction.totalFee > 0">
-                <ion-label class="ion-text-center">FEE: {{ transaction.totalFee }} TPC</ion-label>
+                <ion-label class="ion-text-center"
+                  >FEE: {{ transaction.totalFee }} TPC</ion-label
+                >
               </ion-item>
             </ion-col>
           </ion-row>
