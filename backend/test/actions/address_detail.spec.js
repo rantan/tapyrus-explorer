@@ -6,32 +6,6 @@ const electrs = require('../../libs/electrs');
 
 const sinon = require('sinon');
 
-describe('GET /address return type check', function () {
-  it('/address', function (done) {
-    this.timeout(5000);
-    supertest(app)
-      .get('/address/1EH5UTrkqwzy56tG8kSctVeTDHLkhjg7g')
-      .query({ perPage: '25', page: 1 })
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const addressResponse = JSON.parse(res.text);
-        assert.ok(addressResponse[0].toString());
-        assert.ok(addressResponse[1]);
-        assert.ok(addressResponse[2].toString());
-        assert.ok(addressResponse[3].toString());
-
-        assert.strictEqual(typeof addressResponse[0], 'number');
-        assert.ok(Array.isArray(addressResponse[1]));
-        assert.strictEqual(typeof addressResponse[2], 'number');
-        assert.strictEqual(typeof addressResponse[3], 'number');
-
-        done();
-      });
-  });
-});
-
 describe('GET /address with sinon.stub', function () {
   beforeEach(() => {
     sinon

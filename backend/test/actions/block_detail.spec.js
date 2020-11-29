@@ -6,35 +6,6 @@ const cl = require('../../libs/tapyrusd').client;
 
 const sinon = require('sinon');
 
-describe('GET /block/:blockHash return type check', function () {
-  it('/block/:blockHash', function (done) {
-    supertest(app)
-      .get(
-        '/block/b9deaab16abe5f28967aebd0c6e94ce18c8309dec39816ea883885265b681f7c'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const block = JSON.parse(res.text);
-
-        assert.ok(block.blockHash);
-        assert.ok(block.ntx);
-        assert.ok(block.height);
-        assert.ok(block.sizeBytes);
-        assert.ok(block.merkleRoot);
-        assert.ok(block.immutableMerkleRoot);
-        assert.ok(block.previousBlock);
-        assert.ok(block.nextBlock);
-        assert.ok(block.version);
-        assert.ok(block.timestamp);
-        assert.ok(block.proof);
-
-        done();
-      });
-  });
-});
-
 describe('GET /block/:blockHash with sinon.stub', function () {
   beforeEach(() => {
     sinon
@@ -115,26 +86,6 @@ describe('GET /block/:blockHash with sinon.stub', function () {
   });
 });
 
-describe('GET /block/:blockHash/raw return type check', function () {
-  it('type check raw', function (done) {
-    supertest(app)
-      .get(
-        '/block/b9deaab16abe5f28967aebd0c6e94ce18c8309dec39816ea883885265b681f7c/raw'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const rawBlock = JSON.parse(res.text);
-
-        assert.ok(rawBlock);
-        assert.notEqual(rawBlock.length, 0);
-        assert.equal(typeof rawBlock, 'string');
-        done();
-      });
-  });
-});
-
 describe('GET /block/:blockHash/raw with sinon.stub', function () {
   beforeEach(() => {
     sinon
@@ -167,58 +118,6 @@ describe('GET /block/:blockHash/raw with sinon.stub', function () {
           body,
           '0100000075adc0f804073eee1c74988e1e1bd83c85f987e34a95fd714813e379a724e85f97d679310470c26fdfaed7167075c7a8a1fa34d9c67be9c45c246281c15ffb231d0ef017e1b2147099d84709bcc0fbe89ef4d579fa8a95192ce89671765ec90459d4455f0040e7f72ce96424573b0d18f707333d02a2bc546491ba197c3af7b52d559eb55765d00a1e99d6ef4175ec4aae134c6b496a87c78d3a41ed77c7c2fd4ba684cd4abd01010000000100000000000000000000000000000000000000000000000000000000000000008a69000005028a690101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000'
         );
-        done();
-      });
-  });
-});
-
-describe('GET /block/:blockHash/txns return type check', function () {
-  it('/block/:blockHash/txns', function (done) {
-    supertest(app)
-      .get(
-        '/block/b9deaab16abe5f28967aebd0c6e94ce18c8309dec39816ea883885265b681f7c/txns'
-      )
-      //.query({ perPage: '25', page: 1 })
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const block = JSON.parse(res.text);
-
-        assert.ok(block.hash);
-        assert.ok(block.confirmations);
-        assert.ok(block.height);
-        assert.ok(block.size);
-        assert.ok(block.strippedsize);
-        assert.ok(block.merkleroot);
-        assert.ok(block.immutablemerkleroot);
-        assert.ok(block.previousblockhash);
-        assert.ok(block.nextblockhash);
-        assert.ok(block.weight);
-        assert.ok(block.features);
-        assert.ok(block.featuresHex);
-        assert.ok(block.time);
-        assert.ok(block.mediantime);
-        assert.ok(!block.xfieldType);
-        assert.ok(block.proof);
-        assert.ok(block.tx);
-        assert.ok(block.nTx);
-
-        const transaction = block.tx;
-
-        assert.equal(transaction.length, block.nTx);
-
-        assert.ok(transaction[0].txid);
-        assert.ok(transaction[0].hash);
-        assert.ok(transaction[0].features);
-        assert.ok(transaction[0].size);
-        assert.ok(transaction[0].vsize);
-        assert.ok(transaction[0].weight);
-        assert.ok(!transaction[0].locktime);
-        assert.ok(transaction[0].vin);
-        assert.ok(transaction[0].vout);
-        assert.ok(transaction[0].hex);
-
         done();
       });
   });

@@ -35,19 +35,19 @@ app.get('/blocks', async (req, res) => {
 
   try {
     const bestBlockHeight = await tapyrusd.getBlockCount();
-    let startFromBlock = bestBlockHeight - perPage * page + 1;
+    const endIndex = perPage * page - 1; // genesis block has height 0.
+    const startIndex = endIndex + 1 - perPage;
 
-    if (startFromBlock <= 0) {
-      //if last page's remainder should use different value of startFromBlock and perPage
-      startFromBlock = 0;
-      perPage = (bestBlockHeight % perPage) + 1;
+    const startBlock = bestBlockHeight - startIndex;
+    let endBlock = startBlock - perPage + 1;
+    if (endBlock < 0) {
+      endBlock = 0;
     }
+    logger.debug(`Get block from = ${startBlock}, to = ${endBlock}`);
 
     const headers = [];
-    for (let i = startFromBlock; i < startFromBlock + perPage; i++) {
-      const header = await electrs.blockchain.block.header(i);
-
-      headers.push(header);
+    for (let i = endBlock; i <= startBlock; i++) {
+      headers.push(await electrs.blockchain.block.header(i));
     }
 
     const promiseArray = headers.map(x =>
