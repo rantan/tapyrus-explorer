@@ -14,6 +14,8 @@ After all the blocks are downloaded, you can start to use Tapyrus Explorer.
 docker-compose up -d
 ```
 
+Once the container is up and running, you can access the Explorer at `http://localhost:4200/`.
+
 ### Run on your local host!
 
 see [setup.md](./setup.md)
