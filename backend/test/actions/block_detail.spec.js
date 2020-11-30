@@ -3,7 +3,7 @@ const assert = require('assert');
 const app = require('../../server');
 require('../../actions/block_detail');
 const cl = require('../../libs/tapyrusd').client;
-
+const RpcError = require('bitcoin-core/dist/src/errors/rpc-error').default;
 const sinon = require('sinon');
 
 describe('GET /block/:blockHash with sinon.stub', function () {
@@ -32,57 +32,75 @@ describe('GET /block/:blockHash with sinon.stub', function () {
           '471b4c1fcb6105c9812edde93c6dd760330daa8b3897a9484a24c3ce23683805',
         nextblockhash:
           'e17286ef05705b03f2396f28f06b9afafa4502157285ad1d1ebc08537d27de57'
-      });
+      })
+      .withArgs(
+        '5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420fe'
+      )
+      .resolves(new RpcError(-5, 'Block not found'));
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it('/block/:blockHash', function (done) {
-    supertest(app)
-      .get(
-        '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
+  context('existing block', function () {
+    it('should return block information.', function (done) {
+      supertest(app)
+        .get(
+          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
+        )
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function (err, res) {
+          if (err) done(err);
 
-        const body = res.body;
+          const body = res.body;
 
-        assert.strictEqual(
-          body.blockHash,
-          '5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
-        );
-        assert.strictEqual(body.ntx, 1);
-        assert.strictEqual(body.height, 1236);
-        assert.strictEqual(body.timestamp, 1598253741);
-        assert.strictEqual(
-          body.proof,
-          '9fd45dcb188a5547a34fe2d181c24fd8f0f68b88d6c8951ec4db921a133dd846fb77d030bdacb1e421c49e23483937ce2c5eb3693baae040ddda8316ea3b6127'
-        );
-        assert.strictEqual(body.sizeBytes, 261);
-        assert.strictEqual(body.version, 1);
-        assert.strictEqual(
-          body.merkleRoot,
-          '39b95731fbae308d85743e2682988038980d7463ea2fc1b21f91860b243892e9'
-        );
-        assert.strictEqual(
-          body.immutableMerkleRoot,
-          'd837966bc672b6459385989fdbfc049773f03fd355bb62c9765cdfa51e7a19a4'
-        );
-        assert.strictEqual(
-          body.previousBlock,
-          '471b4c1fcb6105c9812edde93c6dd760330daa8b3897a9484a24c3ce23683805'
-        );
-        assert.strictEqual(
-          body.nextBlock,
-          'e17286ef05705b03f2396f28f06b9afafa4502157285ad1d1ebc08537d27de57'
-        );
+          assert.strictEqual(
+            body.blockHash,
+            '5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
+          );
+          assert.strictEqual(body.ntx, 1);
+          assert.strictEqual(body.height, 1236);
+          assert.strictEqual(body.timestamp, 1598253741);
+          assert.strictEqual(
+            body.proof,
+            '9fd45dcb188a5547a34fe2d181c24fd8f0f68b88d6c8951ec4db921a133dd846fb77d030bdacb1e421c49e23483937ce2c5eb3693baae040ddda8316ea3b6127'
+          );
+          assert.strictEqual(body.sizeBytes, 261);
+          assert.strictEqual(body.version, 1);
+          assert.strictEqual(
+            body.merkleRoot,
+            '39b95731fbae308d85743e2682988038980d7463ea2fc1b21f91860b243892e9'
+          );
+          assert.strictEqual(
+            body.immutableMerkleRoot,
+            'd837966bc672b6459385989fdbfc049773f03fd355bb62c9765cdfa51e7a19a4'
+          );
+          assert.strictEqual(
+            body.previousBlock,
+            '471b4c1fcb6105c9812edde93c6dd760330daa8b3897a9484a24c3ce23683805'
+          );
+          assert.strictEqual(
+            body.nextBlock,
+            'e17286ef05705b03f2396f28f06b9afafa4502157285ad1d1ebc08537d27de57'
+          );
 
-        done();
-      });
+          done();
+        });
+    });
+  });
+
+  context('unknown block', function () {
+    it('should return 404 response.', function (done) {
+      supertest(app)
+        .get(
+          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e5'
+        )
+        .expect(404)
+        .expect('Content-Type', /json/);
+      done();
+    });
   });
 });
 

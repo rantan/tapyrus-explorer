@@ -18,7 +18,6 @@ app.get('/block/:blockHash', async (req, res) => {
 
   if (!regex.test(urlBlockHash)) {
     logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}`);
-
     res.status(400).send('Bad request');
     return;
   }
@@ -40,9 +39,13 @@ app.get('/block/:blockHash', async (req, res) => {
       nextBlock: blockInfo.nextblockhash
     });
   } catch (err) {
-    logger.error(
-      `Error retrieving information for block  - ${urlBlockHash}. Error Message - ${err.message}`
-    );
+    if (err.code === -5) {
+      res.status(404).send('Block Not Found.');
+    } else {
+      logger.error(
+        `Error retrieving information for block  - ${urlBlockHash}. Error Message - ${err.message}`
+      );
+    }
   }
 });
 
