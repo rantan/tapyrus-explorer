@@ -33,7 +33,6 @@ export class BlocksPage implements OnInit {
       data => {
         const resultData: any = data || {};
         const txnsData: any = resultData.results || [];
-        console.log(txnsData);
         this.blocks = txnsData.sort(this.compareHeight);
         this.bestHeight = resultData.bestHeight;
         this.calculatePagination();
