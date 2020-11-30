@@ -74,7 +74,7 @@ export class BlocksPage implements OnInit {
 
   onSearch() {
     this.resetError();
-    if (this.searchValue == null || this.searchValue.length == 0) {
+    if (this.searchValue == null || this.searchValue.length === 0) {
       this.getBlockLists();
     } else {
       this.backendService.searchBlock(this.searchValue).subscribe(
