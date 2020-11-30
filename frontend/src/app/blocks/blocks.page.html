@@ -16,8 +16,12 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-
-    <ion-grid class="ion-padding" id="table">
+    <div class="bg-white ion-padding" *ngIf="notFound">
+      <div class="flex">
+        <p id="block-header-text">Not Found</p>
+      </div>
+    </div>
+    <ion-grid class="ion-padding" id="table" *ngIf="!notFound">
       <ion-row id="table-header">
         <ion-col size="2">HEIGHT</ion-col>
         <ion-col size="6">HASH</ion-col>
@@ -47,7 +51,7 @@
       </ion-row>
     </ion-grid>
   </div>
-  <ion-grid>
+  <ion-grid *ngIf="!notFound">
     <ion-row>
       <ion-col style="margin-top: 16px">
         Show

@@ -17,6 +17,7 @@ export class BlocksPage implements OnInit {
   blocks: any = [];
   searchValue: string;
   bestHeight = 0;
+  notFound = false;
 
   constructor(
     private httpClient: HttpClient,
@@ -29,6 +30,7 @@ export class BlocksPage implements OnInit {
   }
 
   getBlockLists() {
+    this.notFound = false;
     this.backendService.getBlocks(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
@@ -70,6 +72,7 @@ export class BlocksPage implements OnInit {
   }
 
   onSearch() {
+    this.notFound = false;
     this.backendService.searchBlock(this.searchValue).subscribe(
       data => {
         const result: any = data || {};
@@ -86,7 +89,11 @@ export class BlocksPage implements OnInit {
         this.bestHeight = 1;
       },
       err => {
-        console.log(err);
+        if (err.status == 404) {
+          this.notFound = true;
+        } else {
+          console.log(err);
+        }
       }
     );
   }
