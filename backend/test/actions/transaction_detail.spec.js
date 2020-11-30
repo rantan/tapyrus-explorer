@@ -6,38 +6,6 @@ const electrs = require('../../libs/electrs');
 
 const sinon = require('sinon');
 
-describe('GET /transaction/:txid return type check', function () {
-  it('type check', function (done) {
-    supertest(app)
-      .get(
-        '/transaction/3a46acee8ac1434ca5f17f7b3626142de71a003f5e1e39a7abced3e2a7b94f2b'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const transaction = res.body;
-
-        assert.ok(transaction.txid);
-        assert.ok(transaction.hash);
-        assert.ok(transaction.features);
-        assert.ok(transaction.size);
-        assert.ok(transaction.vsize);
-        assert.ok(transaction.weight);
-        assert.ok(!transaction.locktime);
-        assert.ok(transaction.vin);
-        assert.ok(transaction.vout);
-        assert.ok(transaction.hex);
-        assert.ok(transaction.blockhash);
-        assert.ok(transaction.confirmations);
-        assert.ok(transaction.time);
-        assert.ok(transaction.blocktime);
-        assert.ok(transaction.vinRaw);
-        done();
-      });
-  });
-});
-
 function isEmpty(obj) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) return false;
@@ -155,25 +123,6 @@ describe('GET /transaction/:txid with sinon.stub', function () {
   });
 });
 
-describe('GET /transaction/:txid/rawData return type check', function () {
-  it('type check', function (done) {
-    supertest(app)
-      .get(
-        '/transaction/3a46acee8ac1434ca5f17f7b3626142de71a003f5e1e39a7abced3e2a7b94f2b/rawData'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const rawTransaction = JSON.parse(res.text);
-        assert.ok(rawTransaction);
-        assert.notEqual(rawTransaction.length, 0);
-        assert.equal(typeof rawTransaction, 'string');
-        done();
-      });
-  });
-});
-
 describe('GET /transaction/:txid/rawData with sinon.stub', function () {
   beforeEach(() => {
     sinon
@@ -211,37 +160,6 @@ describe('GET /transaction/:txid/rawData with sinon.stub', function () {
 
   afterEach(function () {
     sinon.restore();
-  });
-});
-
-describe('GET /transaction/:txid/get return type check', function () {
-  it('type check', function (done) {
-    supertest(app)
-      .get(
-        '/transaction/3a46acee8ac1434ca5f17f7b3626142de71a003f5e1e39a7abced3e2a7b94f2b/get'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const getTransaction = JSON.parse(res.text);
-        assert.ok(getTransaction.txid);
-        assert.ok(getTransaction.hash);
-        assert.ok(getTransaction.features);
-        assert.ok(getTransaction.size);
-        assert.ok(getTransaction.vsize);
-        assert.ok(getTransaction.weight);
-        assert.ok(!getTransaction.locktime);
-        assert.ok(getTransaction.vin);
-        assert.ok(getTransaction.vout);
-        assert.ok(getTransaction.hex);
-        assert.ok(getTransaction.blockhash);
-        assert.ok(getTransaction.confirmations);
-        assert.ok(getTransaction.time);
-        assert.ok(getTransaction.blocktime);
-
-        done();
-      });
   });
 });
 

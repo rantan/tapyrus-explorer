@@ -3,45 +3,44 @@ const assert = require('assert');
 const app = require('../../server');
 require('../../actions/transaction_list');
 const electrs = require('../../libs/electrs');
-
+const cl = require('../../libs/tapyrusd').client;
 const sinon = require('sinon');
-
-describe('GET /transactions return type check', function () {
-  it('/transactions', function (done) {
-    this.timeout(5000);
-    supertest(app)
-      .get('/transactions')
-      .query({ perPage: '25', page: 1 })
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
-        const transactions = JSON.parse(res.text).results;
-        assert.equal(transactions.length, 25);
-
-        assert.ok(transactions[0].txid);
-        assert.ok(transactions[0].hash);
-        assert.ok(transactions[0].features);
-        assert.ok(transactions[0].size);
-        assert.ok(transactions[0].vsize);
-        assert.ok(transactions[0].weight);
-        assert.ok(!transactions[0].locktime);
-        assert.ok(transactions[0].vin);
-        assert.ok(transactions[0].vout);
-        assert.ok(transactions[0].hex);
-        assert.ok(transactions[0].blockhash);
-        assert.ok(transactions[0].confirmations);
-        assert.ok(transactions[0].time);
-        assert.ok(transactions[0].blocktime);
-        assert.ok(transactions[0].amount);
-
-        done();
-      });
-  });
-});
 
 describe('GET /transactions and then call individual transaction using /transaction/:txid', function () {
   beforeEach(() => {
+    sinon.stub(cl, 'getChainTxStats').resolves({ txcount: 1 });
+    sinon.stub(cl, 'getBlockCount').resolves(1);
+    sinon.stub(cl, 'getRawMempool').resolves([]);
+    sinon
+      .stub(cl, 'getBlockHash')
+      .resolves(
+        'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5'
+      );
+    sinon.stub(cl, 'getBlock').resolves({
+      hash: 'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5',
+      confirmations: 10248,
+      strippedsize: 262,
+      size: 262,
+      weight: 1048,
+      height: 41794,
+      features: 1,
+      featuresHex: '00000001',
+      merkleroot:
+        '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9',
+      immutablemerkleroot:
+        '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
+      tx: ['8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f'],
+      time: 1603108230,
+      mediantime: 1603104903,
+      xfieldType: 0,
+      proof:
+        'a8487c83d1740373a2eab54571b730d75450db11702a4d5ff05c680d919b9f848cc344ac81540c0341733c28c8e26b1e10aa1b566e2d68615ae03281116fbcc8',
+      nTx: 1,
+      previousblockhash:
+        'da9a38e33da2d01d70ea6f439ce48c28e4dbd603937f7bb429ec9871c3a9dbf7',
+      nextblockhash:
+        'e84148009b81c00688bd23d0eb01c9676589214996e5dc13aec328aff5102526'
+    });
     sinon.stub(electrs.blockchain.transaction, 'get').resolves({
       txid: '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
       hash: '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9',
@@ -88,7 +87,7 @@ describe('GET /transactions and then call individual transaction using /transact
       .end(function (err, res) {
         if (err) done(err);
         else {
-          assert.strictEqual(res.body.results.length, 25);
+          assert.strictEqual(res.body.results.length, 1);
           supertest(app)
             .get(`/transaction/${res.body.results[0].txid}`)
             .expect('Content-Type', /json/)
