@@ -17,12 +17,12 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div class="bg-white ion-padding" *ngIf="notFound">
+    <div class="bg-white ion-padding" *ngIf="hasError">
       <div class="flex">
-        <p id="block-header-text">Not Found</p>
+        <p id="block-header-text">{{errorMsg}}</p>
       </div>
     </div>
-    <ion-grid class="ion-padding" id="table" *ngIf="!notFound">
+    <ion-grid class="ion-padding" id="table" *ngIf="!hasError">
       <ion-row id="table-header">
         <ion-col size="2">HEIGHT</ion-col>
         <ion-col size="6">HASH</ion-col>
@@ -52,7 +52,7 @@
       </ion-row>
     </ion-grid>
   </div>
-  <ion-grid *ngIf="!notFound">
+  <ion-grid *ngIf="!hasError">
     <ion-row>
       <ion-col style="margin-top: 16px">
         Show

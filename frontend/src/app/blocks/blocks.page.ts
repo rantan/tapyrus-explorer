@@ -17,7 +17,8 @@ export class BlocksPage implements OnInit {
   blocks: any = [];
   searchValue: string;
   bestHeight = 0;
-  notFound = false;
+  hasError = false;
+  errorMsg = '';
 
   constructor(
     private httpClient: HttpClient,
@@ -30,7 +31,7 @@ export class BlocksPage implements OnInit {
   }
 
   getBlockLists() {
-    this.notFound = false;
+    this.resetError();
     this.backendService.getBlocks(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
@@ -72,7 +73,7 @@ export class BlocksPage implements OnInit {
   }
 
   onSearch() {
-    this.notFound = false;
+    this.resetError();
     this.backendService.searchBlock(this.searchValue).subscribe(
       data => {
         const result: any = data || {};
@@ -89,12 +90,14 @@ export class BlocksPage implements OnInit {
         this.bestHeight = 1;
       },
       err => {
-        if (err.status == 404) {
-          this.notFound = true;
-        } else {
-          console.log(err);
-        }
+        this.hasError = true;
+        this.errorMsg = err.error;
       }
     );
+  }
+
+  resetError() {
+    this.hasError = false;
+    this.errorMsg = '';
   }
 }

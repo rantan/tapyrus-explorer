@@ -18,7 +18,7 @@ app.get('/block/:blockHash', async (req, res) => {
 
   if (!regex.test(urlBlockHash)) {
     logger.error(`Regex Test didn't pass for URL - /block/${urlBlockHash}`);
-    res.status(400).send('Bad request');
+    res.status(400).send('Invalid block hash.');
     return;
   }
 
@@ -40,7 +40,7 @@ app.get('/block/:blockHash', async (req, res) => {
     });
   } catch (err) {
     if (err.code === -5) {
-      res.status(404).send('Block Not Found.');
+      res.status(404).send('Block not found.');
     } else {
       logger.error(
         `Error retrieving information for block  - ${urlBlockHash}. Error Message - ${err.message}`
