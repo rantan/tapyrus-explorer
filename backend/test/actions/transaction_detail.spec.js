@@ -3,7 +3,7 @@ const assert = require('assert');
 const app = require('../../server');
 require('../../actions/transaction_detail');
 const electrs = require('../../libs/electrs');
-
+const RpcError = require('bitcoin-core/dist/src/errors/rpc-error').default;
 const sinon = require('sinon');
 
 function isEmpty(obj) {
@@ -53,73 +53,97 @@ describe('GET /transaction/:txid with sinon.stub', function () {
         confirmations: 28,
         time: 1599509432,
         blocktime: 1599509432
-      });
+      })
+      .withArgs(
+        'a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3',
+        true
+      )
+      .resolves(undefined);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it('/transaction/:txid', function (done) {
-    supertest(app)
-      .get(
-        '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
-      )
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function (err, res) {
-        if (err) done(err);
+  context('existing tx', function () {
+    it('should return transaction information', function (done) {
+      supertest(app)
+        .get(
+          '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
+        )
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function (err, res) {
+          if (err) done(err);
 
-        const transaction = res.body;
-        assert.strictEqual(
-          transaction.txid,
-          'a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
-        );
-        assert.strictEqual(
-          transaction.hash,
-          'fa305c408bbedc3043658845b1605b0f02e89dc471b9c86d1b74a7b8b1b9d531'
-        );
-        assert.strictEqual(transaction.features, 1);
-        assert.strictEqual(transaction.size, 90);
-        assert.strictEqual(transaction.vsize, 90);
-        assert.strictEqual(transaction.weight, 360);
-        assert.strictEqual(transaction.locktime, 0);
-        assert.strictEqual(
-          transaction.hex,
-          '01000000010000000000000000000000000000000000000000000000000000000000000000e37700000502e3770101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000'
-        );
-        assert.strictEqual(
-          transaction.blockhash,
-          '69b5964caf1e85883dfe60ddf4ace9e301e7b21a923f8fc82f47b0deae366a2b'
-        );
-        assert.strictEqual(transaction.time, 1599509432);
-        assert.strictEqual(transaction.blocktime, 1599509432);
+          const transaction = res.body;
+          assert.strictEqual(
+            transaction.txid,
+            'a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
+          );
+          assert.strictEqual(
+            transaction.hash,
+            'fa305c408bbedc3043658845b1605b0f02e89dc471b9c86d1b74a7b8b1b9d531'
+          );
+          assert.strictEqual(transaction.features, 1);
+          assert.strictEqual(transaction.size, 90);
+          assert.strictEqual(transaction.vsize, 90);
+          assert.strictEqual(transaction.weight, 360);
+          assert.strictEqual(transaction.locktime, 0);
+          assert.strictEqual(
+            transaction.hex,
+            '01000000010000000000000000000000000000000000000000000000000000000000000000e37700000502e3770101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000'
+          );
+          assert.strictEqual(
+            transaction.blockhash,
+            '69b5964caf1e85883dfe60ddf4ace9e301e7b21a923f8fc82f47b0deae366a2b'
+          );
+          assert.strictEqual(transaction.time, 1599509432);
+          assert.strictEqual(transaction.blocktime, 1599509432);
 
-        assert.strictEqual(transaction.vin[0].coinbase, '08f2770101');
-        assert.strictEqual(transaction.vin[0].sequence, 9672954294);
+          assert.strictEqual(transaction.vin[0].coinbase, '08f2770101');
+          assert.strictEqual(transaction.vin[0].sequence, 9672954294);
 
-        assert.strictEqual(transaction.vout[0].value, 50);
-        assert.strictEqual(transaction.vout[0].n, 0);
-        assert.strictEqual(
-          transaction.vout[0].scriptPubKey.asm,
-          'OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG'
-        );
-        assert.strictEqual(
-          transaction.vout[0].scriptPubKey.hex,
-          'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a'
-        );
-        assert.strictEqual(transaction.vout[0].scriptPubKey.reqSigs, 1);
-        assert.strictEqual(transaction.vout[0].scriptPubKey.type, 'pubkeyhash');
-        assert.strictEqual(
-          transaction.vout[0].scriptPubKey.addresses[0],
-          '1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA'
-        );
+          assert.strictEqual(transaction.vout[0].value, 50);
+          assert.strictEqual(transaction.vout[0].n, 0);
+          assert.strictEqual(
+            transaction.vout[0].scriptPubKey.asm,
+            'OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG'
+          );
+          assert.strictEqual(
+            transaction.vout[0].scriptPubKey.hex,
+            'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a'
+          );
+          assert.strictEqual(transaction.vout[0].scriptPubKey.reqSigs, 1);
+          assert.strictEqual(
+            transaction.vout[0].scriptPubKey.type,
+            'pubkeyhash'
+          );
+          assert.strictEqual(
+            transaction.vout[0].scriptPubKey.addresses[0],
+            '1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA'
+          );
 
-        assert.strictEqual(transaction.vinRaw.length, 1);
-        assert.strictEqual(isEmpty(transaction.vinRaw[0]), true);
+          assert.strictEqual(transaction.vinRaw.length, 1);
+          assert.strictEqual(isEmpty(transaction.vinRaw[0]), true);
 
-        done();
-      });
+          done();
+        });
+    });
+  });
+
+  context('unknown tx', function () {
+    it('should return 404 response.', function (done) {
+      supertest(app)
+        .get(
+          '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3'
+        )
+        .expect(404)
+        .expect('Content-Type', /json/)
+        .end(function (err, res) {
+          done();
+        });
+    });
   });
 });
 

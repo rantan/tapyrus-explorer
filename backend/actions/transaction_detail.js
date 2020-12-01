@@ -16,22 +16,21 @@ app.get('/transaction/:txid', async (req, res) => {
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    logger.error(`Regex Test didn't pass for URL - /transaction/${urlTxid}`);
-
     res.status(400).send('Bad request');
     return;
   }
 
   try {
     const tx = await electrs.blockchain.transaction.get(urlTxid, true);
-
-    tx.vinRaw = tx.vin.map(async vin => {
-      if (!vin.txid) return {};
-
-      return await electrs.blockchain.transaction.get(vin.txid, true);
-    });
-
-    res.json(tx);
+    if (tx === undefined) {
+      res.status(404).send('Tx not found.');
+    } else {
+      tx.vinRaw = tx.vin.map(async vin => {
+        if (!vin.txid) return {};
+        return await electrs.blockchain.transaction.get(vin.txid, true);
+      });
+      res.json(tx);
+    }
   } catch (error) {
     logger.error(
       `Error retrieving information for transaction - ${urlTxid}. Error Message - ${error.message}`
