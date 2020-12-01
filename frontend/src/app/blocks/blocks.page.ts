@@ -17,6 +17,8 @@ export class BlocksPage implements OnInit {
   blocks: any = [];
   searchValue: string;
   bestHeight = 0;
+  hasError = false;
+  errorMsg = '';
 
   constructor(
     private httpClient: HttpClient,
@@ -29,6 +31,7 @@ export class BlocksPage implements OnInit {
   }
 
   getBlockLists() {
+    this.resetError();
     this.backendService.getBlocks(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
@@ -70,24 +73,35 @@ export class BlocksPage implements OnInit {
   }
 
   onSearch() {
-    this.backendService.searchBlock(this.searchValue).subscribe(
-      data => {
-        const result: any = data || {};
-        this.blocks = [
-          {
-            height: result.height,
-            hash: result.blockHash,
-            time: result.timestamp,
-            size: result.sizeBytes
-          }
-        ];
-        this.pages = 1;
-        this.page = 1;
-        this.bestHeight = 1;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.resetError();
+    if (this.searchValue == null || this.searchValue.length === 0) {
+      this.getBlockLists();
+    } else {
+      this.backendService.searchBlock(this.searchValue).subscribe(
+        data => {
+          const result: any = data || {};
+          this.blocks = [
+            {
+              height: result.height,
+              hash: result.blockHash,
+              time: result.timestamp,
+              size: result.sizeBytes
+            }
+          ];
+          this.pages = 1;
+          this.page = 1;
+          this.bestHeight = 1;
+        },
+        err => {
+          this.hasError = true;
+          this.errorMsg = err.error;
+        }
+      );
+    }
+  }
+
+  resetError() {
+    this.hasError = false;
+    this.errorMsg = '';
   }
 }
