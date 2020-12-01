@@ -95,11 +95,13 @@ describe('GET /block/:blockHash with sinon.stub', function () {
     it('should return 404 response.', function (done) {
       supertest(app)
         .get(
-          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e5'
+          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420fe'
         )
         .expect(404)
-        .expect('Content-Type', /json/);
-      done();
+        .expect('Content-Type', /json/)
+        .end(function (err, res) {
+          done();
+        });
     });
   });
 });
