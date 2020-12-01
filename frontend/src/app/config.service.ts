@@ -12,6 +12,7 @@ import { catchError, retry } from 'rxjs/operators';
 
 export interface Config {
   backendUrl: string;
+  project: string;
 }
 
 @Injectable({
