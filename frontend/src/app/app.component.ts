@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Config, ConfigService } from './config.service';
 
 @Component({
   selector: 'app-root',
@@ -24,12 +25,14 @@ export class AppComponent implements OnInit {
     }
   ];
   public menuToggle = false;
+  public project;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private menu: MenuController
+    private menu: MenuController,
+    private configService: ConfigService
   ) {
     this.initializeApp();
   }
@@ -38,6 +41,9 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.configService.getConfig().subscribe((config: Config) => {
+        this.project = config.project;
+      });
     });
   }
 
