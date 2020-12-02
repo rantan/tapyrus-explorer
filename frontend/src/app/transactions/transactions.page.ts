@@ -17,6 +17,8 @@ export class TransactionsPage implements OnInit {
   transactions: any = [];
   searchValue: string;
   txCount = 0;
+  hasError = false;
+  errorMsg = '';
 
   constructor(
     private httpClient: HttpClient,
@@ -29,6 +31,7 @@ export class TransactionsPage implements OnInit {
   }
 
   getTransactionLists() {
+    this.resetError();
     this.backendService.getTransactions(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
@@ -61,16 +64,27 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    this.backendService.searchTransaction(this.searchValue).subscribe(
-      data => {
-        this.transactions = [data];
-        this.pages = 1;
-        this.page = 1;
-        this.txCount = 1;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.resetError();
+    if (this.searchValue == null || this.searchValue.length === 0) {
+      this.getTransactionLists();
+    } else {
+      this.backendService.searchTransaction(this.searchValue).subscribe(
+        data => {
+          this.transactions = [data];
+          this.pages = 1;
+          this.page = 1;
+          this.txCount = 1;
+        },
+        err => {
+          this.hasError = true;
+          this.errorMsg = err.error;
+        }
+      );
+    }
+  }
+
+  resetError() {
+    this.hasError = false;
+    this.errorMsg = '';
   }
 }

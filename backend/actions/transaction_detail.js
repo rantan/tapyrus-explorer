@@ -16,7 +16,7 @@ app.get('/transaction/:txid', async (req, res) => {
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    res.status(400).send('Bad request');
+    res.status(400).send('Invalid txid.');
     return;
   }
 
@@ -46,15 +46,17 @@ app.get('/transaction/:txid/rawData', async (req, res) => {
     logger.error(
       `Regex Test didn't pass for URL - /transaction/${urlTxid}/rawData`
     );
-
-    res.status(400).send('Bad request');
+    res.status(400).send('Invalid txid.');
     return;
   }
 
   try {
     const tx = await electrs.blockchain.transaction.get(urlTxid, false);
-
-    res.json(tx);
+    if (tx === undefined) {
+      res.status(404).send('Tx not found.');
+    } else {
+      res.json(tx);
+    }
   } catch (error) {
     logger.error(
       `Error retrieving rawdata for transaction - ${urlTxid}. Error Message - ${error.message}`
@@ -70,15 +72,17 @@ app.get('/transaction/:txid/get', async (req, res) => {
     logger.error(
       `Regex Test didn't pass for URL - /transaction/${urlTxid}/get`
     );
-
-    res.status(400).send('Bad request');
+    res.status(400).send('Invalid txid.');
     return;
   }
 
   try {
     const tx = await electrs.blockchain.transaction.get(urlTxid, true);
-
-    res.json(tx);
+    if (tx === undefined) {
+      res.status(404).send('Tx not found.');
+    } else {
+      res.json(tx);
+    }
   } catch (error) {
     logger.error(
       `Error calling the method gettransaction for transaction - ${urlTxid}. Error Message - ${error.message}`
