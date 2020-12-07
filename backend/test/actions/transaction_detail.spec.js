@@ -3,7 +3,6 @@ const assert = require('assert');
 const app = require('../../server');
 require('../../actions/transaction_detail');
 const electrs = require('../../libs/electrs');
-const RpcError = require('bitcoin-core/dist/src/errors/rpc-error').default;
 const sinon = require('sinon');
 
 function isEmpty(obj) {
