@@ -79,18 +79,7 @@ export class BlocksPage implements OnInit {
     } else {
       this.backendService.searchBlock(this.searchValue).subscribe(
         data => {
-          const result: any = data || {};
-          this.blocks = [
-            {
-              height: result.height,
-              hash: result.blockHash,
-              time: result.timestamp,
-              size: result.sizeBytes
-            }
-          ];
-          this.pages = 1;
-          this.page = 1;
-          this.bestHeight = 1;
+          this.goToBlock(data.blockHash);
         },
         err => {
           this.hasError = true;
