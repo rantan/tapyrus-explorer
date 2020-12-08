@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
 import { BackendService } from '../backend.service';
+import { AppConst } from '../app.const';
 
 @Component({
   selector: 'app-transactions',
@@ -11,7 +12,7 @@ import { BackendService } from '../backend.service';
   providers: [BackendService]
 })
 export class TransactionsPage implements OnInit {
-  perPage = 25; // default with 20 per page
+  perPage = AppConst.PER_PAGE_COUNT;
   page = 1; // default start with page 1
   pages = 1; // number of pages
   transactions: any = [];
@@ -44,11 +45,6 @@ export class TransactionsPage implements OnInit {
 
   onPageChange(pageNumber: number) {
     this.page = pageNumber;
-    this.getTransactionLists();
-  }
-
-  onPerPageChange() {
-    this.page = 1;
     this.getTransactionLists();
   }
 
