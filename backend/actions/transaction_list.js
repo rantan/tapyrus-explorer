@@ -42,7 +42,8 @@ app.get('/transactions', async (req, res) => {
   const page = Number(req.query.page);
 
   try {
-    const txCount = await tapyrusd.getChainTxStats().txcount;
+    const stats = await tapyrusd.getChainTxStats();
+    const txCount = stats.txcount;
     const bestBlockHeight = await tapyrusd.getBlockCount();
 
     let count = 0,
