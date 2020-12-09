@@ -4,8 +4,15 @@
 
 ### Tapyrusd
 
+The following settings need to be added to the configuration file:
+
+```
+rpcworkqueue=32
+rpcthreads=16
+```
+
 Run tapyrusd
-```sh
+```bash
 $ sudo ./src/tapyrusd -datadir=/var/lib/tapyrus-testnet -conf=/etc/tapyrus/tapyrus.conf 
 ```
 

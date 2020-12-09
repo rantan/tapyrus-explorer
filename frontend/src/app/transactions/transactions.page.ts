@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
 import { BackendService } from '../backend.service';
+import { AppConst } from '../app.const';
 
 @Component({
   selector: 'app-transactions',
@@ -11,12 +12,14 @@ import { BackendService } from '../backend.service';
   providers: [BackendService]
 })
 export class TransactionsPage implements OnInit {
-  perPage = 25; // default with 20 per page
+  perPage = AppConst.PER_PAGE_COUNT;
   page = 1; // default start with page 1
   pages = 1; // number of pages
   transactions: any = [];
   searchValue: string;
   txCount = 0;
+  hasError = false;
+  errorMsg = '';
 
   constructor(
     private httpClient: HttpClient,
@@ -29,6 +32,7 @@ export class TransactionsPage implements OnInit {
   }
 
   getTransactionLists() {
+    this.resetError();
     this.backendService.getTransactions(this.page, this.perPage).subscribe(
       data => {
         const resultData: any = data || {};
@@ -47,11 +51,6 @@ export class TransactionsPage implements OnInit {
     this.getTransactionLists();
   }
 
-  onPerPageChange() {
-    this.page = 1;
-    this.getTransactionLists();
-  }
-
   calculatePagination() {
     this.pages = Math.ceil(this.txCount / this.perPage);
   }
@@ -61,13 +60,24 @@ export class TransactionsPage implements OnInit {
   }
 
   onSearch() {
-    this.backendService.searchTransaction(this.searchValue).subscribe(
-      data => {
-        this.goToTransaction(data.txid);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    this.resetError();
+    if (this.searchValue == null || this.searchValue.length === 0) {
+      this.getTransactionLists();
+    } else {
+      this.backendService.searchTransaction(this.searchValue).subscribe(
+        data => {
+          this.goToTransaction(data.txid);
+        },
+        err => {
+          this.hasError = true;
+          this.errorMsg = err.error;
+        }
+      );
+    }
+  }
+
+  resetError() {
+    this.hasError = false;
+    this.errorMsg = '';
   }
 }

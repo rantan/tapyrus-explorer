@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 
 import { BackendService } from '../backend.service';
+import { AppConst } from '../app.const';
 
 @Component({
   selector: 'app-blocks',
@@ -11,7 +12,7 @@ import { BackendService } from '../backend.service';
   styleUrls: ['./blocks.page.scss']
 })
 export class BlocksPage implements OnInit {
-  perPage = 25; // default with 20 per page
+  perPage = AppConst.PER_PAGE_COUNT;
   page = 1; // default start with page 1
   pages = 1; // number of pages
   blocks: any = [];
@@ -56,11 +57,6 @@ export class BlocksPage implements OnInit {
 
   onPageChange(pageNumber: number) {
     this.page = pageNumber;
-    this.getBlockLists();
-  }
-
-  onPerPageChange() {
-    this.page = 1;
     this.getBlockLists();
   }
 
