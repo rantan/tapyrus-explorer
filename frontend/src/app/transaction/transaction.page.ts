@@ -71,7 +71,7 @@ export class TransactionPage implements OnInit {
   }
 
   goToTransactions() {
-    this.navCtrl.navigateBack('/transactions');
+    this.navCtrl.navigateBack('/tx/recent');
   }
 
   goToAddress(add = '') {

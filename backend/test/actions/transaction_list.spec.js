@@ -6,7 +6,7 @@ const electrs = require('../../libs/electrs');
 const cl = require('../../libs/tapyrusd').client;
 const sinon = require('sinon');
 
-describe('GET /transactions and then call individual transaction using /transaction/:txid', function () {
+describe('GET /transactions and then call individual transaction using /tx/:txid', function () {
   beforeEach(() => {
     sinon.stub(cl, 'getChainTxStats').resolves({ txcount: 1 });
     sinon.stub(cl, 'getBlockCount').resolves(1);
@@ -77,7 +77,7 @@ describe('GET /transactions and then call individual transaction using /transact
     sinon.restore();
   });
 
-  it('/transactions', function (done) {
+  it('should return recent transactions', function (done) {
     this.timeout(5000);
     supertest(app)
       .get('/transactions')
@@ -89,7 +89,7 @@ describe('GET /transactions and then call individual transaction using /transact
         else {
           assert.strictEqual(res.body.results.length, 1);
           supertest(app)
-            .get(`/transaction/${res.body.results[0].txid}`)
+            .get(`/tx/${res.body.results[0].txid}`)
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function (err, res) {

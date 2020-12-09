@@ -63,7 +63,7 @@ describe('AppComponent', () => {
       '/blocks'
     );
     expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual(
-      '/transactions'
+      '/tx/recent'
     );
   });
 });

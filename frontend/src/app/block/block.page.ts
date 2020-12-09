@@ -111,6 +111,6 @@ export class BlockPage implements OnInit {
   }
 
   goToTransaction(txid = '') {
-    this.navCtrl.navigateForward(`/transactions/${txid}`);
+    this.navCtrl.navigateForward(`/tx/${txid}`);
   }
 }

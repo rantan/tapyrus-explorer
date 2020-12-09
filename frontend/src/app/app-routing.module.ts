@@ -25,14 +25,14 @@ const routes: Routes = [
       )
   },
   {
-    path: 'transactions',
+    path: 'tx/recent',
     loadChildren: () =>
       import('./transactions/transactions.module').then(
         m => m.TransactionsPageModule
       )
   },
   {
-    path: 'transactions/:txid',
+    path: 'tx/:txid',
     loadChildren: () =>
       import('./transaction/transaction.module').then(
         m => m.TransactionPageModule

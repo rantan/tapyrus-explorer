@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'Txns',
-      url: '/transactions',
+      url: '/tx/recent',
       icon: 'paper-plane'
     }
   ];
