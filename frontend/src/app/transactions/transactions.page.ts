@@ -66,10 +66,7 @@ export class TransactionsPage implements OnInit {
     } else {
       this.backendService.searchTransaction(this.searchValue).subscribe(
         data => {
-          this.transactions = [data];
-          this.pages = 1;
-          this.page = 1;
-          this.txCount = 1;
+          this.goToTransaction(data.txid);
         },
         err => {
           this.hasError = true;
