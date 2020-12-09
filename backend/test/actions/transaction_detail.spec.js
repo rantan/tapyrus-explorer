@@ -165,7 +165,7 @@ describe('GET /tx/:txid/rawData with sinon.stub', function () {
   it('/tx/:txid/rawData', function (done) {
     supertest(app)
       .get(
-        '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
+        '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
       )
       .expect(200)
       .expect('Content-Type', /json/)
