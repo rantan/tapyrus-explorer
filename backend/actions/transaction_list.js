@@ -12,90 +12,44 @@ app.use((req, res, next) => {
   next();
 });
 
-async function getMemTx() {
-  const txids = await tapyrusd.getRawMempool();
-  const txs = await Promise.all(
-    txids.map(txid => electrs.blockchain.transaction.get(txid, true))
-  );
-
-  const txsWithTime = [];
-  for (let tx of txs) {
-    const txDetail = await tapyrusd.command([
-      {
-        method: 'getmempoolentry',
-        parameters: {
-          txid: tx.txid
-        }
-      }
-    ]);
-    tx.time = txDetail[0].time;
-
-    txsWithTime.push(tx);
-  }
-
-  return txsWithTime.sort((a, b) => b.time - a.time);
-}
-
 //Return a List of transactions
 app.get('/transactions', async (req, res) => {
   let perPage = Number(req.query.perPage);
   const page = Number(req.query.page);
 
   try {
-    const stats = await tapyrusd.getChainTxStats();
-    const txCount = stats.txcount;
-    const bestBlockHeight = await tapyrusd.getBlockCount();
+    const txns = Object.values(await tapyrusd.getRawMempool(true));
+    txns.sort((a, b) => b.time - a.time);
 
-    let count = 0,
-      transList = [];
+    const txCount = txns.length;
+    const endIndex = perPage * page - 1;
+    const startIndex = endIndex + 1 - perPage;
+    const startTx = txCount - startIndex;
+    let endTx = startTx - perPage + 1;
+    if (endTx < 0) {
+      endTx = 0;
+    }
 
-    const memTxList = await getMemTx();
-    if (memTxList.length > perPage * (page - 1)) {
-      let j = perPage * (page - 1);
-      while (j < memTxList.length) {
-        let amount = 0;
-        memTxList[j].vout.forEach(vout => {
-          amount += vout.value;
-        });
-        memTxList[j].amount = amount;
-        memTxList[j].confirmations = 0;
-        transList.push(memTxList[j]);
-        j++;
-        count++;
-        if (count === perPage) {
-          break;
-        }
+    const memTxList = [];
+    for (let i = endTx; i < startTx; i++) {
+      const tx = txns[i];
+      const txInfo = await electrs.blockchain.transaction.get(
+        txns[i].txid,
+        true
+      );
+      tx.amount = 0.0;
+      for (let j = 0; j < txInfo.vin.length; j++) {
+        const input = txInfo.vin[j];
+        const prevTx = await electrs.blockchain.transaction.get(
+          input.txid,
+          true
+        );
+        tx.amount += prevTx.vout[input.vout].value;
       }
+      memTxList.push(tx);
     }
-
-    let startingTrans = bestBlockHeight - perPage * page;
-
-    if (startingTrans < 0) {
-      //if last page's remainder should use different value of startingTrans and perPage
-      startingTrans = 0;
-      perPage = bestBlockHeight % perPage;
-    }
-
-    for (let i = startingTrans + perPage; i > startingTrans; i--) {
-      let amount = 0;
-
-      const blockHash = await tapyrusd.getBlockHash(i);
-      const block = await tapyrusd.getBlock(blockHash);
-      const txs = Array.from(block.tx);
-
-      for (let txid of txs) {
-        const trans = await electrs.blockchain.transaction.get(txid, true);
-
-        trans.vout.forEach(vout => {
-          amount += vout.value;
-        });
-        trans.amount = amount;
-        transList.push(trans);
-      }
-    }
-
     res.json({
-      results: transList,
+      results: memTxList,
       txCount
     });
   } catch (error) {

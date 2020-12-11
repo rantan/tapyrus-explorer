@@ -24,27 +24,34 @@
     </div>
     <ion-grid class="ion-padding" id="table" *ngIf="!hasError">
       <ion-row id="table-header">
-        <ion-col size="6">TXID in Mempool</ion-col>
+        <ion-col size="4">TXID in Mempool</ion-col>
         <ion-col size="2">TIME</ion-col>
         <ion-col size="2">VALUE (TPC)</ion-col>
-        <ion-col size="2">Confirmation</ion-col>
+        <ion-col size="2">SIZE (Bytes)</ion-col>
+        <ion-col size="2">FEE (TPC)</ion-col>
       </ion-row>
       <ion-row
         class="table-border-bottom"
         *ngFor="let txn of transactions | paginate: { itemsPerPage: perPage, currentPage: page, totalItems: txCount }"
       >
         <ion-col
-          size="6"
+          size="4"
           class="font-14 link-color cursor-pointer"
           (click)="goToTransaction(txn.txid)"
-          >{{ txn.txid }}</ion-col
         >
+          {{ txn.txid }}
+        </ion-col>
         <ion-col size="2" class="font-14 text-color"
           >{{ txn.time | momentFromNow }}</ion-col
         >
-        <ion-col size="2" class="font-14 text-color">{{ txn.amount}}</ion-col>
-        <ion-col size="2" class="font-14 text-color"
-          >{{ txn.confirmations}}</ion-col
+        <ion-col size="2" class="font-14 text-color ion-text-right"
+          >{{ txn.amount}}</ion-col
+        >
+        <ion-col size="2" class="font-14 text-color ion-text-right"
+          >{{ txn.size}}</ion-col
+        >
+        <ion-col size="2" class="font-14 text-color ion-text-right"
+          >{{ txn.fee}}</ion-col
         >
       </ion-row>
     </ion-grid>
