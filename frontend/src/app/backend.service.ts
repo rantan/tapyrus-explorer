@@ -46,11 +46,11 @@ export class BackendService {
   }
 
   getTransaction(txId: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/transaction/${txId}`);
+    return this.http.get(`${this.backendUrl}/tx/${txId}`);
   }
 
   getRawTransaction(txId: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/transaction/${txId}/rawData`);
+    return this.http.get(`${this.backendUrl}/tx/${txId}/rawData`);
   }
 
   getAddressInfo(
@@ -66,6 +66,6 @@ export class BackendService {
   }
 
   searchTransaction(query: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/transaction/${query}/get`);
+    return this.http.get(`${this.backendUrl}/tx/${query}/get`);
   }
 }

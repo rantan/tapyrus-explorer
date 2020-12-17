@@ -56,7 +56,7 @@ export class TransactionsPage implements OnInit {
   }
 
   goToTransaction(txid: string) {
-    this.navCtrl.navigateForward(`/transactions/${txid}`);
+    this.navCtrl.navigateForward(`/tx/${txid}`);
   }
 
   onSearch() {

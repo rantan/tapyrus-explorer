@@ -6,78 +6,100 @@ const electrs = require('../../libs/electrs');
 const cl = require('../../libs/tapyrusd').client;
 const sinon = require('sinon');
 
-describe('GET /transactions and then call individual transaction using /transaction/:txid', function () {
+describe('GET /transactions and then call individual transaction using /tx/:txid', function () {
   beforeEach(() => {
-    sinon.stub(cl, 'getChainTxStats').resolves({ txcount: 1 });
-    sinon.stub(cl, 'getBlockCount').resolves(1);
-    sinon.stub(cl, 'getRawMempool').resolves([]);
+    sinon.stub(cl, 'getRawMempool').resolves({
+      '67de335bfd0d098ff415b26e30716b54cd54a6e310897980b25c37610344d46f': {
+        fees: {
+          base: 0.1,
+          modified: 0.1,
+          ancestor: 0.1,
+          descendant: 0.1
+        },
+        size: 225,
+        fee: 0.1,
+        modifiedfee: 0.1,
+        time: 1607586380,
+        height: 54547,
+        descendantcount: 1,
+        descendantsize: 225,
+        descendantfees: 10000000,
+        ancestorcount: 1,
+        ancestorsize: 225,
+        ancestorfees: 10000000,
+        txid:
+          '67de335bfd0d098ff415b26e30716b54cd54a6e310897980b25c37610344d46f',
+        depends: [],
+        spentby: []
+      }
+    });
     sinon
-      .stub(cl, 'getBlockHash')
-      .resolves(
-        'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5'
-      );
-    sinon.stub(cl, 'getBlock').resolves({
-      hash: 'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5',
-      confirmations: 10248,
-      strippedsize: 262,
-      size: 262,
-      weight: 1048,
-      height: 41794,
-      features: 1,
-      featuresHex: '00000001',
-      merkleroot:
-        '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9',
-      immutablemerkleroot:
-        '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
-      tx: ['8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f'],
-      time: 1603108230,
-      mediantime: 1603104903,
-      xfieldType: 0,
-      proof:
-        'a8487c83d1740373a2eab54571b730d75450db11702a4d5ff05c680d919b9f848cc344ac81540c0341733c28c8e26b1e10aa1b566e2d68615ae03281116fbcc8',
-      nTx: 1,
-      previousblockhash:
-        'da9a38e33da2d01d70ea6f439ce48c28e4dbd603937f7bb429ec9871c3a9dbf7',
-      nextblockhash:
-        'e84148009b81c00688bd23d0eb01c9676589214996e5dc13aec328aff5102526'
-    });
-    sinon.stub(electrs.blockchain.transaction, 'get').resolves({
-      txid: '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f',
-      hash: '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9',
-      features: 1,
-      size: 91,
-      vsize: 91,
-      weight: 364,
-      locktime: 0,
-      vin: [{ coinbase: '0342a3000101', sequence: 4294967295 }],
-      vout: [
-        {
-          value: 50,
-          n: 0,
-          scriptPubKey: {
-            asm:
-              'OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG',
-            hex: 'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a',
-            reqSigs: 1,
-            type: 'pubkeyhash',
-            addresses: ['1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA']
+      .stub(electrs.blockchain.transaction, 'get')
+      .withArgs(
+        '67de335bfd0d098ff415b26e30716b54cd54a6e310897980b25c37610344d46f'
+      )
+      .resolves({
+        txid:
+          '67de335bfd0d098ff415b26e30716b54cd54a6e310897980b25c37610344d46f',
+        hash:
+          'ec98b82943d3b98fcdf1f3d482c0b142386bf34678c71bbaf67da6a8dd251030',
+        vin: [
+          {
+            txid:
+              'eb420c5e67fb1786045f4e5b932b526503c596d3692f44ceba5c2830faaf08dd',
+            vout: 0,
+            scriptSig: {
+              asm:
+                '30440220104a368bfb63b90848dde50fd8101c6dc73b77d7930e905ba464385e3bec1c410220299a3a1b83a86527b7e1cadcd89ff44df444115c96c8a191ac3b7551dc3f5732[ALL] 037a65e1076bd67f566ea4c1f542141b9b0004b4479c57eb951671cc89c4758e67',
+              hex:
+                '4730440220104a368bfb63b90848dde50fd8101c6dc73b77d7930e905ba464385e3bec1c410220299a3a1b83a86527b7e1cadcd89ff44df444115c96c8a191ac3b7551dc3f57320121037a65e1076bd67f566ea4c1f542141b9b0004b4479c57eb951671cc89c4758e67'
+            },
+            sequence: 4294967294
           }
-        }
-      ],
-      hex:
-        '0100000001000000000000000000000000000000000000000000000000000000000000000042a30000060342a3000101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000',
-      blockhash:
-        'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5',
-      time: 1603108230,
-      blocktime: 1603108230
-    });
+        ],
+        vout: [
+          {
+            value: 0.4,
+            n: 0,
+            scriptPubKey: {
+              asm:
+                'OP_DUP OP_HASH160 846dbba7c781c8103efca5be3ceead6ba6eba1ea OP_EQUALVERIFY OP_CHECKSIG',
+              hex: '76a914846dbba7c781c8103efca5be3ceead6ba6eba1ea88ac',
+              reqSigs: 1,
+              type: 'pubkeyhash',
+              addresses: ['1D5DehxQTUG7vHq6i3EQE8JnBb6SDcqZkS']
+            }
+          }
+        ]
+      })
+      .withArgs(
+        'eb420c5e67fb1786045f4e5b932b526503c596d3692f44ceba5c2830faaf08dd'
+      )
+      .resolves({
+        txid:
+          'eb420c5e67fb1786045f4e5b932b526503c596d3692f44ceba5c2830faaf08dd',
+        vout: [
+          {
+            value: 0.4,
+            n: 0,
+            scriptPubKey: {
+              asm:
+                'OP_DUP OP_HASH160 846dbba7c781c8103efca5be3ceead6ba6eba1ea OP_EQUALVERIFY OP_CHECKSIG',
+              hex: '76a914846dbba7c781c8103efca5be3ceead6ba6eba1ea88ac',
+              reqSigs: 1,
+              type: 'pubkeyhash',
+              addresses: ['1D5DehxQTUG7vHq6i3EQE8JnBb6SDcqZkS']
+            }
+          }
+        ]
+      });
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it('/transactions', function (done) {
+  it('should return recent transactions', function (done) {
     this.timeout(5000);
     supertest(app)
       .get('/transactions')
@@ -88,62 +110,14 @@ describe('GET /transactions and then call individual transaction using /transact
         if (err) done(err);
         else {
           assert.strictEqual(res.body.results.length, 1);
-          supertest(app)
-            .get(`/transaction/${res.body.results[0].txid}`)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end(function (err, res) {
-              if (err) done(err);
-
-              const transaction = res.body;
-              assert.strictEqual(
-                transaction.txid,
-                '8c74a12270ce0520d5def8d798e320d3922c01b5da294aaaa857876c7e4e846f'
-              );
-              assert.strictEqual(
-                transaction.hash,
-                '11fd6e5f137781b524db73dc644c739c9a7141991482215544198c699b7457a9'
-              );
-              assert.strictEqual(transaction.features, 1);
-              assert.strictEqual(transaction.size, 91);
-              assert.strictEqual(transaction.vsize, 91);
-              assert.strictEqual(transaction.weight, 364);
-              assert.strictEqual(transaction.locktime, 0);
-              assert.strictEqual(
-                transaction.hex,
-                '0100000001000000000000000000000000000000000000000000000000000000000000000042a30000060342a3000101ffffffff0100f2052a010000001976a9146713b478d99432aac667b7d8e87f9d06edca03bb88ac00000000'
-              );
-              assert.strictEqual(
-                transaction.blockhash,
-                'aa04f9cfceb4499d5df308c37b6c197a3a19439ba1893f214e5bf4a65ac3fcf5'
-              );
-              assert.strictEqual(transaction.time, 1603108230);
-              assert.strictEqual(transaction.blocktime, 1603108230);
-
-              assert.strictEqual(transaction.vin[0].coinbase, '0342a3000101');
-              assert.strictEqual(transaction.vin[0].sequence, 4294967295);
-
-              assert.strictEqual(transaction.vout[0].value, 50);
-              assert.strictEqual(transaction.vout[0].n, 0);
-              assert.strictEqual(
-                transaction.vout[0].scriptPubKey.asm,
-                'OP_DUP OP_HASH160 6713b478d99432aac667b7d8e87f9d06edca03bb OP_EQUALVERIFY OP_CHECKSIG'
-              );
-              assert.strictEqual(
-                transaction.vout[0].scriptPubKey.hex,
-                'ac667b7d8e87f9d06edca03bb88ac76a9146713b478d99432a'
-              );
-              assert.strictEqual(transaction.vout[0].scriptPubKey.reqSigs, 1);
-              assert.strictEqual(
-                transaction.vout[0].scriptPubKey.type,
-                'pubkeyhash'
-              );
-              assert.strictEqual(
-                transaction.vout[0].scriptPubKey.addresses[0],
-                '1AQ2CtG3jho78SrEzKe3vf6dxcEkJt5nzA'
-              );
-              done();
-            });
+          const tx = res.body.results[0];
+          assert.strictEqual(
+            tx.txid,
+            '67de335bfd0d098ff415b26e30716b54cd54a6e310897980b25c37610344d46f'
+          );
+          assert.strictEqual(tx.time, 1607586380);
+          assert.strictEqual(tx.amount, 0.4);
+          done();
         }
       });
   });

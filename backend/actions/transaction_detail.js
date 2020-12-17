@@ -11,12 +11,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/transaction/:txid', async (req, res) => {
+app.get('/tx/:txid', async (req, res) => {
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    res.status(400).send('Invalid txid.');
+    res.status(400).send(`Invalid txid: ${urlTxid}`);
     return;
   }
 
@@ -38,15 +38,13 @@ app.get('/transaction/:txid', async (req, res) => {
   }
 });
 
-app.get('/transaction/:txid/rawData', async (req, res) => {
+app.get('/tx/:txid/rawData', async (req, res) => {
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
   const urlTxid = req.params.txid;
 
   if (!regex.test(urlTxid)) {
-    logger.error(
-      `Regex Test didn't pass for URL - /transaction/${urlTxid}/rawData`
-    );
-    res.status(400).send('Invalid txid.');
+    logger.error(`Regex Test didn't pass for URL - /tx/${urlTxid}/rawData`);
+    res.status(400).send(`Invalid txid: ${urlTxid}`);
     return;
   }
 
@@ -64,15 +62,13 @@ app.get('/transaction/:txid/rawData', async (req, res) => {
   }
 });
 
-app.get('/transaction/:txid/get', async (req, res) => {
+app.get('/tx/:txid/get', async (req, res) => {
   const urlTxid = req.params.txid;
   const regex = new RegExp(/^[0-9a-fA-F]{64}$/);
 
   if (!regex.test(urlTxid)) {
-    logger.error(
-      `Regex Test didn't pass for URL - /transaction/${urlTxid}/get`
-    );
-    res.status(400).send('Invalid txid.');
+    logger.error(`Regex Test didn't pass for URL - /tx/${urlTxid}/get`);
+    res.status(400).send(`Invalid txid: ${urlTxid}`);
     return;
   }
 

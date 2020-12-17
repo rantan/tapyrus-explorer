@@ -12,7 +12,7 @@ function isEmpty(obj) {
   return true;
 }
 
-describe('GET /transaction/:txid with sinon.stub', function () {
+describe('GET /tx/:txid with sinon.stub', function () {
   beforeEach(() => {
     sinon
       .stub(electrs.blockchain.transaction, 'get')
@@ -68,7 +68,7 @@ describe('GET /transaction/:txid with sinon.stub', function () {
     it('should return transaction information', function (done) {
       supertest(app)
         .get(
-          '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
+          '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
         )
         .expect(200)
         .expect('Content-Type', /json/)
@@ -135,7 +135,7 @@ describe('GET /transaction/:txid with sinon.stub', function () {
     it('should return 404 response.', function (done) {
       supertest(app)
         .get(
-          '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3'
+          '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3'
         )
         .expect(404)
         .expect('Content-Type', /json/)
@@ -146,7 +146,7 @@ describe('GET /transaction/:txid with sinon.stub', function () {
   });
 });
 
-describe('GET /transaction/:txid/rawData with sinon.stub', function () {
+describe('GET /tx/:txid/rawData with sinon.stub', function () {
   beforeEach(() => {
     sinon
       .stub(electrs.blockchain.transaction, 'get')
@@ -162,10 +162,10 @@ describe('GET /transaction/:txid/rawData with sinon.stub', function () {
     sinon.restore();
   });
 
-  it('/transaction/:txid/rawData', function (done) {
+  it('/tx/:txid/rawData', function (done) {
     supertest(app)
       .get(
-        '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
+        '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
       )
       .expect(200)
       .expect('Content-Type', /json/)
@@ -186,7 +186,7 @@ describe('GET /transaction/:txid/rawData with sinon.stub', function () {
   });
 });
 
-describe('GET /transaction/:txid/get with sinon.stub', function () {
+describe('GET /tx/:txid/get with sinon.stub', function () {
   beforeEach(() => {
     sinon
       .stub(electrs.blockchain.transaction, 'get')
@@ -233,10 +233,10 @@ describe('GET /transaction/:txid/get with sinon.stub', function () {
     sinon.restore();
   });
 
-  it('/transaction/:txid/get', function (done) {
+  it('/tx/:txid/get', function (done) {
     supertest(app)
       .get(
-        '/transaction/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/get'
+        '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/get'
       )
       .expect(200)
       .expect('Content-Type', /json/)
