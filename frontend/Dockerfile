@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm install && \
-    npm install -g @angular/cli@8.3.29
+    npm install -g @angular/cli@9.1.13
 
 EXPOSE 4200
 
