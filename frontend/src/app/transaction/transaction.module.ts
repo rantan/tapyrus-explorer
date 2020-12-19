@@ -16,7 +16,7 @@ import { TransactionRawdataPage } from '../transaction-rawdata/transaction-rawda
     IonicModule,
     TransactionPageRoutingModule
   ],
-  declarations: [TransactionPage],
+  declarations: [TransactionPage, TransactionRawdataPage],
   entryComponents: [TransactionRawdataPage]
 })
 export class TransactionPageModule {}

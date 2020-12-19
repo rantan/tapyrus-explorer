@@ -11,7 +11,7 @@ import { BlockRawdataPage } from '../block-rawdata/block-rawdata.page';
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, BlockPageRoutingModule],
-  declarations: [BlockPage],
+  declarations: [BlockPage, BlockRawdataPage],
   entryComponents: [BlockRawdataPage]
 })
 export class BlockPageModule {}
