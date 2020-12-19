@@ -17,21 +17,21 @@
     "bitcoin-core": "git+https://github.com/Takeshi-Y/bitcoin-core.git",
     "compression": "^1.7.4",
     "express": "^4.17.1",
-    "jayson": "^3.1.1",
+    "jayson": "^3.4.4",
     "jssha": "^2.3.1",
     "log4js": "^6.3.0",
-    "sinon": "^9.2.0",
+    "sinon": "^9.2.2",
     "socket.io": "^2.3.0",
     "tapyrusjs-lib": "git+https://github.com/chaintope/tapyrusjs-lib.git",
-    "ws": "^7.1.2",
+    "ws": "^7.4.1",
     "wss": "^3.3.4"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-strongloop": "^2.1.0",
-    "mocha": "^8.1.1",
-    "nodemon": "^2.0.4",
-    "prettier": "^2.1.2",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.2.1",
     "supertest": "^4.0.2"
   }
 }
