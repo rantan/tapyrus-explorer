@@ -25,7 +25,7 @@ $ cargo build --release
 ```
 
 ```bash
-$ cargo run --release -- -vvvv --index-batch-size=10 --jsonrpc-import --db-dir ./db --electrum-rpc-addr="127.0.0.1:50001" --daemon-dir /var/lib/tapyrus-testnet/prod-1939510133/ --network-id 1939510133  --txid-limit=0
+$ cargo run --release --bin electrs -- -vvvv --index-batch-size=10 --jsonrpc-import --db-dir ./db --electrum-rpc-addr="127.0.0.1:50001" --daemon-dir /var/lib/tapyrus-testnet/prod-1939510133/ --network-id 1939510133  --txid-limit=0
 ```
 
 ### Tapyrus explorer
