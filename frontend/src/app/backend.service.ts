@@ -14,7 +14,7 @@ export class BackendService {
   }
 
   getBlocks(page: number, perPage: number): Observable<any> {
-    return this.http.get(`${this.backendUrl}/blocks`, {
+    return this.http.get(`${this.backendUrl}/api/blocks`, {
       params: new HttpParams({
         fromObject: { page: page.toString(), perPage: perPage.toString() }
       })
@@ -22,15 +22,15 @@ export class BackendService {
   }
 
   searchBlock(query: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/block/${query}`);
+    return this.http.get(`${this.backendUrl}/api/block/${query}`);
   }
 
   getBlock(blockHash: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/block/${blockHash}`);
+    return this.http.get(`${this.backendUrl}/api/block/${blockHash}`);
   }
 
   getRawBlock(blockHash: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/block/${blockHash}/raw`);
+    return this.http.get(`${this.backendUrl}/api/block/${blockHash}/raw`);
   }
 
   getBlockTransactions(
@@ -38,7 +38,7 @@ export class BackendService {
     page: number,
     perPage: number
   ): Observable<any> {
-    return this.http.get(`${this.backendUrl}/block/${blockHash}/txns`, {
+    return this.http.get(`${this.backendUrl}/api/block/${blockHash}/txns`, {
       params: new HttpParams({
         fromObject: { page: page.toString(), perPage: perPage.toString() }
       })
@@ -46,7 +46,7 @@ export class BackendService {
   }
 
   getTransactions(page: number, perPage: number): Observable<any> {
-    return this.http.get(`${this.backendUrl}/transactions`, {
+    return this.http.get(`${this.backendUrl}/api/transactions`, {
       params: new HttpParams({
         fromObject: { page: page.toString(), perPage: perPage.toString() }
       })
@@ -54,15 +54,15 @@ export class BackendService {
   }
 
   getTransaction(txId: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/tx/${txId}`);
+    return this.http.get(`${this.backendUrl}/api/tx/${txId}`);
   }
 
   getRawTransaction(txId: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/tx/${txId}/rawData`);
+    return this.http.get(`${this.backendUrl}/api/tx/${txId}/rawData`);
   }
 
   getAddressInfo(address: string, lastSeenTxid?: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/address/${address}`, {
+    return this.http.get(`${this.backendUrl}/api/address/${address}`, {
       params: new HttpParams({
         fromObject: {
           lastSeenTxid: (lastSeenTxid || '').toString()
@@ -72,11 +72,11 @@ export class BackendService {
   }
 
   searchTransaction(query: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/tx/${query}/get`);
+    return this.http.get(`${this.backendUrl}/api/tx/${query}/get`);
   }
 
   getColor(colorId: string, lastSeenTxid?: string): Observable<any> {
-    return this.http.get(`${this.backendUrl}/color/${colorId}`, {
+    return this.http.get(`${this.backendUrl}/api/color/${colorId}`, {
       params: new HttpParams({
         fromObject: {
           lastSeenTxid: (lastSeenTxid || '').toString()

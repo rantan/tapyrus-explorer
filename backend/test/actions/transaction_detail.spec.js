@@ -5,7 +5,7 @@ require('../../actions/transaction_detail');
 const rest = require('../../libs/rest');
 const sinon = require('sinon');
 
-describe('GET /tx/:txid', () => {
+describe('GET /api/tx/:txid', () => {
   beforeEach(() => {
     sinon
       .stub(rest.transaction, 'get')
@@ -63,7 +63,7 @@ describe('GET /tx/:txid', () => {
     it('should return transaction information', done => {
       supertest(app)
         .get(
-          '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
+          '/api/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8'
         )
         .expect(200)
         .expect('Content-Type', /json/)
@@ -114,7 +114,7 @@ describe('GET /tx/:txid', () => {
     it('should return 404 response.', done => {
       supertest(app)
         .get(
-          '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3'
+          '/api/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c3'
         )
         .expect(404)
         .then(res => {
@@ -125,7 +125,7 @@ describe('GET /tx/:txid', () => {
   });
 });
 
-describe('GET /tx/:txid/rawData', () => {
+describe('GET /api/tx/:txid/rawData', () => {
   beforeEach(() => {
     sinon
       .stub(rest.transaction, 'raw')
@@ -141,10 +141,10 @@ describe('GET /tx/:txid/rawData', () => {
     sinon.restore();
   });
 
-  it('/tx/:txid/rawData', done => {
+  it('/api/tx/:txid/rawData', done => {
     supertest(app)
       .get(
-        '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
+        '/api/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/rawData'
       )
       .expect(200)
       .expect('Content-Type', /json/)
@@ -164,7 +164,7 @@ describe('GET /tx/:txid/rawData', () => {
   });
 });
 
-describe('GET /tx/:txid/get', () => {
+describe('GET /api/tx/:txid/get', () => {
   beforeEach(() => {
     sinon
       .stub(rest.transaction, 'get')
@@ -212,10 +212,10 @@ describe('GET /tx/:txid/get', () => {
     sinon.restore();
   });
 
-  it('/tx/:txid/get', done => {
+  it('/api/tx/:txid/get', done => {
     supertest(app)
       .get(
-        '/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/get'
+        '/api/tx/a82d9931eece4f2504691810db4a11d406a6eb2345b739fc35bb4f993d85e7c8/get'
       )
       .expect(200)
       .expect('Content-Type', /json/)

@@ -5,7 +5,7 @@ require('../../actions/block_detail');
 const rest = require('../../libs/rest');
 const sinon = require('sinon');
 
-describe('GET /block/:blockHash', function () {
+describe('GET /api/block/:blockHash', function () {
   beforeEach(() => {
     sinon
       .stub(rest.block, 'get')
@@ -61,7 +61,7 @@ describe('GET /block/:blockHash', function () {
     it('should return block information.', function (done) {
       supertest(app)
         .get(
-          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
+          '/api/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6'
         )
         .expect(200)
         .expect('Content-Type', /json/)
@@ -107,7 +107,7 @@ describe('GET /block/:blockHash', function () {
     it('should return 404 response.', function (done) {
       supertest(app)
         .get(
-          '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420fe'
+          '/api/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420fe'
         )
         .expect(404)
         .then(res => {
@@ -118,7 +118,7 @@ describe('GET /block/:blockHash', function () {
   });
 });
 
-describe('GET /block/:blockHash/raw', function () {
+describe('GET /api/block/:blockHash/raw', function () {
   beforeEach(() => {
     sinon
       .stub(rest.block, 'raw')
@@ -134,10 +134,10 @@ describe('GET /block/:blockHash/raw', function () {
     sinon.restore();
   });
 
-  it('/block/:blockHash/raw', function (done) {
+  it('/api/block/:blockHash/raw', function (done) {
     supertest(app)
       .get(
-        '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/raw'
+        '/api/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/raw'
       )
       .expect(200)
       .expect('Content-Type', /json/)
@@ -153,7 +153,7 @@ describe('GET /block/:blockHash/raw', function () {
   });
 });
 
-describe('GET /block/:blockHash/txns', function () {
+describe('GET /api/block/:blockHash/txns', function () {
   beforeEach(() => {
     sinon
       .stub(rest.block, 'txs')
@@ -201,7 +201,7 @@ describe('GET /block/:blockHash/txns', function () {
   it('/block/:blockHash/txns', function (done) {
     supertest(app)
       .get(
-        '/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/txns'
+        '/api/block/5c6fd3ae9a05a6db255525bd6b1e5e4cb9cfbda876ee39cc809129a9ade420e6/txns'
       )
       .expect(200)
       .expect('Content-Type', /json/)

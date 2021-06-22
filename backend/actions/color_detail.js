@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/color/:colorId', async (req, res) => {
+app.get('/api/color/:colorId', async (req, res) => {
   const colorId = req.params.colorId;
   const lastSeenTxid = req.query.lastSeenTxid;
 
