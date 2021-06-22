@@ -6,7 +6,7 @@ const rest = require('../../libs/rest');
 const sinon = require('sinon');
 const fixtures = require('../fixtures/txs.json');
 
-describe('GET /address', () => {
+describe('GET /api/address', () => {
   beforeEach(() => {
     sinon
       .stub(rest.address, 'stats')
@@ -35,7 +35,7 @@ describe('GET /address', () => {
     });
     it('should return balances and txs', done => {
       supertest(app)
-        .get('/address/12FmjcAHuen1gptnZoSZ7MLWmNhZny6GmP')
+        .get('/api/address/12FmjcAHuen1gptnZoSZ7MLWmNhZny6GmP')
         .query({})
         .expect(200)
         .expect('Content-Type', /json/)
@@ -73,7 +73,7 @@ describe('GET /address', () => {
     });
     it('should return balances and txs', done => {
       supertest(app)
-        .get('/address/12FmjcAHuen1gptnZoSZ7MLWmNhZny6GmP')
+        .get('/api/address/12FmjcAHuen1gptnZoSZ7MLWmNhZny6GmP')
         .query({
           lastSeenTxid:
             'b9112788b9509306bedd77142f24e3a647190ecb5351a22e71eb203dec0f28fc'

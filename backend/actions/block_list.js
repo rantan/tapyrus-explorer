@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/blocks', async (req, res) => {
+app.get('/api/blocks', async (req, res) => {
   let perPage = Number(req.query.perPage);
   const page = Number(req.query.page);
 

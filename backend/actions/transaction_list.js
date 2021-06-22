@@ -12,7 +12,7 @@ app.use((req, res, next) => {
 });
 
 //Return a List of transactions
-app.get('/transactions', async (req, res) => {
+app.get('/api/transactions', async (req, res) => {
   let perPage = Number(req.query.perPage);
   const page = Number(req.query.page);
 

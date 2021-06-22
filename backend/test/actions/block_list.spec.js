@@ -7,7 +7,7 @@ const fixtures = require('../fixtures/blocks.json');
 
 const sinon = require('sinon');
 
-describe('GET /blocks and then call individual block using /block/:blockHash', () => {
+describe('GET /api/blocks and then call individual block using /block/:blockHash', () => {
   beforeEach(() => {
     sinon.stub(rest.block.tip, 'height').resolves(30);
     sinon
@@ -22,9 +22,9 @@ describe('GET /blocks and then call individual block using /block/:blockHash', (
     sinon.restore();
   });
 
-  it('/blocks', done => {
+  it('/api/blocks', done => {
     supertest(app)
-      .get('/blocks')
+      .get('/api/blocks')
       .query({ perPage: '15', page: 1 })
       .expect(200)
       .expect('Content-Type', /json/)

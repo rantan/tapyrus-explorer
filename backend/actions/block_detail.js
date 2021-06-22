@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/block/:blockHash', async (req, res) => {
+app.get('/api/block/:blockHash', async (req, res) => {
   const blockHash = req.params.blockHash;
 
   if (!isHash(blockHash)) {
@@ -51,7 +51,7 @@ app.get('/block/:blockHash', async (req, res) => {
 });
 
 // bitcoin-cli getblock ${blockHash} 0
-app.get('/block/:blockHash/raw', async (req, res) => {
+app.get('/api/block/:blockHash/raw', async (req, res) => {
   const blockHash = req.params.blockHash;
 
   if (!isHash(blockHash)) {
@@ -70,7 +70,7 @@ app.get('/block/:blockHash/raw', async (req, res) => {
   }
 });
 
-app.get('/block/:blockHash/txns', async (req, res) => {
+app.get('/api/block/:blockHash/txns', async (req, res) => {
   const blockHash = req.params.blockHash;
   const perPage = Number(req.query.perPage) || 25;
   const page = Number(req.query.page) || 1;

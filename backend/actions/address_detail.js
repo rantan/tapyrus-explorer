@@ -13,7 +13,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/address/:address', async (req, res) => {
+app.get('/api/address/:address', async (req, res) => {
   // TODO: This API only supports returning 25 records for one request.
   const lastSeenTxid = req.query.lastSeenTxid;
   const address = req.params.address;

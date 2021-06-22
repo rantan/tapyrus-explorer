@@ -5,7 +5,7 @@ require('../../actions/transaction_list');
 const rest = require('../../libs/rest');
 const sinon = require('sinon');
 
-describe('GET /transactions', () => {
+describe('GET /api/transactions', () => {
   beforeEach(() => {
     sinon
       .stub(rest.mempool, 'list')
@@ -31,7 +31,7 @@ describe('GET /transactions', () => {
 
   it('should return recent transactions', done => {
     supertest(app)
-      .get('/transactions')
+      .get('/api/transactions')
       .query({ perPage: '25', page: 1 })
       .expect(200)
       .expect('Content-Type', /json/)

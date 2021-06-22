@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/tx/:txid', async (req, res) => {
+app.get('/api/tx/:txid', async (req, res) => {
   const txid = req.params.txid;
 
   if (!isHash(txid)) {
@@ -38,7 +38,7 @@ app.get('/tx/:txid', async (req, res) => {
   }
 });
 
-app.get('/tx/:txid/rawData', async (req, res) => {
+app.get('/api/tx/:txid/rawData', async (req, res) => {
   const txid = req.params.txid;
 
   if (!isHash(txid)) {
@@ -61,7 +61,7 @@ app.get('/tx/:txid/rawData', async (req, res) => {
   }
 });
 
-app.get('/tx/:txid/get', async (req, res) => {
+app.get('/api/tx/:txid/get', async (req, res) => {
   const txid = req.params.txid;
   if (!isHash(txid)) {
     console.error(`Invalid txid(${txid}) -- /tx/${txid}/get`);
